@@ -1,0 +1,19 @@
+# VSCode settings
+.vscode
+
+# Objects
+obj
+*.o
+
+# Libraries
+plog/lib
+
+# Executables
+test/bin/*
+
+# Unit-test
+coverage_report
+*.gcno
+*.gcda
+*.gcov
+*.info
