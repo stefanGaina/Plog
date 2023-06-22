@@ -2,6 +2,7 @@
  * @file plog.h                                                                                       *
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
+ * 22.06.2023  Gaina Stefan               Add plog_get_version.                                       *
  * @details This file defines the type definitions and public interface of Plog.                      *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -30,6 +31,16 @@
  * if not already).
 */
 #define PLOG_LEVEL_FILE_NAME "plog_level"
+
+/**
+ * @brief The compiled major version.
+*/
+#define PLOG_VERSION_MAJOR 1
+
+/**
+ * @brief The compiled minor version.
+*/
+#define PLOG_VERSION_MINOR 0
 
 #ifdef PLOG_STRIP_ALL
 
@@ -158,6 +169,15 @@ typedef enum e_plog_SeverityLevel_t
 	E_PLOG_SEVERITY_LEVEL_VERBOSE = (1 << 6)  /**< If bit is set verbose logs are enabled. */
 } plog_SeverityLevel_t;
 
+/**
+ * @brief A structure that contains information about the version of Plog in use.
+*/
+typedef struct s_plog_Version_t
+{
+	uint8_t major; /**< Increments with massive changes, additions, and enhancement.        */
+	uint8_t minor; /**< Increments with backwards-compatible changes to the major revision. */
+} plog_Version_t;
+
 /******************************************************************************************************
  * FUNCTION PROTOTYPES                                                                                *
  *****************************************************************************************************/
@@ -195,6 +215,13 @@ extern void plog_set_severity_level(uint8_t severity_level_mask);
  * @return The current severity level.
 */
 extern uint8_t plog_get_severity_level(void);
+
+/**
+ * @brief Get the version of Plog that is linked.
+ * @param void
+ * @return Version information.
+*/
+extern plog_Version_t plog_get_version(void);
 
 #ifdef __cplusplus
 }

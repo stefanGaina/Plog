@@ -2,6 +2,7 @@
  * @file plog_test.c                                                                                  *
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
+ * 22.06.2023  Gaina Stefan               Add check for Plog version.                                 *
  * @details This file is implementing a program that loads Plog and tests it using API-Test.          *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -32,7 +33,7 @@ static void handle_commands(FILE* input_file);
  * @param void
  * @return void
 */
-static void print_version(void);
+static void print_versions(void);
 
 /**
  * @brief Prints the usage of the application to the user.
@@ -56,7 +57,7 @@ int main(int argc, char* argv[])
 {
 	FILE* input_file = NULL;
 
-	print_version();
+	print_versions();
 
 	if (1L >= argc)
 	{
@@ -354,17 +355,27 @@ FREE_COMMAND:
 	}
 }
 
-static void print_version(void)
+static void print_versions(void)
 {
-	apitest_Version_t version = { 0 };
+	apitest_Version_t apitest_version = { 0 };
+	plog_Version_t    plog_version    = { 0 };
 
-	version = apitest_get_version();
-	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 "\n", version.major, version.minor);
+	apitest_version = apitest_get_version();
+	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 "\n", apitest_version.major, apitest_version.minor);
 
-	if (APITEST_VERSION_MAJOR != version.major
-	 || APITEST_VERSION_MINOR != version.minor)
+	if (APITEST_VERSION_MAJOR != apitest_version.major
+	 || APITEST_VERSION_MINOR != apitest_version.minor)
 	{
-		(void)fprintf(stdout, "Version mismatch! (header version: %" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR);
+		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR);
+	}
+
+	plog_version = plog_get_version();
+	(void)fprintf(stdout, "Using Plog %" PRIu8 ".%" PRIu8 "\n", plog_version.major, plog_version.minor);
+
+	if (PLOG_VERSION_MAJOR != plog_version.major
+	 || PLOG_VERSION_MINOR != plog_version.minor)
+	{
+		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ")\n", PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR);
 	}
 }
 

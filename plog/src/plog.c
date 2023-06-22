@@ -2,6 +2,7 @@
  * @file plog.c                                                                                       *
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
+ * 22.06.2023  Gaina Stefan               Add plog_get_version.                                       *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -79,6 +80,7 @@ void plog_init(const char* file_name)
 	{
 		(void)fgets(buffer, sizeof(buffer), level_file);
 		buffer[15] = '\0';
+
 		severity_level = (uint8_t)strtol(buffer + strlen("LOG_LEVEL = "), NULL, 0L);
 		plog_info(LOG_PREFIX "Severity level from \"%s\" is: %" PRIu8 "", PLOG_LEVEL_FILE_NAME, severity_level);
 	}
@@ -116,6 +118,11 @@ void plog_set_severity_level(uint8_t severity_level_mask)
 uint8_t plog_get_severity_level(void)
 {
 	return severity_level;
+}
+
+plog_Version_t plog_get_version(void)
+{
+	return (plog_Version_t){ PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR };
 }
 
 FILE* plog_internal_get_file(void)
