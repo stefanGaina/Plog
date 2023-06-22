@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
  * 22.06.2023  Gaina Stefan               Add plog_get_version.                                       *
+ * 22.06.2023  Gaina Stefan               Fixed the stripping of logging from compilation.            *
  * @details This file defines the type definitions and public interface of Plog.                      *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -89,6 +90,14 @@
 */
 #define plog_fatal(...) plog_internal(E_PLOG_SEVERITY_LEVEL_FATAL, "fatal", __VA_ARGS__)
 
+#else
+
+/**
+ * @brief Fatal error messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_fatal(...)
+
 #endif /*< PLOG_STRIP_FATAL */
 
 #ifndef PLOG_STRIP_ERROR
@@ -98,6 +107,14 @@
  * @param __VA_ARGS__: The message passed in a printf style.
 */
 #define plog_error(...) plog_internal(E_PLOG_SEVERITY_LEVEL_ERROR, "error", __VA_ARGS__)
+
+#else
+
+/**
+ * @brief Error messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_error(...)
 
 #endif /*< PLOG_STRIP_ERROR */
 
@@ -109,6 +126,14 @@
 */
 #define plog_warn(...) plog_internal(E_PLOG_SEVERITY_LEVEL_WARN, "warn", __VA_ARGS__)
 
+#else
+
+/**
+ * @brief Warning messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_warn(...)
+
 #endif /*< PLOG_STRIP_WARN */
 
 #ifndef PLOG_STRIP_INFO
@@ -118,6 +143,14 @@
  * @param __VA_ARGS__: The message passed in a printf style.
 */
 #define plog_info(...) plog_internal(E_PLOG_SEVERITY_LEVEL_INFO, "info", __VA_ARGS__)
+
+#else
+
+/**
+ * @brief Information messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_info(...)
 
 #endif /*< PLOG_STRIP_INFO */
 
@@ -129,6 +162,14 @@
 */
 #define plog_debug(...) plog_internal(E_PLOG_SEVERITY_LEVEL_DEBUG, "debug", __VA_ARGS__)
 
+#else
+
+/**
+ * @brief Debug messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_debug(...)
+
 #endif /*< PLOG_STRIP_DEBUG */
 
 #ifndef PLOG_STRIP_TRACE
@@ -139,6 +180,14 @@
 */
 #define plog_trace(...) plog_internal(E_PLOG_SEVERITY_LEVEL_TRACE, "trace", __VA_ARGS__)
 
+#else
+
+/**
+ * @brief Trace messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_trace(...)
+
 #endif /*< PLOG_STRIP_TRACE */
 
 #ifndef PLOG_STRIP_VERBOSE
@@ -148,6 +197,14 @@
  * @param __VA_ARGS__: The message passed in a printf style.
 */
 #define plog_verbose(...) plog_internal(E_PLOG_SEVERITY_LEVEL_TRACE, "verbose", __VA_ARGS__)
+
+#else
+
+/**
+ * @brief Verbose messages are stripped from compilation.
+ * @param __VA_ARGS__: Do not matter.
+*/
+#define plog_verbose(...)
 
 #endif /*< PLOG_STRIP_VERBOSE */
 
