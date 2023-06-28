@@ -2,6 +2,7 @@
  * @file plog_internal.h                                                                              *
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
+ * 29.06.2023  Gaina Stefan               Added function macro.                                       *
  * @details This file defines macros and interfaces of Plog that are meant to be internal.            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -27,16 +28,16 @@
  * (indicating the severity of the message).
  * @param __VA_ARGS__: The message passed in a printf style.
 */
-#define plog_internal(severity_bit, severity_tag, ...)                                                      \
-	do                                                                                                      \
-	{                                                                                                       \
-		if (severity_bit == (severity_bit & plog_get_severity_level()) && NULL != plog_internal_get_file()) \
-		{                                                                                                   \
-			(void)fprintf(plog_internal_get_file(), "[%s] [%s] ", plog_internal_get_time(), severity_tag);  \
-			(void)fprintf(plog_internal_get_file(), __VA_ARGS__);                                           \
-			(void)fprintf(plog_internal_get_file(), "\n");                                                  \
-		}                                                                                                   \
-	}                                                                                                       \
+#define plog_internal(severity_bit, severity_tag, ...)                                                                        \
+	do                                                                                                                        \
+	{                                                                                                                         \
+		if (severity_bit == (severity_bit & plog_get_severity_level()) && NULL != plog_internal_get_file())                   \
+		{                                                                                                                     \
+			(void)fprintf(plog_internal_get_file(), "[%s] [%s] [%s] ", plog_internal_get_time(), __FUNCTION__, severity_tag); \
+			(void)fprintf(plog_internal_get_file(), __VA_ARGS__);                                                             \
+			(void)fprintf(plog_internal_get_file(), "\n");                                                                    \
+		}                                                                                                                     \
+	}                                                                                                                         \
 	while (false)
 
 /******************************************************************************************************
