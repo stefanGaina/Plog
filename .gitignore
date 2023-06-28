@@ -9,7 +9,7 @@ obj
 plog/lib
 
 # Executables
-test/bin/*
+test/bin
 
 # Unit-test
 coverage_report

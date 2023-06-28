@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
  * 22.06.2023  Gaina Stefan               Add check for Plog version.                                 *
+ * 29.06.2023  Gaina Stefan               Update check for Plog version with patch.                   *
  * @details This file is implementing a program that loads Plog and tests it using API-Test.          *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -370,12 +371,13 @@ static void print_versions(void)
 	}
 
 	plog_version = plog_get_version();
-	(void)fprintf(stdout, "Using Plog %" PRIu8 ".%" PRIu8 "\n", plog_version.major, plog_version.minor);
+	(void)fprintf(stdout, "Using Plog %" PRIu8 ".%" PRIu8 ".%" PRIu8 "\n", plog_version.major, plog_version.minor, plog_version.patch);
 
 	if (PLOG_VERSION_MAJOR != plog_version.major
-	 || PLOG_VERSION_MINOR != plog_version.minor)
+	 || PLOG_VERSION_MINOR != plog_version.minor
+	 || PLOG_VERSION_PATCH != plog_version.patch)
 	{
-		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ")\n", PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR);
+		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ".%" PRIu8 ")\n", PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR, PLOG_VERSION_PATCH);
 	}
 }
 

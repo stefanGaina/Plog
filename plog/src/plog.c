@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
  * 22.06.2023  Gaina Stefan               Add plog_get_version.                                       *
+ * 29.06.2023  Gaina Stefan               Moved plog_get_version to plog_version.c.                   *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -118,11 +119,6 @@ void plog_set_severity_level(uint8_t severity_level_mask)
 uint8_t plog_get_severity_level(void)
 {
 	return severity_level;
-}
-
-plog_Version_t plog_get_version(void)
-{
-	return (plog_Version_t){ PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR };
 }
 
 FILE* plog_internal_get_file(void)
