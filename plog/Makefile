@@ -1,7 +1,7 @@
 #######################################################################################################
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
-#   22.06.2023  Gaina Stefan               Initial version.                                           #
+#   29.06.2023  Gaina Stefan               Change plog library name.                                  #
 # Description: This Makefile is used to generate the Plog library.                                    #
 #######################################################################################################
 
@@ -11,7 +11,7 @@ INCLUDES = -Iinclude/
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
-LIBRARY := libplog.$(LIB_EXTENSION)
+LIBRARY := Plog.$(LIB_EXTENSION)
 
 all: | create_dirs $(LIBRARY)
 

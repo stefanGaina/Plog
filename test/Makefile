@@ -2,13 +2,14 @@
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
+#   29.06.2023  Gaina Stefan               Change plog library name.                                  #
 # Description: This Makefile is used to generate an application that loads Plog library and tests its #
 # API using API-Test.                                                                                 #
 #######################################################################################################
 
 CFLAGS  = -Wall -Werror
 LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/lib/$(OS_DIR)/ -lapitest \
-		  -Wl,-rpath='.' -L../plog/lib/ -lplog
+		  -Wl,-rpath='.' -L../plog/lib/ -lPlog
 
 INCLUDES = -I../vendor/apitest/include/ \
 		   -I../plog/include/
@@ -53,9 +54,9 @@ endif
 copy_libraries:
 ifeq (Windows_NT, $(OS))
 	copy ..\vendor\apitest\lib\$(OS_DIR)\libapitest.$(LIB_EXTENSION) bin
-	copy ..\plog\lib\libplog.$(LIB_EXTENSION) bin
+	copy ..\plog\lib\Plog.$(LIB_EXTENSION) bin
 endif
 ifeq (Linux, $(shell uname))
 	cp ../vendor/apitest/lib/$(OS_DIR)/libapitest.$(LIB_EXTENSION) bin/
-	cp ../plog/lib/libplog.$(LIB_EXTENSION) bin/
+	cp ../plog/lib/Plog.$(LIB_EXTENSION) bin/
 endif
