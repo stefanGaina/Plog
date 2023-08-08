@@ -11,7 +11,7 @@ INCLUDES = -Iinclude/
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
-LIBRARY := Plog.$(LIB_EXTENSION)
+LIBRARY := libplog.$(LIB_EXTENSION)
 
 all: | create_dirs $(LIBRARY)
 

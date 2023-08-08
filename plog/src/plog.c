@@ -67,12 +67,12 @@ void plog_init(const char* file_name)
 	level_file = fopen(PLOG_LEVEL_FILE_NAME, "r");
 	if (NULL == level_file)
 	{
-		plog_warn(LOG_PREFIX "Failed to open \"%s\" in read mode!", PLOG_LEVEL_FILE_NAME);
+		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_LEVEL_FILE_NAME "\" in read mode!");
 
 		level_file = fopen(PLOG_LEVEL_FILE_NAME, "w");
 		if (0L != error_code)
 		{
-			plog_warn(LOG_PREFIX "Failed to open \"%s\" in write mode!", PLOG_LEVEL_FILE_NAME);
+			plog_warn(LOG_PREFIX "Failed to open \"" PLOG_LEVEL_FILE_NAME "\" in write mode!");
 			return;
 		}
 		(void)fprintf(level_file, "%s", buffer);
@@ -83,7 +83,7 @@ void plog_init(const char* file_name)
 		buffer[15] = '\0';
 
 		severity_level = (uint8_t)strtol(buffer + strlen("LOG_LEVEL = "), NULL, 0L);
-		plog_info(LOG_PREFIX "Severity level from \"%s\" is: %" PRIu8 "", PLOG_LEVEL_FILE_NAME, severity_level);
+		plog_info(LOG_PREFIX "Severity level from \"" PLOG_LEVEL_FILE_NAME "\" is: %" PRIu8 "", severity_level);
 	}
 
 	error_code = fclose(level_file);

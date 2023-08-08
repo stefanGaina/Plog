@@ -4,6 +4,7 @@
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
  * 22.06.2023  Gaina Stefan               Add check for Plog version.                                 *
  * 29.06.2023  Gaina Stefan               Update check for Plog version with patch.                   *
+ * 08.08.2023  Gaina Stefan               Updated apitest.                                            *
  * @details This file is implementing a program that loads Plog and tests it using API-Test.          *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -15,6 +16,7 @@
 
 #include <stdlib.h>
 #include <apitest.h>
+#include <apitest_version.h>
 
 #include "plog.h"
 
@@ -358,21 +360,18 @@ FREE_COMMAND:
 
 static void print_versions(void)
 {
-	apitest_Version_t apitest_version = { 0 };
-	plog_Version_t    plog_version    = { 0 };
+	apitest_Version_t apitest_version = apitest_get_version();
+	plog_Version_t    plog_version    = plog_get_version();
 
-	apitest_version = apitest_get_version();
-	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 "\n", apitest_version.major, apitest_version.minor);
-
+	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 ".%" PRIu8 "\n", apitest_version.major, apitest_version.minor, apitest_version.patch);
 	if (APITEST_VERSION_MAJOR != apitest_version.major
-	 || APITEST_VERSION_MINOR != apitest_version.minor)
+	 || APITEST_VERSION_MINOR != apitest_version.minor
+	 || APITEST_VERSION_PATCH != apitest_version.patch)
 	{
-		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR);
+		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR, APITEST_VERSION_PATCH);
 	}
 
-	plog_version = plog_get_version();
 	(void)fprintf(stdout, "Using Plog %" PRIu8 ".%" PRIu8 ".%" PRIu8 "\n", plog_version.major, plog_version.minor, plog_version.patch);
-
 	if (PLOG_VERSION_MAJOR != plog_version.major
 	 || PLOG_VERSION_MINOR != plog_version.minor
 	 || PLOG_VERSION_PATCH != plog_version.patch)

@@ -2,14 +2,14 @@
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
-#   29.06.2023  Gaina Stefan               Change plog library name.                                  #
+#   29.06.2023  Gaina Stefan               Changed plog library name.                                 #
 # Description: This Makefile is used to generate an application that loads Plog library and tests its #
 # API using API-Test.                                                                                 #
 #######################################################################################################
 
 CFLAGS  = -Wall -Werror
-LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/lib/$(OS_DIR)/ -lapitest \
-		  -Wl,-rpath='.' -L../plog/lib/ -lPlog
+LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/$(LIB)/$(OS_DIR)/ -lapitest \
+		  -Wl,-rpath='.' -L../plog/$(LIB)/ -lPlog
 
 INCLUDES = -I../vendor/apitest/include/ \
 		   -I../plog/include/
@@ -53,10 +53,10 @@ endif
 ### COPY LIBRARIES ###
 copy_libraries:
 ifeq (Windows_NT, $(OS))
-	copy ..\vendor\apitest\lib\$(OS_DIR)\libapitest.$(LIB_EXTENSION) bin
-	copy ..\plog\lib\Plog.$(LIB_EXTENSION) bin
+	copy ..\vendor\apitest\$(LIB)\$(OS_DIR)\libapitest.$(LIB_EXTENSION) bin
+	copy ..\plog\$(LIB)\libplog.$(LIB_EXTENSION) bin
 endif
 ifeq (Linux, $(shell uname))
-	cp ../vendor/apitest/lib/$(OS_DIR)/libapitest.$(LIB_EXTENSION) bin/
-	cp ../plog/lib/Plog.$(LIB_EXTENSION) bin/
+	cp ../vendor/apitest/$(LIB)/$(OS_DIR)/API-Test.$(LIB_EXTENSION) bin/
+	cp ../plog/$(LIB)/libplog.$(LIB_EXTENSION) bin/
 endif

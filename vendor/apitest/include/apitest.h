@@ -6,7 +6,9 @@
  * 03.06.2023  Gaina Stefan               Added apitest_string_to_float.                              *
  * 05.06.2023  Gaina Stefan               Specify apitest_get_command EOF behavior.                   *
  * 11.06.2023  Gaina Stefan               Changed the order of the memebers in apitest_Command_t.     *
- * 20.06.2023  Gaina Stefan               Added apitest_get_version function.                         *
+ * 22.06.2023  Gaina Stefan               Added apitest_get_version function.                         *
+ * 22.06.2023  Gaina Stefan               Fixed version.                                              *
+ * 06.08.2023  Gaina Stefan               Removed version.                                            *
  * @details This file defines the type definitions and public interface of API-Test.                  *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -19,7 +21,7 @@
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -38,16 +40,6 @@
 */
 #define APITEST_INPUT_BUFFER_SIZE 1024
 
-/**
- * @brief The header major version (also set at compilation time).
-*/
-#define APITEST_VERSION_MAJOR 1
-
-/**
- * @brief The header minor version (also set at compilation time).
-*/
-#define APITEST_VERSION_MINOR 1
-
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *
  *****************************************************************************************************/
@@ -60,15 +52,6 @@ typedef struct s_apitest_Command_t
 	int32_t argc; /**< How many arguments does the command have. */
 	char**  argv; /**< The command splitted by arguments.        */
 } apitest_Command_t;
-
-/**
- * @brief A structure that contains information about the version of API-Test in use.
-*/
-typedef struct s_apitest_Version_t
-{
-	uint8_t major; /**< Increments with massive changes, additions, and enhancement.        */
-	uint8_t minor; /**< Increments with backwards-compatible changes to the major revision. */
-} apitest_Version_t;
 
 /**
  * @brief Enumerates the possible error codes when converting a number from a string,
@@ -104,7 +87,7 @@ extern apitest_Command_t apitest_get_command(const char* title, FILE* file);
 /**
  * @brief Frees a command resulted from @see apitest_get_command. Sets the pointers to NULL and the
  * argument counter to 0.
- * @param[in|out] command: Command to be freed (safe to pass NULL).
+ * @param[in out] command: Command to be freed (safe to pass NULL).
  * @return void
 */
 extern void apitest_free_command(apitest_Command_t* command);
@@ -133,13 +116,6 @@ extern apitest_Error_t apitest_string_to_integer(const char* string, int64_t* in
  * @return An error code according to apitest_Error_t.
 */
 extern apitest_Error_t apitest_string_to_float(const char* string, double* floating_number);
-
-/**
- * @brief Get the version of API-Test that is linked.
- * @param void
- * @return Version information.
-*/
-extern apitest_Version_t apitest_get_version(void);
 
 #ifdef __cplusplus
 }
