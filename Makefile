@@ -15,7 +15,7 @@ export BIN := bin
 export COVERAGE_REPORT := coverage_report
 
 GENHTML       = vendor/lcov/genhtml.perl
-GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory coverage_report/
+GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory $(COVERAGE_REPORT)/
 
 INFO_FILES = $(COVERAGE_REPORT)/plog.info
 

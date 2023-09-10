@@ -5,6 +5,7 @@
  * 22.06.2023  Gaina Stefan               Add check for Plog version.                                 *
  * 29.06.2023  Gaina Stefan               Update check for Plog version with patch.                   *
  * 08.08.2023  Gaina Stefan               Updated apitest.                                            *
+ * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
  * @details This file is implementing a program that loads Plog and tests it using API-Test.          *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -92,8 +93,10 @@ int main(int argc, char* argv[])
 
 static void handle_commands(FILE* input_file)
 {
-	apitest_Command_t command                  = { 0 };
+	apitest_Command_t command                  = {};
 	apitest_Error_t   error                    = E_APITEST_ERROR_NONE;
+	int64_t           terminal_mode_parameter  = 0LL;
+	bool              terminal_mode_return     = false;
 	int64_t           severity_level_parameter = 0LL;
 	uint8_t           severity_level_return    = 0U;
 
@@ -124,24 +127,45 @@ static void handle_commands(FILE* input_file)
 
 		if (0 == apitest_string_compare("plog_init", command.argv[0]))
 		{
-			if (1L == command.argc)
+			if (2L == command.argc)
 			{
 				(void)fprintf(stdout, "Not enough parameters!\n");
 				goto FREE_COMMAND;
 			}
 
-			if (2L < command.argc)
+			if (3L < command.argc)
 			{
 				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
 			}
 
+			error = apitest_string_to_integer(command.argv[2], &terminal_mode_parameter);
+			switch (error)
+			{
+				case E_APITEST_ERROR_NONE:
+				{
+					break;
+				}
+				case E_APITEST_ERROR_INVALID_CHARACTER: /*< Missed break; on purpose. */
+				case E_APITEST_ERROR_OUT_OF_RANGE:
+				{
+					terminal_mode_parameter = 1LL;
+					break;
+				}
+				case E_APITEST_ERROR_INVALID_PARAMETER: /*< Missed break; on purpose. */
+				default:
+				{
+					(void)fprintf(stdout, "Internal error! (error code: %" PRId32 ")\n", error);
+					break;
+				}
+			}
+
 			if (0 == apitest_string_compare("NULL", command.argv[1]))
 			{
-				plog_init(NULL);
+				plog_init(NULL, (bool)terminal_mode_parameter);
 			}
 			else
 			{
-				plog_init(command.argv[1]);
+				plog_init(command.argv[1], (bool)terminal_mode_parameter);
 			}
 			(void)fprintf(stdout, "plog_init = void\n");
 
@@ -212,6 +236,58 @@ static void handle_commands(FILE* input_file)
 
 			severity_level_return = plog_get_severity_level();
 			(void)fprintf(stdout, "plog_get_severity_level = %" PRIu8 "\n", severity_level_return);
+
+			goto FREE_COMMAND;
+		}
+
+		if (0 == apitest_string_compare("plog_set_terminal_mode", command.argv[0]))
+		{
+			if (1L == command.argc)
+			{
+				(void)fprintf(stdout, "Not enough parameters!\n");
+				goto FREE_COMMAND;
+			}
+
+			if (2L < command.argc)
+			{
+				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
+			}
+
+			error = apitest_string_to_integer(command.argv[1], &terminal_mode_parameter);
+			switch (error)
+			{
+				case E_APITEST_ERROR_NONE:
+				{
+					break;
+				}
+				case E_APITEST_ERROR_INVALID_CHARACTER: /*< Missed break; on purpose. */
+				case E_APITEST_ERROR_OUT_OF_RANGE:
+				{
+					terminal_mode_parameter = 1LL;
+					break;
+				}
+				case E_APITEST_ERROR_INVALID_PARAMETER: /*< Missed break; on purpose. */
+				default:
+				{
+					(void)fprintf(stdout, "Internal error! (error code: %" PRId32 ")\n", error);
+					break;
+				}
+			}
+			plog_set_terminal_mode((bool)terminal_mode_parameter);
+			(void)fprintf(stdout, "plog_set_terminal_mode = void\n");
+
+			goto FREE_COMMAND;
+		}
+
+		if (0 == apitest_string_compare("plog_get_terminal_mode", command.argv[0]))
+		{
+			if (1L < command.argc)
+			{
+				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
+			}
+
+			terminal_mode_return = plog_get_terminal_mode();
+			(void)fprintf(stdout, "plog_get_terminal_mode = %s\n", false == terminal_mode_return ? "FALSE" : "TRUE");
 
 			goto FREE_COMMAND;
 		}
@@ -360,8 +436,8 @@ FREE_COMMAND:
 
 static void print_versions(void)
 {
-	apitest_Version_t apitest_version = apitest_get_version();
-	plog_Version_t    plog_version    = plog_get_version();
+	const apitest_Version_t apitest_version = apitest_get_version();
+	const plog_Version_t    plog_version    = plog_get_version();
 
 	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 ".%" PRIu8 "\n", apitest_version.major, apitest_version.minor, apitest_version.patch);
 	if (APITEST_VERSION_MAJOR != apitest_version.major
@@ -387,10 +463,12 @@ static void print_usage(void)
 
 static void print_help(void)
 {
-	(void)fprintf(stdout, "plog_init               <file_name>\n");
+	(void)fprintf(stdout, "plog_init               <file_name> <terminal_mode>\n");
 	(void)fprintf(stdout, "plog_deinit\n");
 	(void)fprintf(stdout, "plog_set_severity_level <severity_level>\n");
 	(void)fprintf(stdout, "plog_get_severity_level\n");
+	(void)fprintf(stdout, "plog_set_terminal_mode  <terminal_mode>\n");
+	(void)fprintf(stdout, "plog_get_terminal_mode\n");
 	(void)fprintf(stdout, "plog_fatal              <text>\n");
 	(void)fprintf(stdout, "plog_error              <text>\n");
 	(void)fprintf(stdout, "plog_warn               <text>\n");

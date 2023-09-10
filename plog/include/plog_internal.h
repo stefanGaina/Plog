@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
  * 29.06.2023  Gaina Stefan               Added function macro.                                       *
+ * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
  * @details This file defines macros and interfaces of Plog that are meant to be internal.            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -36,6 +37,12 @@
 			(void)fprintf(plog_internal_get_file(), "[%s] [%s] [%s] ", plog_internal_get_time(), __FUNCTION__, severity_tag); \
 			(void)fprintf(plog_internal_get_file(), __VA_ARGS__);                                                             \
 			(void)fprintf(plog_internal_get_file(), "\n");                                                                    \
+			if (true == plog_get_terminal_mode())                                                                             \
+			{                                                                                                                 \
+				(void)fprintf(stdout, "[%s] [%s] [%s] ", plog_internal_get_time(), __FUNCTION__, severity_tag);               \
+				(void)fprintf(stdout, __VA_ARGS__);                                                                           \
+				(void)fprintf(stdout, "\n");                                                                                  \
+			}                                                                                                                 \
 		}                                                                                                                     \
 	}                                                                                                                         \
 	while (false)

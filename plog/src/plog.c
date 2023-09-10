@@ -4,6 +4,7 @@
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
  * 22.06.2023  Gaina Stefan               Add plog_get_version.                                       *
  * 29.06.2023  Gaina Stefan               Moved plog_get_version to plog_version.c.                   *
+ * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -42,11 +43,16 @@ static FILE* file = NULL;
 */
 static uint8_t severity_level = 127U;
 
+/**
+ * @brief Flag indicating if the logs have to be printed in the terminal as well.
+*/
+static bool is_terminal_enabled = false;
+
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
-void plog_init(const char* file_name)
+void plog_init(const char* file_name, const bool terminal_mode)
 {
 	FILE*   level_file = NULL;
 	char    buffer[]   = "LOG_LEVEL = 127";
@@ -85,6 +91,7 @@ void plog_init(const char* file_name)
 		severity_level = (uint8_t)strtol(buffer + strlen("LOG_LEVEL = "), NULL, 0L);
 		plog_info(LOG_PREFIX "Severity level from \"" PLOG_LEVEL_FILE_NAME "\" is: %" PRIu8 "", severity_level);
 	}
+	plog_set_terminal_mode(terminal_mode);
 
 	error_code = fclose(level_file);
 	if (0L != error_code)
@@ -99,6 +106,9 @@ void plog_deinit(void)
 {
 	int32_t error_code = 0L;
 
+	plog_set_severity_level(0U);
+	plog_set_terminal_mode(false);
+
 	if (NULL != file)
 	{
 		error_code = fclose(file);
@@ -111,7 +121,7 @@ void plog_deinit(void)
 	}
 }
 
-void plog_set_severity_level(uint8_t severity_level_mask)
+void plog_set_severity_level(const uint8_t severity_level_mask)
 {
 	severity_level = severity_level_mask;
 }
@@ -119,6 +129,16 @@ void plog_set_severity_level(uint8_t severity_level_mask)
 uint8_t plog_get_severity_level(void)
 {
 	return severity_level;
+}
+
+void plog_set_terminal_mode(const bool terminal_mode)
+{
+	is_terminal_enabled = terminal_mode;
+}
+
+bool plog_get_terminal_mode(void)
+{
+	return is_terminal_enabled;
 }
 
 FILE* plog_internal_get_file(void)
@@ -133,9 +153,9 @@ uint8_t plog_internal_get_severity_level(void)
 
 const char* plog_internal_get_time(void)
 {
-    time_t now         = time(NULL);
-    char*  time_string = ctime(&now);
+	const time_t now         = time(NULL);
+	char* const  time_string = ctime(&now);
 
-    time_string[strlen(time_string) - 1ULL] = '\0'; /*< Remove the '\n'.                 */
+	time_string[strlen(time_string) - 1ULL] = '\0'; /*< Remove the '\n'.                 */
 	return (const char*)(time_string + 4);          /*< Remove the day of the week part. */
 }

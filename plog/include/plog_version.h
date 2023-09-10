@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 29.06.2023  Gaina Stefan               Initial version.                                            *
  * 08.08.2023  Gaina Stefan               Added cast to macro.                                        *
+ * 10.09.2023  Gaina Stefan               Updated version to 1.0.1.                                   *
  * @details This file defines the type definitions and function prototype of getting the version of   *
  * Plog.                                                                                              *
  * @todo N/A.                                                                                         *
@@ -35,7 +36,7 @@
 /**
  * @brief The compiled patch version.
 */
-#define PLOG_VERSION_PATCH (uint8_t)0U
+#define PLOG_VERSION_PATCH (uint8_t)1U
 
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *
