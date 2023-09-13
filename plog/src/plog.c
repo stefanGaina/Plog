@@ -2,9 +2,10 @@
  * @file plog.c                                                                                       *
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
- * 22.06.2023  Gaina Stefan               Add plog_get_version.                                       *
+ * 22.06.2023  Gaina Stefan               Added plog_get_version.                                     *
  * 29.06.2023  Gaina Stefan               Moved plog_get_version to plog_version.c.                   *
  * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
+ * 13.09.2023  Gaina Stefan               Added color for Windows.                                    *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -17,6 +18,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#elif __linux__
+#else
+#error "Platform not supported!"
+#endif
 
 #include "plog.h"
 
@@ -158,4 +166,83 @@ const char* plog_internal_get_time(void)
 
 	time_string[strlen(time_string) - 1ULL] = '\0'; /*< Remove the '\n'.                 */
 	return (const char*)(time_string + 4);          /*< Remove the day of the week part. */
+}
+
+void plog_internal_set_color(const uint8_t severity_bit)
+{
+	switch (severity_bit)
+	{
+		case E_PLOG_SEVERITY_LEVEL_FATAL:
+		{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+#elif __linux__
+
+#endif
+			break;
+		}
+		case E_PLOG_SEVERITY_LEVEL_ERROR:
+		{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
+#elif __linux__
+
+#endif
+			break;
+		}
+		case E_PLOG_SEVERITY_LEVEL_WARN:
+		{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+#elif __linux__
+
+#endif
+			break;
+		}
+		case E_PLOG_SEVERITY_LEVEL_INFO:
+		{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+#elif __linux__
+
+#endif
+			break;
+		}
+		case E_PLOG_SEVERITY_LEVEL_DEBUG:
+		{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+#elif __linux__
+
+#endif
+			break;
+		}
+		case E_PLOG_SEVERITY_LEVEL_TRACE:
+		{
+			plog_internal_restore_color();
+			break;
+		}
+		case E_PLOG_SEVERITY_LEVEL_VERBOSE:
+		{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
+#elif __linux__
+
+#endif
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+}
+
+void plog_internal_restore_color(void)
+{
+#ifdef _WIN32
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+#elif __linux__
+
+#endif
 }

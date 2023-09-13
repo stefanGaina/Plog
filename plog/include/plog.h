@@ -87,7 +87,7 @@
 
 /**
  * @brief Fatal error messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_fatal(...)
 
@@ -105,7 +105,7 @@
 
 /**
  * @brief Error messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_error(...)
 
@@ -123,7 +123,7 @@
 
 /**
  * @brief Warning messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_warn(...)
 
@@ -141,7 +141,7 @@
 
 /**
  * @brief Information messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_info(...)
 
@@ -159,7 +159,7 @@
 
 /**
  * @brief Debug messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_debug(...)
 
@@ -177,7 +177,7 @@
 
 /**
  * @brief Trace messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_trace(...)
 
@@ -195,7 +195,7 @@
 
 /**
  * @brief Verbose messages are stripped from compilation.
- * @param __VA_ARGS__: Do not matter.
+ * @param __VA_ARGS__: Does not matter.
 */
 #define plog_verbose(...)
 
