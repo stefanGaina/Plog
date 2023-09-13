@@ -3,13 +3,14 @@
 #   Date:       Author:                    Reason:                                                    #
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
 #   29.06.2023  Gaina Stefan               Changed plog library name.                                 #
+#   13.09.2023  Gaina Stefan               Fixed warnings on Linux.                                   #
 # Description: This Makefile is used to generate an application that loads Plog library and tests its #
 # API using API-Test.                                                                                 #
 #######################################################################################################
 
-CFLAGS  = -Wall -Werror
+CFLAGS  = -Wall -Werror -Wno-format-security
 LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/$(LIB)/$(OS_DIR)/ -lapitest \
-		  -Wl,-rpath='.' -L../plog/$(LIB)/ -lPlog
+		  -Wl,-rpath='.' -L../plog/$(LIB)/ -lplog
 
 INCLUDES = -I../vendor/apitest/include/ \
 		   -I../plog/include/
@@ -57,6 +58,6 @@ ifeq (Windows_NT, $(OS))
 	copy ..\plog\$(LIB)\libplog.$(LIB_EXTENSION) bin
 endif
 ifeq (Linux, $(shell uname))
-	cp ../vendor/apitest/$(LIB)/$(OS_DIR)/API-Test.$(LIB_EXTENSION) bin/
+	cp ../vendor/apitest/$(LIB)/$(OS_DIR)/libapitest.$(LIB_EXTENSION) bin/
 	cp ../plog/$(LIB)/libplog.$(LIB_EXTENSION) bin/
 endif
