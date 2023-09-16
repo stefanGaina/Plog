@@ -40,11 +40,13 @@
 			(void)fprintf(plog_internal_get_file(), "\n");                                                                    \
 			if (true == plog_get_terminal_mode())                                                                             \
 			{                                                                                                                 \
+				plog_internal_mutex_lock();                                                                                   \
 				plog_internal_set_color(severity_bit);                                                                        \
 				(void)fprintf(stdout, "[%s] [%s] [%s] ", plog_internal_get_time(), __FUNCTION__, severity_tag);               \
 				(void)fprintf(stdout, __VA_ARGS__);                                                                           \
 				plog_internal_restore_color();                                                                                \
 				(void)fprintf(stdout, "\n");                                                                                  \
+				plog_internal_mutex_unlock();                                                                                 \
 			}                                                                                                                 \
 		}                                                                                                                     \
 	}                                                                                                                         \
@@ -92,6 +94,20 @@ extern void plog_internal_set_color(uint8_t severity_bit);
  * @return void
 */
 extern void plog_internal_restore_color(void);
+
+/**
+ * @brief Locks the mutex.
+ * @param void
+ * @return void
+*/
+extern void plog_internal_mutex_lock(void);
+
+/**
+ * @brief Unlocks the mutex.
+ * @param void
+ * @return void
+*/
+extern void plog_internal_mutex_unlock(void);
 
 #ifdef __cplusplus
 }

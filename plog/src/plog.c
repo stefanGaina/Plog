@@ -7,6 +7,7 @@
  * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
  * 13.09.2023  Gaina Stefan               Added color for Windows.                                    *
  * 13.09.2023  Gaina Stefan               Added color for Linux.                                      *
+ * 16.09.2023  Gaina Stefan               Added mutex for Windows.                                    *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -57,6 +58,13 @@ static uint8_t severity_level = 127U;
 */
 static bool is_terminal_enabled = false;
 
+#ifdef _WIN32
+/**
+ * @brief Mutex object for Windows.
+*/
+HANDLE mutex = NULL;
+#endif /*< _WIN32 */
+
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
@@ -102,6 +110,10 @@ void plog_init(const char* file_name, const bool terminal_mode)
 	}
 	plog_set_terminal_mode(terminal_mode);
 
+#ifdef _WIN32
+	mutex = CreateMutex(NULL, FALSE, NULL);
+#endif /*< _WIN32 */
+
 	error_code = fclose(level_file);
 	if (0L != error_code)
 	{
@@ -117,6 +129,10 @@ void plog_deinit(void)
 
 	plog_set_severity_level(0U);
 	plog_set_terminal_mode(false);
+
+#ifdef _WIN32
+	(void)CloseHandle(mutex);
+#endif /*< _WIN32 */
 
 	if (NULL != file)
 	{
@@ -176,46 +192,46 @@ void plog_internal_set_color(const uint8_t severity_bit)
 		case E_PLOG_SEVERITY_LEVEL_FATAL:
 		{
 #ifdef _WIN32
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
 #elif __linux__
 			(void)fprintf(stdout, "\033[1;31m");
-#endif
+#endif /*< _WIN32 */
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_ERROR:
 		{
 #ifdef _WIN32
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
+			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
 #elif __linux__
 			(void)fprintf(stdout, "\033[0;91m");
-#endif
+#endif /*< _WIN32 */
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_WARN:
 		{
 #ifdef _WIN32
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 #elif __linux__
 			(void)fprintf(stdout, "\033[0;93m");
-#endif
+#endif /*< _WIN32 */
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_INFO:
 		{
 #ifdef _WIN32
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
 #elif __linux__
 			(void)fprintf(stdout, "\033[1;32m");
-#endif
+#endif /*< _WIN32 */
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_DEBUG:
 		{
 #ifdef _WIN32
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
 #elif __linux__
 			(void)fprintf(stdout, "\033[1;36m");
-#endif
+#endif /*< _WIN32 */
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_TRACE:
@@ -226,10 +242,10 @@ void plog_internal_set_color(const uint8_t severity_bit)
 		case E_PLOG_SEVERITY_LEVEL_VERBOSE:
 		{
 #ifdef _WIN32
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
+			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
 #elif __linux__
 			(void)fprintf(stdout, "\033[0;90m");
-#endif
+#endif /*< _WIN32 */
 			break;
 		}
 		default:
@@ -242,8 +258,26 @@ void plog_internal_set_color(const uint8_t severity_bit)
 void plog_internal_restore_color(void)
 {
 #ifdef _WIN32
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 #elif __linux__
 	(void)fprintf(stdout, "\033[1;0m");
-#endif
+#endif /*< _WIN32 */
+}
+
+void plog_internal_mutex_lock(void)
+{
+#ifdef _WIN32
+	(void)WaitForSingleObject(mutex, INFINITE);
+#elif __linux__
+	// TODO
+#endif /*< _WIN32 */
+}
+
+void plog_internal_mutex_unlock(void)
+{
+#ifdef _WIN32
+	(void)ReleaseMutex(mutex);
+#elif __linux__
+	// TODO
+#endif /*< _WIN32 */
 }

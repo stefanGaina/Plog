@@ -4,6 +4,7 @@
  * 29.06.2023  Gaina Stefan               Initial version.                                            *
  * 08.08.2023  Gaina Stefan               Added cast to macro.                                        *
  * 10.09.2023  Gaina Stefan               Updated version to 1.0.1.                                   *
+ * 16.09.2023  Gaina Stefan               Updated version to 1.0.2.                                   *
  * @details This file defines the type definitions and function prototype of getting the version of   *
  * Plog.                                                                                              *
  * @todo N/A.                                                                                         *
@@ -18,6 +19,7 @@
  *****************************************************************************************************/
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /******************************************************************************************************
  * MACROS                                                                                             *
@@ -36,7 +38,7 @@
 /**
  * @brief The compiled patch version.
 */
-#define PLOG_VERSION_PATCH (uint8_t)1U
+#define PLOG_VERSION_PATCH (uint8_t)2U
 
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *
