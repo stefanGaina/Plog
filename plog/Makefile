@@ -1,34 +1,30 @@
 #######################################################################################################
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
-#   29.06.2023  Gaina Stefan               Change plog library name.                                  #
+#   29.06.2023  Gaina Stefan               Initial version.                                           #
+#   08.12.2023  Gaina Stefan               Added glib.                                                #
 # Description: This Makefile is used to generate the Plog library.                                    #
 #######################################################################################################
 
-CFLAGS = -Wall -Werror -Wpointer-arith -fPIC
+CFLAGS = `pkg-config --cflags glib-2.0` -Wall -Werror -Wpointer-arith -fPIC
+LDFLAGS = `pkg-config --libs glib-2.0`
 
-INCLUDES = -Iinclude/
+INCLUDES = -Iinclude
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
-LIBRARY := libplog.$(LIB_EXTENSION)
+LIBRARY := libplog.so
 
 all: | create_dirs $(LIBRARY)
 
 ### CREATE DIRECTORIES ###
 create_dirs:
-ifeq (Windows_NT, $(OS))
-	if not exist "$(OBJ)" mkdir $(OBJ)
-	if not exist "$(LIB)" mkdir $(LIB)
-endif
-ifeq (Linux, $(shell uname))
 	mkdir -p $(OBJ)
 	mkdir -p $(LIB)
-endif
 
 ### BINARIES ###
 $(LIBRARY): $(OBJECTS)
-	$(CC) $(CFLAGS) -shared -o $(LIB)/$@ $^
+	$(CC) $(CFLAGS) -shared -o $(LIB)/$@ $^ $(LDFLAGS)
 
 ### OBJECTS ###
 $(OBJ)/%.o: $(SRC)/%.c
@@ -36,11 +32,5 @@ $(OBJ)/%.o: $(SRC)/%.c
 
 ### CLEAN ###
 clean:
-ifeq (Windows_NT, $(OS))
-	$(RM) $(OBJ)\*
-	$(RM) $(LIB)\*
-endif
-ifeq (Linux, $(shell uname))
-	$(RM) $(OBJ)/*
-	$(RM) $(LIB)/*
-endif
+	rm -rf $(OBJ)/*
+	rm -rf $(LIB)/*

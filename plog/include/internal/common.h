@@ -16,26 +16,25 @@
 ******************************************************************************************************/
 
 /******************************************************************************************************
- * @file plog_version.c                                                                               *
+ * @file common.h                                                                                     *
  * @date:      @author:                   Reason for change:                                          *
- * 29.06.2023  Gaina Stefan               Initial version.                                            *
- * 08.12.2023  Gaina Stefan               Added copyright comment.                                    *
- * @details This file implements the interface defined in plog_version.h.                             *
+ * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * @details This file defines a common macro that is used internally by Plog and not meant to be      *
+ * public API.                                                                                        *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
 
-/******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
- *****************************************************************************************************/
-
-#include "plog_version.h"
+#ifndef INTERNAL_COMMON_H_
+#define INTERNAL_COMMON_H_
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * MACROS                                                                                             *
  *****************************************************************************************************/
 
-plog_Version_t plog_get_version(void)
-{
-	return (plog_Version_t){ PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR, PLOG_VERSION_PATCH };
-}
+/**
+ * @brief The tag attached at the beginning of the messages logged by Plog library.
+*/
+#define LOG_PREFIX "[PLOG] "
+
+#endif /*< INTERNAL_COMMON_H_ */

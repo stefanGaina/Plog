@@ -16,11 +16,10 @@
 ******************************************************************************************************/
 
 /******************************************************************************************************
- * @file plog_version.c                                                                               *
+ * @file vector.c                                                                                     *
  * @date:      @author:                   Reason for change:                                          *
- * 29.06.2023  Gaina Stefan               Initial version.                                            *
- * 08.12.2023  Gaina Stefan               Added copyright comment.                                    *
- * @details This file implements the interface defined in plog_version.h.                             *
+ * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * @details This file implements the interface defined in vector.h.                                   *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
@@ -29,13 +28,94 @@
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
 
-#include "plog_version.h"
+#include "internal/vector.h"
+
+/******************************************************************************************************
+ * TYPE DEFINITIONS                                                                                   *
+ *****************************************************************************************************/
+
+/**
+ * @brief Explicit data type of the vector for internal usage.
+*/
+typedef struct s_PrivateVector_t
+{
+	gchar** buffer; /**< Dynamic array of strings. */
+	gsize   size;   /**< The size of the array.    */
+}
+PrivateVector_t;
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
-plog_Version_t plog_get_version(void)
+void vector_init(Vector_t* const public_vector)
 {
-	return (plog_Version_t){ PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR, PLOG_VERSION_PATCH };
+	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
+
+	vector->buffer = NULL;
+	vector->size   = 0ULL;
+}
+
+void vector_clean(Vector_t* const public_vector)
+{
+	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
+	gsize                  index  = 0ULL;
+
+	for (; index < vector->size; ++index)
+	{
+		g_free(vector->buffer[index]);
+		vector->buffer[index] = NULL;
+	}
+
+	g_free(vector->buffer);
+	vector->buffer = NULL;
+}
+
+gboolean vector_push(Vector_t* const public_vector, const gchar* const buffer)
+{
+	PrivateVector_t* const vector           = (PrivateVector_t*)public_vector;
+	const gsize            buffer_size      = strlen(buffer) + 1ULL;
+	gchar*                 buffer_copy      = NULL;
+	gchar**                buffer_auxiliary = NULL;
+
+	buffer_copy = (gchar*)g_try_malloc(buffer_size);
+	if (NULL == buffer_copy)
+	{
+		return FALSE;
+	}
+
+	buffer_auxiliary = (gchar**)g_try_realloc(vector->buffer, (vector->size + 1ULL) * sizeof(gchar*));
+	if (NULL == buffer_auxiliary)
+	{
+		g_free(buffer_copy);
+		return FALSE;
+	}
+
+	(void)g_strlcpy(buffer_copy, buffer, buffer_size);
+	vector->buffer                 = buffer_auxiliary;
+	vector->buffer[vector->size++] = buffer_copy;
+
+	return TRUE;
+}
+
+void vector_pop(Vector_t* const public_vector, gchar* const buffer, const gsize buffer_size)
+{
+	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
+	gsize                  index  = 0ULL;
+
+	(void)g_strlcpy(buffer, vector->buffer[0], buffer_size);
+	g_free(vector->buffer[0]);
+
+	for (; index < vector->size - 1ULL; ++index)
+	{
+		vector->buffer[index] = vector->buffer[index + 1ULL];
+	}
+
+	vector->buffer = (gchar**)g_try_realloc(vector->buffer, --vector->size * sizeof(gchar*));
+}
+
+gboolean vector_is_empty(const Vector_t* const public_vector)
+{
+	const PrivateVector_t* const vector = (const PrivateVector_t*)public_vector;
+	return 0ULL == vector->size;
 }

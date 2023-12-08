@@ -1,4 +1,21 @@
 /******************************************************************************************************
+ * Plog Copyright (C) 2023                                                                            *
+ *                                                                                                    *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
+ * authors be held liable for any damages arising from the use of this software.                      *
+ *                                                                                                    *
+ * Permission is granted to anyone to use this software for any purpose, including commercial         *
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
+ *                                                                                                    *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
+ * original software. If you use this software in a product, an acknowledgment in the product         *
+ * documentation would be appreciated but is not required.                                            *
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
+ * the original software.                                                                             *
+ * 3. This notice may not be removed or altered from any source distribution.                         *
+******************************************************************************************************/
+
+/******************************************************************************************************
  * @file plog.c                                                                                       *
  * @date:      @author:                   Reason for change:                                          *
  * 22.06.2023  Gaina Stefan               Initial version.                                            *
@@ -8,6 +25,7 @@
  * 13.09.2023  Gaina Stefan               Added color for Windows.                                    *
  * 13.09.2023  Gaina Stefan               Added color for Linux.                                      *
  * 16.09.2023  Gaina Stefan               Added mutex for Windows.                                    *
+ * 08.12.2023  Gaina Stefan               Made Glib refactor.                                         *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -18,26 +36,16 @@
  *****************************************************************************************************/
 
 #include <stdlib.h>
+#include <stdarg.h>
+#include <stdatomic.h>
 #include <string.h>
 #include <time.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#elif __linux__
-#else
-#error "Platform not supported!"
-#endif
+#include <glib/gprintf.h>
 
 #include "plog.h"
-
-/******************************************************************************************************
- * MACROS                                                                                             *
- *****************************************************************************************************/
-
-/**
- * @brief The tag attached at the beginning of the messages logged by Plog library.
-*/
-#define LOG_PREFIX "[PLOG] "
+#include "internal/configuration.h"
+#include "internal/queue.h"
+#include "internal/common.h"
 
 /******************************************************************************************************
  * LOCAL VARIABLES                                                                                    *
@@ -51,31 +59,94 @@ static FILE* file = NULL;
 /**
  * @brief The current severity level bitmask.
 */
-static uint8_t severity_level = 127U;
+static atomic_uchar severity_level = 127U;
 
 /**
  * @brief Flag indicating if the logs have to be printed in the terminal as well.
 */
-static bool is_terminal_enabled = false;
+static atomic_bool is_terminal_enabled = FALSE;
 
-#ifdef _WIN32
 /**
- * @brief Mutex object for Windows.
+ * @brief The thread on which the logging will be done in case te buffering option is selected.
 */
-HANDLE mutex = NULL;
-#endif /*< _WIN32 */
+static GThread* thread = NULL;
+
+/**
+ * @brief Flag indicating if the thread is currently running.
+*/
+static atomic_bool is_working = FALSE;
+
+/**
+ * @brief Lock protecting the data from multiple thread access.
+*/
+static GMutex lock = {};
+
+/**
+ * @brief Buffer in which the logs are composed.
+*/
+static gchar* buffer = NULL;
+
+/**
+ * @brief The size of the buffer.
+*/
+static gsize buffer_size = 0ULL;
+
+/**
+ * @brief Queue in which the logs are being stored and consumed asynchronically.
+*/
+static Queue_t queue = {};
+
+/******************************************************************************************************
+ * LOCAL FUNCTIONS                                                                                    *
+ *****************************************************************************************************/
+
+/**
+ * @brief Function consuming the logs from the queue. This is being run asynchronically.
+ * @param data: User data (NULL).
+ * @return NULL
+*/
+static gpointer work_function(gpointer data);
+
+/**
+ * @brief Prints the last log from the queue or waits until one is available.
+ * @param void
+ * @return void
+*/
+static void print_from_queue(void);
+
+/**
+ * @brief This function is not meant to be called outside plog macros.
+ * @param void
+ * @return A string representing the current time in a "mmm dd hh:mm:ss yyyy" format.
+*/
+static const gchar* get_time(void);
+
+/**
+ * @brief Sets the color of the text printed in the terminal.
+ * @param severity_bit: Bit indicating the severity of the log message.
+ * @return void
+*/
+static void set_color(guint8 severity_bit);
+
+/**
+ * @brief Restores the color of the text printed in the terminal to default (white).
+ * @param void
+ * @return void
+*/
+static void restore_color(void);
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
-void plog_init(const char* file_name, const bool terminal_mode)
+gboolean plog_init(const gchar* file_name)
 {
-	FILE*   level_file = NULL;
-	char    buffer[]   = "LOG_LEVEL = 127";
-	int32_t error_code = 0L;
+	if (NULL != file)
+	{
+		return FALSE;
+	}
 
-	if (NULL == file_name || 0L == strcmp("", file_name))
+	if (NULL == file_name || 0L == g_strcmp0("", file_name))
 	{
 		file_name = PLOG_DEFAULT_FILE_NAME;
 	}
@@ -83,100 +154,228 @@ void plog_init(const char* file_name, const bool terminal_mode)
 	file = fopen(file_name, "w");
 	if (NULL == file)
 	{
-		(void)fprintf(stdout, "Failed to open \"%s\" in write mode!", file_name);
-		return;
+		(void)g_fprintf(stdout, "Failed to open \"%s\" in write mode!\n", file_name);
+		return FALSE;
 	}
 
-	level_file = fopen(PLOG_LEVEL_FILE_NAME, "r");
-	if (NULL == level_file)
+	g_mutex_init(&lock);
+
+	if (FALSE == configuration_read())
 	{
-		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_LEVEL_FILE_NAME "\" in read mode!");
+		g_mutex_clear(&lock);
+		(void)fclose(file);
+		file = NULL;
 
-		level_file = fopen(PLOG_LEVEL_FILE_NAME, "w");
-		if (0L != error_code)
-		{
-			plog_warn(LOG_PREFIX "Failed to open \"" PLOG_LEVEL_FILE_NAME "\" in write mode!");
-			return;
-		}
-		(void)fprintf(level_file, "%s", buffer);
+		return FALSE;
 	}
-	else
-	{
-		(void)fgets(buffer, sizeof(buffer), level_file);
-		buffer[15] = '\0';
 
-		severity_level = (uint8_t)strtol(buffer + strlen("LOG_LEVEL = "), NULL, 0L);
-		plog_info(LOG_PREFIX "Severity level from \"" PLOG_LEVEL_FILE_NAME "\" is: %" PRIu8 "", severity_level);
-	}
-	plog_set_terminal_mode(terminal_mode);
-
-#ifdef _WIN32
-	mutex = CreateMutex(NULL, FALSE, NULL);
-#endif /*< _WIN32 */
-
-	error_code = fclose(level_file);
-	if (0L != error_code)
-	{
-		plog_warn(LOG_PREFIX "Failed to close \"%s\"! (error code: %" PRId32 ")", file_name, error_code);
-		return;
-	}
 	plog_info(LOG_PREFIX "Plog has initialized successfully!");
+	return TRUE;
 }
 
 void plog_deinit(void)
 {
-	int32_t error_code = 0L;
-
-	plog_set_severity_level(0U);
-	plog_set_terminal_mode(false);
-
-#ifdef _WIN32
-	(void)CloseHandle(mutex);
-#endif /*< _WIN32 */
-
-	if (NULL != file)
+	if (NULL == file)
 	{
-		error_code = fclose(file);
-		if (0L != error_code)
-		{
-			plog_warn(LOG_PREFIX "Failed to close the logging file! (error code: %" PRId32 ")", error_code);
-			return;
-		}
-		file = NULL;
+		return;
 	}
+
+	configuration_write();
+	(void)fclose(file);
+	g_mutex_clear(&lock);
 }
 
-void plog_set_severity_level(const uint8_t severity_level_mask)
+void plog_set_severity_level(const guint8 severity_level_mask)
 {
-	severity_level = severity_level_mask;
+	severity_level = (atomic_uchar)severity_level_mask;
 }
 
-uint8_t plog_get_severity_level(void)
+guint8 plog_get_severity_level(void)
 {
-	return severity_level;
+	return (guint8)severity_level;
 }
 
-void plog_set_terminal_mode(const bool terminal_mode)
+void plog_set_terminal_mode(const gboolean terminal_mode)
 {
-	is_terminal_enabled = terminal_mode;
+	is_terminal_enabled = (atomic_bool)terminal_mode;
 }
 
-bool plog_get_terminal_mode(void)
+gboolean plog_get_terminal_mode(void)
 {
-	return is_terminal_enabled;
+	return (gboolean)is_terminal_enabled;
 }
 
-FILE* plog_internal_get_file(void)
+gboolean plog_set_buffer_size(const gsize new_buffer_size)
 {
-	return file;
+	gchar* auxiliary_buffer = NULL;
+
+	if (NULL == file)
+	{
+		return FALSE;
+	}
+
+	g_mutex_lock(&lock);
+
+	auxiliary_buffer = (gchar*)g_try_realloc((gpointer)buffer, new_buffer_size);
+	if (NULL == auxiliary_buffer && 0ULL != new_buffer_size)
+	{
+		g_mutex_unlock(&lock);
+		return FALSE;
+	}
+
+	buffer      = auxiliary_buffer;
+	buffer_size = new_buffer_size;
+
+	if (NULL == auxiliary_buffer && TRUE == is_working)
+	{
+		is_working = FALSE;
+		queue_interrupt_wait(&queue);
+
+		(void)g_thread_join(thread);
+		thread = NULL;
+
+		while (FALSE == queue_is_empty(&queue))
+		{
+			print_from_queue();
+		}
+		queue_deinit(&queue);
+	}
+	else if (NULL != auxiliary_buffer && FALSE == is_working)
+	{
+		queue_init(&queue);
+		is_working = TRUE;
+
+		thread = g_thread_try_new("worker_thread", work_function, NULL, NULL);
+		if (NULL == thread)
+		{
+			g_free(buffer);
+			buffer = NULL;
+
+			queue_deinit(&queue);
+			buffer_size = 0ULL;
+			is_working  = FALSE;
+
+			g_mutex_unlock(&lock);
+			return FALSE;
+		}
+	}
+
+	g_mutex_unlock(&lock);
+	return TRUE;
 }
 
-uint8_t plog_internal_get_severity_level(void)
+gsize plog_get_buffer_size(void)
 {
-	return severity_level;
+	gsize result = 0ULL;
+
+	g_mutex_lock(&lock);
+	result = buffer_size;
+	g_mutex_unlock(&lock);
+
+	return result;
 }
 
-const char* plog_internal_get_time(void)
+void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, const gchar* const function_name, const gchar* const format, ...)
+{
+	va_list argument_list      = {};
+	va_list argument_list_copy = {};
+	gint32  bytes_copied       = 0L;
+	gint32  bytes_copied2      = 0L;
+	gchar*  buffer_copy        = NULL;
+
+	if (severity_bit != (severity_bit & plog_get_severity_level()) || NULL == file)
+	{
+		return;
+	}
+
+	va_start(argument_list, format);
+	g_mutex_lock(&lock);
+
+	if (TRUE == is_working)
+	{
+		bytes_copied = g_sprintf(buffer, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
+		if (0L <= bytes_copied)
+		{
+			bytes_copied2 = g_vsprintf((gchar*)(buffer + bytes_copied), format, argument_list);
+			if (0L <= bytes_copied2)
+			{
+				buffer_copy = (gchar*)g_try_malloc((gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
+				if (NULL != buffer_copy)
+				{
+					(void)g_strlcpy(buffer_copy, buffer, (gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
+					if (TRUE == queue_put(&queue, buffer_copy, severity_bit))
+					{
+						g_mutex_unlock(&lock);
+						va_end(argument_list);
+
+						return;
+					}
+
+					g_free(buffer_copy);
+					buffer_copy = NULL;
+				}
+			}
+		}
+	}
+
+	if (TRUE == plog_get_terminal_mode())
+	{
+		set_color(severity_bit);
+		(void)g_fprintf(stdout, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
+
+		va_copy(argument_list_copy, argument_list);
+		(void)g_vfprintf(stdout, format, argument_list_copy);
+		va_end(argument_list_copy);
+
+		restore_color();
+		(void)g_fprintf(stdout, "\n");
+	}
+
+	(void)g_fprintf(file, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
+	(void)g_vfprintf(file, format, argument_list);
+	(void)g_fprintf(file, "\n");
+
+	g_mutex_unlock(&lock);
+	va_end(argument_list);
+}
+
+static gpointer work_function(gpointer const data)
+{
+	while (TRUE == is_working)
+	{
+		print_from_queue();
+	}
+
+	g_thread_exit(NULL);
+	return NULL; /*< To avoid warning. */
+}
+
+static void print_from_queue(void)
+{
+	gchar* buffer_copy  = NULL;
+	guint8 severity_bit = 0U;
+
+	if (FALSE == queue_pop(&queue, &buffer_copy, &severity_bit))
+	{
+		return;
+	}
+
+	(void)g_fprintf(file, "%s\n", buffer_copy);
+
+	if (TRUE == plog_get_terminal_mode())
+	{
+		set_color(severity_bit);
+		(void)g_fprintf(stdout, "%s", buffer_copy);
+
+		restore_color();
+		(void)g_fprintf(stdout, "\n");
+	}
+
+	g_free(buffer_copy);
+	buffer_copy = NULL;
+}
+
+static const char* get_time(void)
 {
 	const time_t now         = time(NULL);
 	char* const  time_string = ctime(&now);
@@ -185,67 +384,43 @@ const char* plog_internal_get_time(void)
 	return (const char*)(time_string + 4);          /*< Remove the day of the week part. */
 }
 
-void plog_internal_set_color(const uint8_t severity_bit)
+static void set_color(const guint8 severity_bit)
 {
 	switch (severity_bit)
 	{
 		case E_PLOG_SEVERITY_LEVEL_FATAL:
 		{
-#ifdef _WIN32
-			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
-#elif __linux__
-			(void)fprintf(stdout, "\033[1;31m");
-#endif /*< _WIN32 */
+			(void)g_fprintf(stdout, "\033[1;31m");
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_ERROR:
 		{
-#ifdef _WIN32
-			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
-#elif __linux__
-			(void)fprintf(stdout, "\033[0;91m");
-#endif /*< _WIN32 */
+			(void)g_fprintf(stdout, "\033[0;91m");
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_WARN:
 		{
-#ifdef _WIN32
-			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-#elif __linux__
-			(void)fprintf(stdout, "\033[0;93m");
-#endif /*< _WIN32 */
+			(void)g_fprintf(stdout, "\033[0;93m");
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_INFO:
 		{
-#ifdef _WIN32
-			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
-#elif __linux__
-			(void)fprintf(stdout, "\033[1;32m");
-#endif /*< _WIN32 */
+			(void)g_fprintf(stdout, "\033[1;32m");
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_DEBUG:
 		{
-#ifdef _WIN32
-			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-#elif __linux__
-			(void)fprintf(stdout, "\033[1;36m");
-#endif /*< _WIN32 */
+			(void)g_fprintf(stdout, "\033[1;36m");
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_TRACE:
 		{
-			plog_internal_restore_color();
+			restore_color();
 			break;
 		}
 		case E_PLOG_SEVERITY_LEVEL_VERBOSE:
 		{
-#ifdef _WIN32
-			(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
-#elif __linux__
-			(void)fprintf(stdout, "\033[0;90m");
-#endif /*< _WIN32 */
+			(void)g_fprintf(stdout, "\033[0;90m");
 			break;
 		}
 		default:
@@ -255,29 +430,7 @@ void plog_internal_set_color(const uint8_t severity_bit)
 	}
 }
 
-void plog_internal_restore_color(void)
+static void restore_color(void)
 {
-#ifdef _WIN32
-	(void)SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-#elif __linux__
-	(void)fprintf(stdout, "\033[1;0m");
-#endif /*< _WIN32 */
-}
-
-void plog_internal_mutex_lock(void)
-{
-#ifdef _WIN32
-	(void)WaitForSingleObject(mutex, INFINITE);
-#elif __linux__
-	// TODO
-#endif /*< _WIN32 */
-}
-
-void plog_internal_mutex_unlock(void)
-{
-#ifdef _WIN32
-	(void)ReleaseMutex(mutex);
-#elif __linux__
-	// TODO
-#endif /*< _WIN32 */
+	(void)g_fprintf(stdout, "\033[1;0m");
 }

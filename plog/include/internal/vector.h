@@ -16,26 +16,77 @@
 ******************************************************************************************************/
 
 /******************************************************************************************************
- * @file plog_version.c                                                                               *
+ * @file vector.h                                                                                     *
  * @date:      @author:                   Reason for change:                                          *
- * 29.06.2023  Gaina Stefan               Initial version.                                            *
- * 08.12.2023  Gaina Stefan               Added copyright comment.                                    *
- * @details This file implements the interface defined in plog_version.h.                             *
+ * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * @details This file defines vector data structure that is used internally by Plog and not meant to  *
+ * be public API.                                                                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
+
+#ifndef VECTOR_H_
+#define VECTOR_H_
 
 /******************************************************************************************************
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
 
-#include "plog_version.h"
+#include <glib.h>
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * TYPE DEFINITIONS                                                                                   *
  *****************************************************************************************************/
 
-plog_Version_t plog_get_version(void)
+/**
+ * @brief Opaque data structure for storying copies of strings.
+*/
+typedef struct s_Vector_t
 {
-	return (plog_Version_t){ PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR, PLOG_VERSION_PATCH };
+	gchar dummy[16]; /**< The size of the vector is 16 bytes. */
 }
+Vector_t;
+
+/******************************************************************************************************
+ * FUNCTION PROTOTYPES                                                                                *
+ *****************************************************************************************************/
+
+/**
+ * @brief Initializes the vector. Do not call any other function before this.
+ * @param vector: Vector object.
+ * @return void
+*/
+void vector_init(Vector_t* vector);
+
+/**
+ * @brief Cleans the stored strings and buffer. It is safe to call other functions after this.
+ * @param vector: Vector object.
+ * @return void
+*/
+void vector_clean(Vector_t* vector);
+
+/**
+ * @brief Pushes a string (makes a copy) into the vector.
+ * @param vector: Vector object.
+ * @param buffer: The string that will be copied.
+ * @return TRUE - the string has been successfully pushed | FALSE - an error has occurred.
+*/
+gboolean vector_push(Vector_t* vector, const gchar* buffer);
+
+/**
+ * @brief Pops a string from the vector (removes it). It is not safe to call if the vector is empty.
+ * @param vector: Vector object.
+ * @param[out] buffer: The buffer where the stored string will be copied.
+ * @param buffer_size: The size of the buffer (to avoid buffer overflow).
+ * @return void
+*/
+void vector_pop(Vector_t* vector, gchar* buffer, gsize buffer_size);
+
+/**
+ * @brief Queries if the vector currently stores any string.
+ * @param vector: Vector object.
+ * @return TRUE - the vector does not store any string | FALSE - otherwise.
+*/
+gboolean vector_is_empty(const Vector_t* vector);
+
+#endif /*< VECTOR_H_ */

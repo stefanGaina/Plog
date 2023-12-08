@@ -16,26 +16,51 @@
 ******************************************************************************************************/
 
 /******************************************************************************************************
- * @file plog_version.c                                                                               *
+ * @file configuration.h                                                                              *
  * @date:      @author:                   Reason for change:                                          *
- * 29.06.2023  Gaina Stefan               Initial version.                                            *
- * 08.12.2023  Gaina Stefan               Added copyright comment.                                    *
- * @details This file implements the interface defined in plog_version.h.                             *
+ * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * @details This file defines function prototypes for reading and writing of plog.conf file. This is  *
+ * used internally by Plog and not meant to be public API.                                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
+
+#ifndef INTERNAL_CONFIGURATION_H_
+#define INTERNAL_CONFIGURATION_H_
 
 /******************************************************************************************************
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
 
-#include "plog_version.h"
+#include <glib.h>
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * MACROS                                                                                             *
  *****************************************************************************************************/
 
-plog_Version_t plog_get_version(void)
-{
-	return (plog_Version_t){ PLOG_VERSION_MAJOR, PLOG_VERSION_MINOR, PLOG_VERSION_PATCH };
-}
+/**
+ * @brief The name of the file that is opened to read the persistent configuration (one will be created
+ * if not already).
+*/
+#define PLOG_CONFIGURATION_FILE_NAME "plog.conf"
+
+/******************************************************************************************************
+ * FUNCTION PROTOTYPES                                                                                *
+ *****************************************************************************************************/
+
+/**
+ * @brief Reads the configuration from plog.conf and if the file does not exist create one with
+ * default values.
+ * @param void
+ * @return TRUE - the configuration has been read successfully | FALSE - an error occured.
+*/
+extern gboolean configuration_read(void);
+
+/**
+ * @brief Writes the potentially updated configuration to the file.
+ * @param void
+ * @return void
+*/
+extern void configuration_write(void);
+
+#endif /*< INTERNAL_CONFIGURATION_H_ */

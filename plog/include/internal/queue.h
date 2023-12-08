@@ -16,20 +16,17 @@
 ******************************************************************************************************/
 
 /******************************************************************************************************
- * @file plog_internal.h                                                                              *
+ * @file queue.h                                                                                      *
  * @date:      @author:                   Reason for change:                                          *
- * 22.06.2023  Gaina Stefan               Initial version.                                            *
- * 29.06.2023  Gaina Stefan               Added function macro.                                       *
- * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
- * 13.09.2023  Gaina Stefan               Added color to terminal mode.                               *
- * 08.12.2023  Gaina Stefan               Transformed plog_internal from macro to function.           *
- * @details This file defines macros and interfaces of Plog that are meant to be internal.            *
+ * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * @details This file defines queue data structure that is used internally by Plog and not meant to   *
+ * be public API.                                                                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
 
-#ifndef PLOG_INTERNAL_H_
-#define PLOG_INTERNAL_H_
+#ifndef INTERNAL_QUEUE_H_
+#define INTERNAL_QUEUE_H_
 
 /******************************************************************************************************
  * HEADER FILE INCLUDES                                                                               *
@@ -38,28 +35,67 @@
 #include <glib.h>
 
 /******************************************************************************************************
+ * TYPE DEFINITIONS                                                                                   *
+ *****************************************************************************************************/
+
+/**
+ * @brief Opaque data structure for storing log buffers and severity bits and getting them in a FIFO way.
+*/
+typedef struct s_Queue_t
+{
+	gchar dummy[40]; /**< The size of the queue is 40 bytes. */
+}
+Queue_t;
+
+/******************************************************************************************************
  * FUNCTION PROTOTYPES                                                                                *
  *****************************************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
- * @brief This function is not meant to be called outside plog macros.
- * @param severity_bit: The message will not be logged if the severity bit is not set in severity
- * level mask.
- * @param severity_tag: The tag that will be attached between time and the actual message (indicating
- * the severity of the message).
- * @param function_name: String that contains the name of the caller function.
- * @param format: String that contains the text to be written.
- * @param __VA_ARGS__: The parameters passed in a printf style (optional).
+ * @brief Initializes the queue. Do not call any other function before this.
+ * @param queue: Queue object.
  * @return void
 */
-extern void plog_internal(guint8 severity_bit, const gchar* severity_tag, const gchar* function_name, const gchar* format, ...);
+extern void queue_init(Queue_t* queue);
 
-#ifdef __cplusplus
-}
-#endif
+/**
+ * @brief Deinitializes the queue. Do not call any other function after this.
+ * @param queue: Queue object.
+ * @return void
+*/
+extern void queue_deinit(Queue_t* queue);
 
-#endif /*< PLOG_INTERNAL_H_ */
+/**
+ * @brief Puts a node in the queue.
+ * @param queue: Queue object.
+ * @param[in] buffer: Log buffer to be stored (the queue does not take ownership).
+ * @param severity_bit: Severity bit to be stored.
+ * @return FALSE - failed to allocate memory for the new node | TRUE - otherwise.
+*/
+extern gboolean queue_put(Queue_t* queue, gchar* buffer, guint8 severity_bit);
+
+/**
+ * @brief Pops a node from the queue (if the queue is empty this function blocks until it is no longer
+ * empty, has been deinitialized or queue_interrupt_wait() has been called).
+ * @param queue: Queue object.
+ * @param[out] buffer: Stored log buffer.
+ * @param[out] severity_bit: Stored severity bit.
+ * @return FALSE - buffer and severity bit are unusable | TRUE - otherwise.
+*/
+extern gboolean queue_pop(Queue_t* queue, gchar** buffer, guint8* severity_bit);
+
+/**
+ * @brief Queries if the queue currently has any node.
+ * @param queue: Queue object.
+ * @return TRUE - the queue does not store any node | FALSE - otherwise.
+*/
+extern gboolean queue_is_empty(Queue_t* queue);
+
+/**
+ * @brief Interupts the wait inside queue_pop in case the queue is empty.
+ * @param queue: Queue object.
+ * @return void
+*/
+extern void queue_interrupt_wait(Queue_t* queue);
+
+#endif /*< INTERNAL_QUEUE_H_ */
