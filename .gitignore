@@ -6,10 +6,10 @@ obj
 *.o
 
 # Libraries
-plog/lib
+lib
 
 # Executables
-test/bin
+bin
 
 # Unit-test
 coverage_report
