@@ -17,3 +17,5 @@ coverage_report
 *.gcda
 *.gcov
 *.info
+read_only.txt
+messages

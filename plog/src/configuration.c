@@ -18,7 +18,7 @@
 /******************************************************************************************************
  * @file configuration.c                                                                              *
  * @date:      @author:                   Reason for change:                                          *
- * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * @details This file implements the interface defined in configuration.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -52,14 +52,24 @@
 #define LOG_LEVEL_STRING_SIZE 12ULL
 
 /**
- * @brief The string indicating the buffer size value is following.
+ * @brief The string indicating the log file size value is following.
 */
-#define BUFFER_SIZE_STRING "BUFFER_SIZE = "
+#define LOG_FILE_SIZE_STRING "LOG_FILE_SIZE = "
 
 /**
- * @brief The length of the buffer size string.
+ * @brief The length of the log file size string.
 */
-#define BUFFER_SIZE_STRING_SIZE 14ULL
+#define LOG_FILE_SIZE_STRING_SIZE 16ULL
+
+/**
+ * @brief The string indicating the log file count value is following.
+*/
+#define LOG_FILE_COUNT_STRING "LOG_FILE_COUNT = "
+
+/**
+ * @brief The length of the log file count string.
+*/
+#define LOG_FILE_COUNT_STRING_SIZE 17ULL
 
 /**
  * @brief The string indicating the terminal mode value is following.
@@ -70,6 +80,16 @@
  * @brief The length of the terminal mode string.
 */
 #define TERMINAL_MODE_STRING_SIZE 16ULL
+
+/**
+ * @brief The string indicating the buffer size value is following.
+*/
+#define BUFFER_SIZE_STRING "BUFFER_SIZE = "
+
+/**
+ * @brief The length of the buffer size string.
+*/
+#define BUFFER_SIZE_STRING_SIZE 14ULL
 
 /******************************************************************************************************
  * LOCAL FUNCTIONS                                                                                    *
@@ -99,15 +119,21 @@ gboolean configuration_read(void)
 	static const char* const DEFAULT_CONFIGURATION =
 		"# Configuration file for Plog that is being read at initialization and is being written at deinitialization with runtime updates.\n\n"
 
-		"# Bitmask enabling/disabling logs\n"
-		"# 2^0 - fatal | 2^1 - error | 2^2 - warn | 2^3 - info | 2^4 - debug | 2^5 - trace | 2^6 - verbose\n"
+		"# Bitmask enabling/disabling logs.\n"
+		"# 2^0 - fatal | 2^1 - error | 2^2 - warn | 2^3 - info | 2^4 - debug | 2^5 - trace | 2^6 - verbose.\n"
 		LOG_LEVEL_STRING "127\n\n"
 
-		"# 0 - asynchronically logging is disabled\n"
-		BUFFER_SIZE_STRING "0\n\n"
+		"# Maximum size of a log file (in bytes) before creating another (or overwriting in case file count is 0).\n"
+		LOG_FILE_SIZE_STRING "0\n\n"
 
-		"# 1 - enabled | 0 - disabled\n"
-		TERMINAL_MODE_STRING "0\n";
+		"# The count of the additional log files created (does not have any effect if file size is 0).\n"
+		LOG_FILE_COUNT_STRING "0\n\n"
+
+		"# 1 - logs will also be printed in terminal | 0 - logs will only be printed in the file.\n"
+		TERMINAL_MODE_STRING "0\n\n"
+
+		"# Size of the buffer of each log, 0 - asynchronically logging is disabled.\n"
+		BUFFER_SIZE_STRING "0\n";
 
 	FILE*   file        = NULL;
 	gchar   buffer[256] = "";
@@ -121,13 +147,15 @@ gboolean configuration_read(void)
 		file = fopen(PLOG_CONFIGURATION_FILE_NAME, "w");
 		if (NULL == file)
 		{
-			plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in write mode!");
+			plog_error(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in write mode!");
 			return FALSE;
 		}
 
 		(void)g_fprintf(file, "%s", DEFAULT_CONFIGURATION);
 		plog_set_severity_level(127U);
-		plog_set_buffer_size(0ULL);
+		plog_set_file_size(0ULL);
+		plog_set_file_count(0U);
+		(void)plog_set_buffer_size(0ULL);
 		plog_set_terminal_mode(FALSE);
 	}
 	else
@@ -146,32 +174,42 @@ gboolean configuration_read(void)
 				auxiliary = g_ascii_strtoull(buffer + LOG_LEVEL_STRING_SIZE, NULL, 0UL);
 				if (0L != errno)
 				{
-					plog_error("Invalid severity level! (text: %s)", buffer + LOG_LEVEL_STRING_SIZE);
+					plog_error(LOG_PREFIX "Invalid severity level! (text: %s)", buffer + LOG_LEVEL_STRING_SIZE);
 					continue;
 				}
 
 				plog_set_severity_level((guint8)auxiliary);
-				plog_info("Severity level has been set successfully! (value: %" G_GUINT16_FORMAT ")", (guint8)auxiliary);
+				plog_info(LOG_PREFIX "Severity level has been set successfully! (value: %" G_GUINT16_FORMAT ")", (guint8)auxiliary);
 				continue;
 			}
 
-			if (0L == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+			if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_SIZE_STRING, LOG_FILE_SIZE_STRING_SIZE))
 			{
-				errno = 0L;
-				auxiliary = g_ascii_strtoull(buffer + BUFFER_SIZE_STRING_SIZE, NULL, 0UL);
+				errno     = 0L;
+				auxiliary = g_ascii_strtoull(buffer + LOG_FILE_SIZE_STRING_SIZE, NULL, 0UL);
 				if (0L != errno)
 				{
-					plog_error("Invalid buffer size! (text: %s)", buffer + BUFFER_SIZE_STRING_SIZE);
+					plog_error(LOG_PREFIX "Invalid log file size! (text: %s)", buffer + LOG_FILE_SIZE_STRING_SIZE);
 					continue;
 				}
 
-				if (FALSE == plog_set_buffer_size(((gsize)auxiliary)))
+				plog_set_file_size((gsize)auxiliary);
+				plog_info(LOG_PREFIX "Log file size has been set successfully! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
+				continue;
+			}
+
+			if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_COUNT_STRING, LOG_FILE_COUNT_STRING_SIZE))
+			{
+				errno     = 0L;
+				auxiliary = g_ascii_strtoull(buffer + LOG_FILE_COUNT_STRING_SIZE, NULL, 0UL);
+				if (0L != errno)
 				{
-					plog_error("Failed to set buffer size! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
+					plog_error(LOG_PREFIX "Invalid log file count! (text: %s)", buffer + LOG_FILE_COUNT_STRING_SIZE);
 					continue;
 				}
 
-				plog_info("Buffer size has been set successfully! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
+				plog_set_file_count((guint8)auxiliary);
+				plog_info(LOG_PREFIX "Log file count has been set successfully! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
 				continue;
 			}
 
@@ -181,16 +219,36 @@ gboolean configuration_read(void)
 				auxiliary = g_ascii_strtoull(buffer + TERMINAL_MODE_STRING_SIZE, NULL, 0UL);
 				if (0L != errno)
 				{
-					plog_error("Invalid terminal mode! (text: %s)", buffer + TERMINAL_MODE_STRING_SIZE);
+					plog_error(LOG_PREFIX "Invalid terminal mode! (text: %s)", buffer + TERMINAL_MODE_STRING_SIZE);
 					continue;
 				}
 
 				plog_set_terminal_mode((gboolean)auxiliary);
-				plog_info("Terminal mode has been set successfully! (value: %s)", TRUE == (gboolean)auxiliary ? "TRUE" : "FALSE");
+				plog_info(LOG_PREFIX "Terminal mode has been set successfully! (value: %s)", TRUE == (gboolean)auxiliary ? "TRUE" : "FALSE");
 				continue;
 			}
 
-			plog_error("Invalid configuration line: %s", buffer);
+			if (0L == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+			{
+				errno = 0L;
+				auxiliary = g_ascii_strtoull(buffer + BUFFER_SIZE_STRING_SIZE, NULL, 0UL);
+				if (0L != errno)
+				{
+					plog_error(LOG_PREFIX "Invalid buffer size! (text: %s)", buffer + BUFFER_SIZE_STRING_SIZE);
+					continue;
+				}
+
+				if (FALSE == plog_set_buffer_size(((gsize)auxiliary)))
+				{
+					plog_error(LOG_PREFIX "Failed to set buffer size! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
+					continue;
+				}
+
+				plog_info(LOG_PREFIX "Buffer size has been set successfully! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
+				continue;
+			}
+
+			plog_warn(LOG_PREFIX "Invalid configuration line: %s", buffer);
 		}
 	}
 
@@ -215,7 +273,7 @@ void configuration_write(void)
 		{
 			if (FALSE == vector_push(&vector, buffer))
 			{
-				plog_warn("Failed to read \"" PLOG_CONFIGURATION_FILE_NAME "\"!");
+				plog_warn(LOG_PREFIX "Failed to read \"" PLOG_CONFIGURATION_FILE_NAME "\"!");
 				is_read_successful = FALSE;
 
 				break;
@@ -239,12 +297,19 @@ void configuration_write(void)
 						buffer[offset + LOG_LEVEL_STRING_SIZE]        = '\n';
 						buffer[offset + LOG_LEVEL_STRING_SIZE + 1ULL] = '\0';
 					}
-					else if (0L == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+					else if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_SIZE_STRING, LOG_FILE_SIZE_STRING_SIZE))
 					{
-						offset = integer_to_string(buffer + BUFFER_SIZE_STRING_SIZE, (guint64)plog_get_buffer_size());
+						offset = integer_to_string(buffer + LOG_FILE_SIZE_STRING_SIZE, (guint64)plog_get_file_size());
 
-						buffer[offset + BUFFER_SIZE_STRING_SIZE]        = '\n';
-						buffer[offset + BUFFER_SIZE_STRING_SIZE + 1ULL] = '\0';
+						buffer[offset + LOG_FILE_SIZE_STRING_SIZE]        = '\n';
+						buffer[offset + LOG_FILE_SIZE_STRING_SIZE + 1ULL] = '\0';
+					}
+					else if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_COUNT_STRING, LOG_FILE_COUNT_STRING_SIZE))
+					{
+						offset = integer_to_string(buffer + LOG_FILE_COUNT_STRING_SIZE, (guint8)plog_get_file_count());
+
+						buffer[offset + LOG_FILE_COUNT_STRING_SIZE]        = '\n';
+						buffer[offset + LOG_FILE_COUNT_STRING_SIZE + 1ULL] = '\0';
 					}
 					else if (0L == g_ascii_strncasecmp(buffer, TERMINAL_MODE_STRING, TERMINAL_MODE_STRING_SIZE))
 					{
@@ -252,6 +317,13 @@ void configuration_write(void)
 
 						buffer[offset + TERMINAL_MODE_STRING_SIZE]        = '\n';
 						buffer[offset + TERMINAL_MODE_STRING_SIZE + 1ULL] = '\0';
+					}
+					else if (0L == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+					{
+						offset = integer_to_string(buffer + BUFFER_SIZE_STRING_SIZE, (guint64)plog_get_buffer_size());
+
+						buffer[offset + BUFFER_SIZE_STRING_SIZE]        = '\n';
+						buffer[offset + BUFFER_SIZE_STRING_SIZE + 1ULL] = '\0';
 					}
 
 					(void)g_fprintf(file, "%s", buffer);
@@ -281,7 +353,7 @@ void configuration_write(void)
 
 static void close_configuration_file(FILE* const file)
 {
-	gint32 error_code = fclose(file);
+	const gint32 error_code = fclose(file);
 	if (0L != error_code)
 	{
 		plog_warn(LOG_PREFIX "Failed to close \"" PLOG_CONFIGURATION_FILE_NAME "\"! (error code: %" G_GINT32_FORMAT ")", error_code);
@@ -296,8 +368,8 @@ static gsize integer_to_string(gchar* buffer, guint64 integer)
 
 	do
 	{
-		digit       = (gchar)(integer % 10ULL) + '0';
-		integer    /= 10ULL;
+		digit    = (gchar)(integer % 10ULL) + '0';
+		integer /= 10ULL;
 
 		for (index = offset++; index > 0ULL; --index)
 		{

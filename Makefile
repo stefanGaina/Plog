@@ -3,6 +3,7 @@
 #   Date:       Author:                    Reason:                                                    #
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
 #   08.12.2023  Gaina Stefan               Added example.                                             #
+#   15.12.2023  Gaina Stefan               Added unit test.                                           #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -16,8 +17,11 @@ export COVERAGE_REPORT := coverage_report
 GENHTML       = vendor/lcov/genhtml.perl
 GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory $(COVERAGE_REPORT)/
 
-INFO_FILES = $(COVERAGE_REPORT)/plog.info \
-			 $(COVERAGE_REPORT)/queue.info
+INFO_FILES = $(COVERAGE_REPORT)/configuration.info \
+			 $(COVERAGE_REPORT)/plog_version.info  \
+			 $(COVERAGE_REPORT)/plog.info          \
+			 $(COVERAGE_REPORT)/queue.info         \
+			 $(COVERAGE_REPORT)/vector.info
 
 ### MAKE SUBDIRECTORIES ###
 all:
@@ -32,7 +36,7 @@ clean:
 	$(MAKE) clean -C example
 
 ### MAKE UNIT-TESTS ###
-ut: create_dir
+ut: create_dir ut-clean
 	$(MAKE) -C unit-tests
 	perl $(GENHTML) $(INFO_FILES) $(GENHTML_FLAGS)
 

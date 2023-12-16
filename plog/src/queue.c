@@ -18,7 +18,7 @@
 /******************************************************************************************************
  * @file queue.c                                                                                      *
  * @date:      @author:                   Reason for change:                                          *
- * 08.12.2023  Gaina Stefan               Initial version.                                            *
+ * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * @details This file implements the interface defined in queue.h.                                    *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -140,8 +140,8 @@ gboolean queue_pop(Queue_t* const public_queue, gchar** const buffer, guint8* co
 
 	if (NULL == queue->tail)
 	{
-		/* This is commented because spourious wake-ups will return right back here */
-		/* and we want to be able to exit in case of queue_deinit().                */
+		/* This is commented because spourious wake-ups will return right back here and    */
+		/* we want to be able to exit in case of queue_deinit() or queue_interrupt_wait(). */
 		// while (NULL == queue->tail)
 		// {
 			g_cond_wait(&queue->condition, &queue->lock);

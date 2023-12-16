@@ -1,78 +1,32 @@
 #######################################################################################################
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
-#   22.06.2023  Gaina Stefan               Initial version.                                           #
-# Description: This Makefile is used to compile unit-tests for plog.c, run them and generate coverage #
-# report.                                                                                             #
+#   15.12.2023  Gaina Stefan               Initial version.                                           #
+# Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
-INCLUDES = -I../../vendor/googletest/include/ \
-		   -I../../plog/include/
+export TESTED_FILE_DIR := ../../../plog/$(SRC)
+export VALGRIND        := valgrind --leak-check=summary --show-leak-kinds=all
 
-TEST_FILE_NAME   := plog_test
-TESTED_FILE_NAME := plog
-TESTED_FILE_DIR  := ../../plog/src/
-EXECUTABLE       := plog-ut.exe
-
-all: | create_dir $(EXECUTABLE)
-
-### CREATE DIRECTORY ###
-create_dir:
-ifeq (Windows_NT, $(OS))
-	if not exist "$(OBJ)" mkdir $(OBJ)
-endif
-ifeq (Linux, $(shell uname))
-	mkdir -p $(OBJ)
-endif
-
-### BINARIES ###
-$(EXECUTABLE):
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $(TEST_FILE_NAME).cpp -o $(OBJ)/$(TEST_FILE_NAME).o
-	$(CXX) $(CFLAGS) $(INCLUDES) -c $(TESTED_FILE_DIR)$(TESTED_FILE_NAME).c -o $(OBJ)/$(TESTED_FILE_NAME).o
-	$(CXX) $(OBJ)/$(TEST_FILE_NAME).o $(OBJ)/$(TESTED_FILE_NAME).o $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) -o $(OBJ)/$@
+all:
+	$(MAKE) -C configuration
+	$(MAKE) -C plog
+	$(MAKE) -C plog_version
+	$(MAKE) -C queue
+	$(MAKE) -C vector
 
 ### RUN TESTS ###
-run_tests: execute_tests copy_results clean
-
-### EXECUTE TESTS ###
-execute_tests:
-	"$(OBJ)/$(EXECUTABLE)"
-
-### COPY RESULTS ###
-copy_results:
-ifeq (Windows_NT, $(OS))
-	copy $(OBJ)\$(TESTED_FILE_NAME).gcda ..\..\plog\src
-	copy $(OBJ)\$(TESTED_FILE_NAME).gcno ..\..\plog\src
-endif
-ifeq (Linux, $(shell uname))
-	cp $(OBJ)/$(TESTED_FILE_NAME).gcda ../../plog/src/
-	cp $(OBJ)/$(TESTED_FILE_NAME).gcno ../../plog/src/
-endif
-	cd $(TESTED_FILE_DIR) && gcov -b $(TESTED_FILE_NAME).c
-	cd $(TESTED_FILE_DIR) && perl $(LCOV) --capture $(LCOV_BRANCH_FLAG) --directory . --output-file $(TESTED_FILE_NAME)_all.info
-	cd $(TESTED_FILE_DIR) && perl $(LCOV) --extract $(TESTED_FILE_NAME)_all.info "*.c" $(LCOV_BRANCH_FLAG) --output-file $(TESTED_FILE_NAME).info
-ifeq (Windows_NT, $(OS))
-	copy ..\..\plog\src\$(TESTED_FILE_NAME).info ..\..\coverage_report\$(TESTED_FILE_NAME).info
-endif
-ifeq (Linux, $(shell uname))
-	cp ../../plog/src/$(TESTED_FILE_NAME).info ../../coverage_report/$(TESTED_FILE_NAME).info
-endif
+run_tests:
+	$(MAKE) run_tests -C configuration
+	$(MAKE) run_tests -C plog
+	$(MAKE) run_tests -C plog_version
+	$(MAKE) run_tests -C queue
+	$(MAKE) run_tests -C vector
 
 ### CLEAN ###
 clean:
-ifeq (Windows_NT, $(OS))
-	$(RM) $(OBJ)\*
-	$(RM) ..\..\plog\src\*.info
-	$(RM) ..\..\plog\src\*.gcov
-	$(RM) ..\..\plog\src\*.gcda
-	$(RM) ..\..\plog\src\*.gcno
-endif
-ifeq (Linux, $(shell uname))
-	$(RM) $(OBJ)/*
-	$(RM) $(TESTED_FILE_DIR)*.info
-	$(RM) $(TESTED_FILE_DIR)*.gcov
-	$(RM) $(TESTED_FILE_DIR)*.gcda
-	$(RM) $(TESTED_FILE_DIR)*.gcno
-endif
-	$(RM) messages
-	$(RM) plog_level
+	$(MAKE) clean -C configuration
+	$(MAKE) clean -C plog
+	$(MAKE) clean -C plog_version
+	$(MAKE) clean -C queue
+	$(MAKE) clean -C vector

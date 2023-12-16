@@ -1,12 +1,13 @@
 #######################################################################################################
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
-#   08.12.2023  Gaina Stefan               Initial version.                                           #
+#   15.12.2023  Gaina Stefan               Initial version.                                           #
 # Description: This Makefile is used to generate an application that loads Plog library and gives an  #
 # example of how the functions might get called.                                                      #
 #######################################################################################################
 
-CFLAGS = `pkg-config --cflags glib-2.0`
+CFLAGS = `pkg-config --cflags glib-2.0` -Wno-format
+# CFLAGS += -DPLOG_STRIP_ALL
 LDFLAGS = -Wl,-rpath='.' -L../plog/$(LIB) -lplog
 
 INCLUDES = -I../plog/include

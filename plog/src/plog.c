@@ -25,7 +25,7 @@
  * 13.09.2023  Gaina Stefan               Added color for Windows.                                    *
  * 13.09.2023  Gaina Stefan               Added color for Linux.                                      *
  * 16.09.2023  Gaina Stefan               Added mutex for Windows.                                    *
- * 08.12.2023  Gaina Stefan               Made Glib refactor.                                         *
+ * 15.12.2023  Gaina Stefan               Made Glib refactor.                                         *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -57,6 +57,11 @@
 static FILE* file = NULL;
 
 /**
+ * @brief A copy to the file name that has extra space for suffix (e.g. ".254").
+*/
+static gchar* file_name_buffer = NULL;
+
+/**
  * @brief The current severity level bitmask.
 */
 static atomic_uchar severity_level = 127U;
@@ -82,6 +87,26 @@ static atomic_bool is_working = FALSE;
 static GMutex lock = {};
 
 /**
+ * @brief The maximum size of the log file before rotating to another file.
+*/
+static atomic_ullong file_size = 0ULL;
+
+/**
+ * @brief The maximum additional created log files.
+*/
+static atomic_uchar file_count = 0U;
+
+/**
+ * @brief The size of the currently opened file.
+*/
+static atomic_ullong current_file_size = 0ULL;
+
+/**
+ * @brief The count of the currently opened file.
+*/
+static atomic_uchar current_file_count = 0U;
+
+/**
  * @brief Buffer in which the logs are composed.
 */
 static gchar* buffer = NULL;
@@ -99,6 +124,13 @@ static Queue_t queue = {};
 /******************************************************************************************************
  * LOCAL FUNCTIONS                                                                                    *
  *****************************************************************************************************/
+
+/**
+ * @brief Checks if file size has been achieved and opens another file if it is the case.
+ * @param void
+ * @return void
+*/
+static void check_file_size(void);
 
 /**
  * @brief Function consuming the logs from the queue. This is being run asynchronically.
@@ -141,8 +173,11 @@ static void restore_color(void);
 
 gboolean plog_init(const gchar* file_name)
 {
+	gsize file_name_size = 0ULL;
+
 	if (NULL != file)
 	{
+		plog_error(LOG_PREFIX "Plog is already initialized!");
 		return FALSE;
 	}
 
@@ -154,7 +189,7 @@ gboolean plog_init(const gchar* file_name)
 	file = fopen(file_name, "w");
 	if (NULL == file)
 	{
-		(void)g_fprintf(stdout, "Failed to open \"%s\" in write mode!\n", file_name);
+		(void)g_fprintf(stdout, LOG_PREFIX "Failed to open \"%s\" in write mode!\n", file_name);
 		return FALSE;
 	}
 
@@ -169,6 +204,19 @@ gboolean plog_init(const gchar* file_name)
 		return FALSE;
 	}
 
+	file_name_size   = strlen(file_name) + 1ULL;
+	file_name_buffer = (gchar*)g_try_malloc(file_name_size + 4ULL * sizeof(gchar));
+	if (NULL == file_name_buffer)
+	{
+		plog_error(LOG_PREFIX "Failed to copy the file name!");
+		g_mutex_clear(&lock);
+		(void)fclose(file);
+		file = NULL;
+
+		return FALSE;
+	}
+	(void)g_strlcpy(file_name_buffer, file_name, file_name_size);
+
 	plog_info(LOG_PREFIX "Plog has initialized successfully!");
 	return TRUE;
 }
@@ -177,11 +225,22 @@ void plog_deinit(void)
 {
 	if (NULL == file)
 	{
+		plog_error(LOG_PREFIX "Plog is already deinitialized!");
 		return;
 	}
 
 	configuration_write();
+
+	g_mutex_lock(&lock);
 	(void)fclose(file);
+	file = NULL;
+
+	g_free(file_name_buffer);
+	file_name_buffer = NULL;
+
+	current_file_size = 0ULL;
+	g_mutex_unlock(&lock);
+
 	g_mutex_clear(&lock);
 }
 
@@ -193,6 +252,26 @@ void plog_set_severity_level(const guint8 severity_level_mask)
 guint8 plog_get_severity_level(void)
 {
 	return (guint8)severity_level;
+}
+
+void plog_set_file_size(const gsize new_file_size)
+{
+	file_size = (atomic_ullong)new_file_size;
+}
+
+gsize plog_get_file_size(void)
+{
+	return (gsize)file_size;
+}
+
+void plog_set_file_count(const guint8 new_file_count)
+{
+	file_count = (atomic_uchar)new_file_count;
+}
+
+guint8 plog_get_file_count(void)
+{
+	return (guint8)file_count;
 }
 
 void plog_set_terminal_mode(const gboolean terminal_mode)
@@ -211,6 +290,7 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 
 	if (NULL == file)
 	{
+		plog_error(LOG_PREFIX "Plog is not initialized!");
 		return FALSE;
 	}
 
@@ -283,7 +363,7 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 	gint32  bytes_copied2      = 0L;
 	gchar*  buffer_copy        = NULL;
 
-	if (severity_bit != (severity_bit & plog_get_severity_level()) || NULL == file)
+	if (severity_bit != (severity_bit & severity_level) || NULL == file) /*< Left unsafe on purpose. */
 	{
 		return;
 	}
@@ -293,32 +373,32 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 
 	if (TRUE == is_working)
 	{
-		bytes_copied = g_sprintf(buffer, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
+		bytes_copied = g_snprintf(buffer, buffer_size, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
 		if (0L <= bytes_copied)
 		{
-			bytes_copied2 = g_vsprintf((gchar*)(buffer + bytes_copied), format, argument_list);
-			if (0L <= bytes_copied2)
+			if (buffer_size > bytes_copied + 1L)
 			{
-				buffer_copy = (gchar*)g_try_malloc((gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
-				if (NULL != buffer_copy)
+				bytes_copied2 = g_vsnprintf((gchar*)(buffer + bytes_copied), buffer_size - bytes_copied, format, argument_list);
+			}
+
+			buffer_copy = (gchar*)g_try_malloc((gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
+			if (NULL != buffer_copy)
+			{
+				(void)g_strlcpy(buffer_copy, buffer, (gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
+				if (FALSE == queue_put(&queue, buffer_copy, severity_bit))
 				{
-					(void)g_strlcpy(buffer_copy, buffer, (gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
-					if (TRUE == queue_put(&queue, buffer_copy, severity_bit))
-					{
-						g_mutex_unlock(&lock);
-						va_end(argument_list);
-
-						return;
-					}
-
 					g_free(buffer_copy);
 					buffer_copy = NULL;
 				}
 			}
 		}
+
+		g_mutex_unlock(&lock);
+		va_end(argument_list);
+		return;
 	}
 
-	if (TRUE == plog_get_terminal_mode())
+	if (TRUE == is_terminal_enabled)
 	{
 		set_color(severity_bit);
 		(void)g_fprintf(stdout, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
@@ -331,12 +411,82 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 		(void)g_fprintf(stdout, "\n");
 	}
 
-	(void)g_fprintf(file, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
-	(void)g_vfprintf(file, format, argument_list);
-	(void)g_fprintf(file, "\n");
+	current_file_size += g_fprintf(file, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
+	current_file_size += g_vfprintf(file, format, argument_list);
+	current_file_size += g_fprintf(file, "\n");
+	check_file_size();
 
 	g_mutex_unlock(&lock);
 	va_end(argument_list);
+}
+
+static void check_file_size(void)
+{
+	gsize  file_name_size  = 0ULL;
+	FILE*  auxiliary_file  = NULL;
+	guint8 file_count_copy = 0U;
+
+	if (0ULL == file_size || current_file_size < file_size)
+	{
+		return;
+	}
+
+	file_name_size = strlen(file_name_buffer);
+
+	if (file_count > current_file_count)
+	{
+		file_name_buffer[file_name_size] = '.';
+
+		if (10U > current_file_count)
+		{
+			file_name_buffer[file_name_size + 1ULL] = '0' + current_file_count % 10U;
+			file_name_buffer[file_name_size + 2ULL] = '\0';
+		}
+		else if (10U <= current_file_count && 100U > current_file_count)
+		{
+			file_name_buffer[file_name_size + 1ULL] = '0' + current_file_count / 10U;
+			file_name_buffer[file_name_size + 2ULL] = '0' + current_file_count % 10U;
+			file_name_buffer[file_name_size + 3ULL] = '\0';
+		}
+		else
+		{
+			file_name_buffer[file_name_size + 1ULL] = '0' + current_file_count / 100U;
+			file_name_buffer[file_name_size + 2ULL] = '0' + (current_file_count / 10U) % 10U;
+			file_name_buffer[file_name_size + 3ULL] = '0' + current_file_count % 10U;
+			file_name_buffer[file_name_size + 4ULL] = '\0';
+		}
+	}
+
+	file_count_copy = file_count;
+	if (0U == file_count_copy)
+	{
+		(void)fclose(file);
+	}
+
+	auxiliary_file = fopen(file_name_buffer, "w");
+	if (NULL != auxiliary_file)
+	{
+		if (0U != file_count_copy)
+		{
+			(void)fclose(file);
+		}
+		file = auxiliary_file;
+
+		if (file_count < ++current_file_count)
+		{
+			current_file_count = 0U;
+		}
+	}
+	else
+	{
+		plog_error(LOG_PREFIX "Failed to open a new log file in write mode!");
+	}
+
+	current_file_size                       = 0ULL;
+	file_name_buffer[file_name_size]        = '\0';
+	file_name_buffer[file_name_size + 1ULL] = '\0';
+	file_name_buffer[file_name_size + 2ULL] = '\0';
+	file_name_buffer[file_name_size + 3ULL] = '\0';
 }
 
 static gpointer work_function(gpointer const data)
@@ -360,9 +510,7 @@ static void print_from_queue(void)
 		return;
 	}
 
-	(void)g_fprintf(file, "%s\n", buffer_copy);
-
-	if (TRUE == plog_get_terminal_mode())
+	if (TRUE == is_terminal_enabled)
 	{
 		set_color(severity_bit);
 		(void)g_fprintf(stdout, "%s", buffer_copy);
@@ -371,17 +519,21 @@ static void print_from_queue(void)
 		(void)g_fprintf(stdout, "\n");
 	}
 
+	/* Left unsafe on purpose. */
+	current_file_size += g_fprintf(file, "%s\n", buffer_copy);
+	check_file_size();
+
 	g_free(buffer_copy);
 	buffer_copy = NULL;
 }
 
-static const char* get_time(void)
+static const gchar* get_time(void)
 {
 	const time_t now         = time(NULL);
-	char* const  time_string = ctime(&now);
+	gchar* const time_string = ctime(&now);
 
 	time_string[strlen(time_string) - 1ULL] = '\0'; /*< Remove the '\n'.                 */
-	return (const char*)(time_string + 4);          /*< Remove the day of the week part. */
+	return (const gchar*)(time_string + 4);         /*< Remove the day of the week part. */
 }
 
 static void set_color(const guint8 severity_bit)

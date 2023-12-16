@@ -23,7 +23,7 @@
  * 22.06.2023  Gaina Stefan               Fixed the stripping of logging from compilation.            *
  * 29.06.2023  Gaina Stefan               Moved version to plog_version.h.                            *
  * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
- * 08.12.2023  Gaina Stefan               Added buffer size.                                          *
+ * 15.12.2023  Gaina Stefan               Added buffer size.                                          *
  * @details This file defines the type definitions and public interface of Plog.                      *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -297,6 +297,36 @@ extern void plog_set_severity_level(guint8 severity_level_mask);
  * @return The current severity level.
 */
 extern guint8 plog_get_severity_level(void);
+
+/**
+ * @brief Sets a new file size.
+ * @param file_size: Maximum size of a log file (in bytes) before creating another (or overwriting
+ * in case file count is 0).
+ * @return void
+*/
+extern void plog_set_file_size(gsize file_size);
+
+/**
+ * @brief Querries the file size.
+ * @param void
+ * @return The current file size.
+*/
+extern gsize plog_get_file_size(void);
+
+/**
+ * @brief Sets a new file count.
+ * @param file_count: The count of the additional log files created (does not have any effect if
+ * file size is 0).
+ * @return void
+*/
+extern void plog_set_file_count(guint8 file_count);
+
+/**
+ * @brief Querries the file count.
+ * @param void
+ * @return The current file count.
+*/
+extern guint8 plog_get_file_count(void);
 
 /**
  * @brief Sets a new terminal mode.
