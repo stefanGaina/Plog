@@ -8,12 +8,12 @@
 # API using API-Test.                                                                                 #
 #######################################################################################################
 
-CFLAGS  = -Wall -Werror -Wno-format-security
-LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/$(LIB)/$(OS_DIR)/ -lapitest \
-		  -Wl,-rpath='.' -L../plog/$(LIB)/ -lplog
+CFLAGS  = `pkg-config --cflags glib-2.0` -Wall -Werror -Wno-format-security
+LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/$(LIB) -lapitest \
+		  -Wl,-rpath='.' -L../plog/$(LIB) -lplog
 
-INCLUDES = -I../vendor/apitest/include/ \
-		   -I../plog/include/
+INCLUDES = -I../vendor/apitest/include \
+		   -I../plog/include
 
 SOURCES    := $(wildcard $(SRC)/*.c)
 OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
@@ -23,14 +23,8 @@ all: | create_dirs $(EXECUTABLE) copy_libraries
 
 ### CREATE DIRECTORIES ###
 create_dirs:
-ifeq (Windows_NT, $(OS))
-	if not exist "$(OBJ)" mkdir $(OBJ)
-	if not exist "$(BIN)" mkdir $(BIN)
-endif
-ifeq (Linux, $(shell uname))
 	mkdir -p $(OBJ)
 	mkdir -p $(BIN)
-endif
 
 ### BINARIES ###
 $(EXECUTABLE): $(OBJECTS)
@@ -42,22 +36,10 @@ $(OBJ)/%.o: $(SRC)/%.c
 
 ### CLEAN ###
 clean:
-ifeq (Windows_NT, $(OS))
-	$(RM) $(OBJ)\*
-	$(RM) $(BIN)\*
-endif
-ifeq (Linux, $(shell uname))
-	$(RM) $(OBJ)/*
-	$(RM) $(BIN)/*
-endif
+	rm -rf $(OBJ)/*
+	rm -rf $(BIN)/*
 
 ### COPY LIBRARIES ###
 copy_libraries:
-ifeq (Windows_NT, $(OS))
-	copy ..\vendor\apitest\$(LIB)\$(OS_DIR)\libapitest.$(LIB_EXTENSION) bin
-	copy ..\plog\$(LIB)\libplog.$(LIB_EXTENSION) bin
-endif
-ifeq (Linux, $(shell uname))
-	cp ../vendor/apitest/$(LIB)/$(OS_DIR)/libapitest.$(LIB_EXTENSION) bin/
-	cp ../plog/$(LIB)/libplog.$(LIB_EXTENSION) bin/
-endif
+	cp ../vendor/apitest/$(LIB)/libapitest.so bin/
+	cp ../plog/$(LIB)/libplog.so bin/

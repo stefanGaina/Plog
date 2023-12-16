@@ -6,10 +6,10 @@ obj
 *.o
 
 # Libraries
-plog/lib
+lib
 
 # Executables
-test/bin
+bin
 
 # Unit-test
 coverage_report
@@ -17,3 +17,5 @@ coverage_report
 *.gcda
 *.gcov
 *.info
+read_only.txt
+messages
