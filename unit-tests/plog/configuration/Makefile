@@ -1,5 +1,5 @@
 #######################################################################################################
-# Copyright Plog 2024                                                                                 #
+# Copyright (C) Plog 2024                                                                             #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   15.12.2023  Gaina Stefan               Initial version.                                           #
