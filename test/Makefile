@@ -1,9 +1,11 @@
 #######################################################################################################
+# Copyright (C) Plog 2024                                                                             #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
 #   29.06.2023  Gaina Stefan               Changed plog library name.                                 #
 #   13.09.2023  Gaina Stefan               Fixed warnings on Linux.                                   #
+#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 # Description: This Makefile is used to generate an application that loads Plog library and tests its #
 # API using API-Test.                                                                                 #
 #######################################################################################################

@@ -1,8 +1,10 @@
 #######################################################################################################
+# Copyright (C) Plog 2024                                                                             #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   29.06.2023  Gaina Stefan               Initial version.                                           #
 #   08.12.2023  Gaina Stefan               Added glib.                                                #
+#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 # Description: This Makefile is used to generate the Plog library.                                    #
 #######################################################################################################
 

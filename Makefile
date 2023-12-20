@@ -1,9 +1,11 @@
 #######################################################################################################
+# Copyright (C) Plog 2024                                                                             #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
 #   08.12.2023  Gaina Stefan               Added example.                                             #
 #   15.12.2023  Gaina Stefan               Added unit test.                                           #
+#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 

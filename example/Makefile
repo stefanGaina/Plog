@@ -1,7 +1,9 @@
 #######################################################################################################
+# Copyright (C) Plog 2024                                                                             #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   15.12.2023  Gaina Stefan               Initial version.                                           #
+#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 # Description: This Makefile is used to generate an application that loads Plog library and gives an  #
 # example of how the functions might get called.                                                      #
 #######################################################################################################

@@ -1,7 +1,9 @@
 #######################################################################################################
+# Copyright Plog 2024                                                                                 #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   15.12.2023  Gaina Stefan               Initial version.                                           #
+#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 # Description: This Makefile is used to compile unit-tests for configuration.c, run them and generate #
 # coverage report.                                                                                    #
 #######################################################################################################

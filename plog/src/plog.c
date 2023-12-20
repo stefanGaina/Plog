@@ -1,5 +1,5 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2023                                                                            *
+ * Plog Copyright (C) 2024                                                                            *
  *                                                                                                    *
  * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
  * authors be held liable for any damages arising from the use of this software.                      *
@@ -8,10 +8,10 @@
  * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
  *                                                                                                    *
  * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- * original software. If you use this software in a product, an acknowledgment in the product         *
- * documentation would be appreciated but is not required.                                            *
+ *    original software. If you use this software in a product, an acknowledgment in the product      *
+ *    documentation would be appreciated but is not required.                                         *
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- * the original software.                                                                             *
+ *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
 ******************************************************************************************************/
 
@@ -26,6 +26,7 @@
  * 13.09.2023  Gaina Stefan               Added color for Linux.                                      *
  * 16.09.2023  Gaina Stefan               Added mutex for Windows.                                    *
  * 15.12.2023  Gaina Stefan               Made Glib refactor.                                         *
+ * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -89,7 +90,7 @@ static GMutex lock = {};
 /**
  * @brief The maximum size of the log file before rotating to another file.
 */
-static atomic_ullong file_size = 0ULL;
+static atomic_ullong file_size = 0UL;
 
 /**
  * @brief The maximum additional created log files.
@@ -99,7 +100,7 @@ static atomic_uchar file_count = 0U;
 /**
  * @brief The size of the currently opened file.
 */
-static atomic_ullong current_file_size = 0ULL;
+static atomic_ullong current_file_size = 0UL;
 
 /**
  * @brief The count of the currently opened file.
@@ -114,7 +115,7 @@ static gchar* buffer = NULL;
 /**
  * @brief The size of the buffer.
 */
-static gsize buffer_size = 0ULL;
+static gsize buffer_size = 0UL;
 
 /**
  * @brief Queue in which the logs are being stored and consumed asynchronically.
@@ -173,7 +174,7 @@ static void restore_color(void);
 
 gboolean plog_init(const gchar* file_name)
 {
-	gsize file_name_size = 0ULL;
+	gsize file_name_size = 0UL;
 
 	if (NULL != file)
 	{
@@ -181,7 +182,7 @@ gboolean plog_init(const gchar* file_name)
 		return FALSE;
 	}
 
-	if (NULL == file_name || 0L == g_strcmp0("", file_name))
+	if (NULL == file_name || 0 == g_strcmp0("", file_name))
 	{
 		file_name = PLOG_DEFAULT_FILE_NAME;
 	}
@@ -204,8 +205,8 @@ gboolean plog_init(const gchar* file_name)
 		return FALSE;
 	}
 
-	file_name_size   = strlen(file_name) + 1ULL;
-	file_name_buffer = (gchar*)g_try_malloc(file_name_size + 4ULL * sizeof(gchar));
+	file_name_size   = strlen(file_name) + 1UL;
+	file_name_buffer = (gchar*)g_try_malloc(file_name_size + 4UL * sizeof(gchar));
 	if (NULL == file_name_buffer)
 	{
 		plog_error(LOG_PREFIX "Failed to copy the file name!");
@@ -238,7 +239,7 @@ void plog_deinit(void)
 	g_free(file_name_buffer);
 	file_name_buffer = NULL;
 
-	current_file_size = 0ULL;
+	current_file_size = 0UL;
 	g_mutex_unlock(&lock);
 
 	g_mutex_clear(&lock);
@@ -297,7 +298,7 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 	g_mutex_lock(&lock);
 
 	auxiliary_buffer = (gchar*)g_try_realloc((gpointer)buffer, new_buffer_size);
-	if (NULL == auxiliary_buffer && 0ULL != new_buffer_size)
+	if (NULL == auxiliary_buffer && 0UL != new_buffer_size)
 	{
 		g_mutex_unlock(&lock);
 		return FALSE;
@@ -332,7 +333,7 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 			buffer = NULL;
 
 			queue_deinit(&queue);
-			buffer_size = 0ULL;
+			buffer_size = 0UL;
 			is_working  = FALSE;
 
 			g_mutex_unlock(&lock);
@@ -346,7 +347,7 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 
 gsize plog_get_buffer_size(void)
 {
-	gsize result = 0ULL;
+	gsize result = 0UL;
 
 	g_mutex_lock(&lock);
 	result = buffer_size;
@@ -359,8 +360,8 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 {
 	va_list argument_list      = {};
 	va_list argument_list_copy = {};
-	gint32  bytes_copied       = 0L;
-	gint32  bytes_copied2      = 0L;
+	gint32  bytes_copied       = 0;
+	gint32  bytes_copied2      = 0;
 	gchar*  buffer_copy        = NULL;
 
 	if (severity_bit != (severity_bit & severity_level) || NULL == file) /*< Left unsafe on purpose. */
@@ -374,17 +375,17 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 	if (TRUE == is_working)
 	{
 		bytes_copied = g_snprintf(buffer, buffer_size, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
-		if (0L <= bytes_copied)
+		if (0 <= bytes_copied)
 		{
-			if (buffer_size > bytes_copied + 1L)
+			if (buffer_size > bytes_copied + 1)
 			{
 				bytes_copied2 = g_vsnprintf((gchar*)(buffer + bytes_copied), buffer_size - bytes_copied, format, argument_list);
 			}
 
-			buffer_copy = (gchar*)g_try_malloc((gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
+			buffer_copy = (gchar*)g_try_malloc((gsize)bytes_copied + (gsize)bytes_copied2 + 1UL);
 			if (NULL != buffer_copy)
 			{
-				(void)g_strlcpy(buffer_copy, buffer, (gsize)bytes_copied + (gsize)bytes_copied2 + 1ULL);
+				(void)g_strlcpy(buffer_copy, buffer, (gsize)bytes_copied + (gsize)bytes_copied2 + 1UL);
 				if (FALSE == queue_put(&queue, buffer_copy, severity_bit))
 				{
 					g_free(buffer_copy);
@@ -422,38 +423,37 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 
 static void check_file_size(void)
 {
-	gsize  file_name_size  = 0ULL;
+	gsize  file_name_size  = 0UL;
 	FILE*  auxiliary_file  = NULL;
 	guint8 file_count_copy = 0U;
 
-	if (0ULL == file_size || current_file_size < file_size)
+	if (0UL == file_size || current_file_size < file_size)
 	{
 		return;
 	}
 
 	file_name_size = strlen(file_name_buffer);
-
 	if (file_count > current_file_count)
 	{
 		file_name_buffer[file_name_size] = '.';
 
 		if (10U > current_file_count)
 		{
-			file_name_buffer[file_name_size + 1ULL] = '0' + current_file_count % 10U;
-			file_name_buffer[file_name_size + 2ULL] = '\0';
+			file_name_buffer[file_name_size + 1UL] = '0' + current_file_count % 10U;
+			file_name_buffer[file_name_size + 2UL] = '\0';
 		}
 		else if (10U <= current_file_count && 100U > current_file_count)
 		{
-			file_name_buffer[file_name_size + 1ULL] = '0' + current_file_count / 10U;
-			file_name_buffer[file_name_size + 2ULL] = '0' + current_file_count % 10U;
-			file_name_buffer[file_name_size + 3ULL] = '\0';
+			file_name_buffer[file_name_size + 1UL] = '0' + current_file_count / 10U;
+			file_name_buffer[file_name_size + 2UL] = '0' + current_file_count % 10U;
+			file_name_buffer[file_name_size + 3UL] = '\0';
 		}
 		else
 		{
-			file_name_buffer[file_name_size + 1ULL] = '0' + current_file_count / 100U;
-			file_name_buffer[file_name_size + 2ULL] = '0' + (current_file_count / 10U) % 10U;
-			file_name_buffer[file_name_size + 3ULL] = '0' + current_file_count % 10U;
-			file_name_buffer[file_name_size + 4ULL] = '\0';
+			file_name_buffer[file_name_size + 1UL] = '0' + current_file_count / 100U;
+			file_name_buffer[file_name_size + 2UL] = '0' + (current_file_count / 10U) % 10U;
+			file_name_buffer[file_name_size + 3UL] = '0' + current_file_count % 10U;
+			file_name_buffer[file_name_size + 4UL] = '\0';
 		}
 	}
 
@@ -482,7 +482,7 @@ static void check_file_size(void)
 		plog_error(LOG_PREFIX "Failed to open a new log file in write mode!");
 	}
 
-	current_file_size                       = 0ULL;
+	current_file_size                       = 0UL;
 	file_name_buffer[file_name_size]        = '\0';
 	file_name_buffer[file_name_size + 1ULL] = '\0';
 	file_name_buffer[file_name_size + 2ULL] = '\0';
@@ -532,8 +532,8 @@ static const gchar* get_time(void)
 	const time_t now         = time(NULL);
 	gchar* const time_string = ctime(&now);
 
-	time_string[strlen(time_string) - 1ULL] = '\0'; /*< Remove the '\n'.                 */
-	return (const gchar*)(time_string + 4);         /*< Remove the day of the week part. */
+	time_string[strlen(time_string) - 1UL] = '\0'; /*< Remove the '\n'.                 */
+	return (const gchar*)(time_string + 4);        /*< Remove the day of the week part. */
 }
 
 static void set_color(const guint8 severity_bit)

@@ -1,5 +1,5 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2023                                                                            *
+ * Plog Copyright (C) 2024                                                                            *
  *                                                                                                    *
  * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
  * authors be held liable for any damages arising from the use of this software.                      *
@@ -8,10 +8,10 @@
  * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
  *                                                                                                    *
  * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- * original software. If you use this software in a product, an acknowledgment in the product         *
- * documentation would be appreciated but is not required.                                            *
+ *    original software. If you use this software in a product, an acknowledgment in the product      *
+ *    documentation would be appreciated but is not required.                                         *
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- * the original software.                                                                             *
+ *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
 ******************************************************************************************************/
 
@@ -19,6 +19,7 @@
  * @file configuration.c                                                                              *
  * @date:      @author:                   Reason for change:                                          *
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
+ * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
  * @details This file implements the interface defined in configuration.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -49,7 +50,7 @@
 /**
  * @brief The length of the log level string.
 */
-#define LOG_LEVEL_STRING_SIZE 12ULL
+#define LOG_LEVEL_STRING_SIZE 12UL
 
 /**
  * @brief The string indicating the log file size value is following.
@@ -59,7 +60,7 @@
 /**
  * @brief The length of the log file size string.
 */
-#define LOG_FILE_SIZE_STRING_SIZE 16ULL
+#define LOG_FILE_SIZE_STRING_SIZE 16UL
 
 /**
  * @brief The string indicating the log file count value is following.
@@ -69,7 +70,7 @@
 /**
  * @brief The length of the log file count string.
 */
-#define LOG_FILE_COUNT_STRING_SIZE 17ULL
+#define LOG_FILE_COUNT_STRING_SIZE 17UL
 
 /**
  * @brief The string indicating the terminal mode value is following.
@@ -79,7 +80,7 @@
 /**
  * @brief The length of the terminal mode string.
 */
-#define TERMINAL_MODE_STRING_SIZE 16ULL
+#define TERMINAL_MODE_STRING_SIZE 16UL
 
 /**
  * @brief The string indicating the buffer size value is following.
@@ -89,7 +90,7 @@
 /**
  * @brief The length of the buffer size string.
 */
-#define BUFFER_SIZE_STRING_SIZE 14ULL
+#define BUFFER_SIZE_STRING_SIZE 14UL
 
 /******************************************************************************************************
  * LOCAL FUNCTIONS                                                                                    *
@@ -137,7 +138,7 @@ gboolean configuration_read(void)
 
 	FILE*   file        = NULL;
 	gchar   buffer[256] = "";
-	guint64 auxiliary   = 0ULL;
+	guint64 auxiliary   = 0UL;
 
 	file = fopen(PLOG_CONFIGURATION_FILE_NAME, "r");
 	if (NULL == file)
@@ -153,9 +154,9 @@ gboolean configuration_read(void)
 
 		(void)g_fprintf(file, "%s", DEFAULT_CONFIGURATION);
 		plog_set_severity_level(127U);
-		plog_set_file_size(0ULL);
+		plog_set_file_size(0UL);
 		plog_set_file_count(0U);
-		(void)plog_set_buffer_size(0ULL);
+		(void)plog_set_buffer_size(0UL);
 		plog_set_terminal_mode(FALSE);
 	}
 	else
@@ -168,11 +169,11 @@ gboolean configuration_read(void)
 				continue;
 			}
 
-			if (0L == g_ascii_strncasecmp(buffer, LOG_LEVEL_STRING, LOG_LEVEL_STRING_SIZE))
+			if (0 == g_ascii_strncasecmp(buffer, LOG_LEVEL_STRING, LOG_LEVEL_STRING_SIZE))
 			{
-				errno     = 0L;
-				auxiliary = g_ascii_strtoull(buffer + LOG_LEVEL_STRING_SIZE, NULL, 0UL);
-				if (0L != errno)
+				errno     = 0;
+				auxiliary = g_ascii_strtoull(buffer + LOG_LEVEL_STRING_SIZE, NULL, 0U);
+				if (0 != errno)
 				{
 					plog_error(LOG_PREFIX "Invalid severity level! (text: %s)", buffer + LOG_LEVEL_STRING_SIZE);
 					continue;
@@ -183,11 +184,11 @@ gboolean configuration_read(void)
 				continue;
 			}
 
-			if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_SIZE_STRING, LOG_FILE_SIZE_STRING_SIZE))
+			if (0 == g_ascii_strncasecmp(buffer, LOG_FILE_SIZE_STRING, LOG_FILE_SIZE_STRING_SIZE))
 			{
-				errno     = 0L;
-				auxiliary = g_ascii_strtoull(buffer + LOG_FILE_SIZE_STRING_SIZE, NULL, 0UL);
-				if (0L != errno)
+				errno     = 0;
+				auxiliary = g_ascii_strtoull(buffer + LOG_FILE_SIZE_STRING_SIZE, NULL, 0U);
+				if (0 != errno)
 				{
 					plog_error(LOG_PREFIX "Invalid log file size! (text: %s)", buffer + LOG_FILE_SIZE_STRING_SIZE);
 					continue;
@@ -198,11 +199,11 @@ gboolean configuration_read(void)
 				continue;
 			}
 
-			if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_COUNT_STRING, LOG_FILE_COUNT_STRING_SIZE))
+			if (0 == g_ascii_strncasecmp(buffer, LOG_FILE_COUNT_STRING, LOG_FILE_COUNT_STRING_SIZE))
 			{
-				errno     = 0L;
-				auxiliary = g_ascii_strtoull(buffer + LOG_FILE_COUNT_STRING_SIZE, NULL, 0UL);
-				if (0L != errno)
+				errno     = 0;
+				auxiliary = g_ascii_strtoull(buffer + LOG_FILE_COUNT_STRING_SIZE, NULL, 0U);
+				if (0 != errno)
 				{
 					plog_error(LOG_PREFIX "Invalid log file count! (text: %s)", buffer + LOG_FILE_COUNT_STRING_SIZE);
 					continue;
@@ -213,11 +214,11 @@ gboolean configuration_read(void)
 				continue;
 			}
 
-			if (0L == g_ascii_strncasecmp(buffer, TERMINAL_MODE_STRING, TERMINAL_MODE_STRING_SIZE))
+			if (0 == g_ascii_strncasecmp(buffer, TERMINAL_MODE_STRING, TERMINAL_MODE_STRING_SIZE))
 			{
-				errno     = 0L;
-				auxiliary = g_ascii_strtoull(buffer + TERMINAL_MODE_STRING_SIZE, NULL, 0UL);
-				if (0L != errno)
+				errno     = 0;
+				auxiliary = g_ascii_strtoull(buffer + TERMINAL_MODE_STRING_SIZE, NULL, 0U);
+				if (0 != errno)
 				{
 					plog_error(LOG_PREFIX "Invalid terminal mode! (text: %s)", buffer + TERMINAL_MODE_STRING_SIZE);
 					continue;
@@ -228,11 +229,11 @@ gboolean configuration_read(void)
 				continue;
 			}
 
-			if (0L == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+			if (0 == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
 			{
-				errno = 0L;
-				auxiliary = g_ascii_strtoull(buffer + BUFFER_SIZE_STRING_SIZE, NULL, 0UL);
-				if (0L != errno)
+				errno = 0;
+				auxiliary = g_ascii_strtoull(buffer + BUFFER_SIZE_STRING_SIZE, NULL, 0U);
+				if (0 != errno)
 				{
 					plog_error(LOG_PREFIX "Invalid buffer size! (text: %s)", buffer + BUFFER_SIZE_STRING_SIZE);
 					continue;
@@ -262,7 +263,7 @@ void configuration_write(void)
 	gchar    buffer[256]        = "";
 	Vector_t vector             = {};
 	gboolean is_read_successful = TRUE;
-	gsize    offset             = 0ULL;
+	gsize    offset             = 0UL;
 
 	vector_init(&vector);
 
@@ -290,40 +291,40 @@ void configuration_write(void)
 				{
 					vector_pop(&vector, buffer, sizeof(buffer));
 
-					if (0L == g_ascii_strncasecmp(buffer, LOG_LEVEL_STRING, LOG_LEVEL_STRING_SIZE))
+					if (0 == g_ascii_strncasecmp(buffer, LOG_LEVEL_STRING, LOG_LEVEL_STRING_SIZE))
 					{
 						offset = integer_to_string(buffer + LOG_LEVEL_STRING_SIZE, (guint64)plog_get_severity_level());
 
-						buffer[offset + LOG_LEVEL_STRING_SIZE]        = '\n';
-						buffer[offset + LOG_LEVEL_STRING_SIZE + 1ULL] = '\0';
+						buffer[offset + LOG_LEVEL_STRING_SIZE]       = '\n';
+						buffer[offset + LOG_LEVEL_STRING_SIZE + 1UL] = '\0';
 					}
-					else if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_SIZE_STRING, LOG_FILE_SIZE_STRING_SIZE))
+					else if (0 == g_ascii_strncasecmp(buffer, LOG_FILE_SIZE_STRING, LOG_FILE_SIZE_STRING_SIZE))
 					{
 						offset = integer_to_string(buffer + LOG_FILE_SIZE_STRING_SIZE, (guint64)plog_get_file_size());
 
-						buffer[offset + LOG_FILE_SIZE_STRING_SIZE]        = '\n';
-						buffer[offset + LOG_FILE_SIZE_STRING_SIZE + 1ULL] = '\0';
+						buffer[offset + LOG_FILE_SIZE_STRING_SIZE]       = '\n';
+						buffer[offset + LOG_FILE_SIZE_STRING_SIZE + 1UL] = '\0';
 					}
-					else if (0L == g_ascii_strncasecmp(buffer, LOG_FILE_COUNT_STRING, LOG_FILE_COUNT_STRING_SIZE))
+					else if (0 == g_ascii_strncasecmp(buffer, LOG_FILE_COUNT_STRING, LOG_FILE_COUNT_STRING_SIZE))
 					{
 						offset = integer_to_string(buffer + LOG_FILE_COUNT_STRING_SIZE, (guint8)plog_get_file_count());
 
-						buffer[offset + LOG_FILE_COUNT_STRING_SIZE]        = '\n';
-						buffer[offset + LOG_FILE_COUNT_STRING_SIZE + 1ULL] = '\0';
+						buffer[offset + LOG_FILE_COUNT_STRING_SIZE]       = '\n';
+						buffer[offset + LOG_FILE_COUNT_STRING_SIZE + 1UL] = '\0';
 					}
-					else if (0L == g_ascii_strncasecmp(buffer, TERMINAL_MODE_STRING, TERMINAL_MODE_STRING_SIZE))
+					else if (0 == g_ascii_strncasecmp(buffer, TERMINAL_MODE_STRING, TERMINAL_MODE_STRING_SIZE))
 					{
 						offset = integer_to_string(buffer + TERMINAL_MODE_STRING_SIZE, (guint64)plog_get_terminal_mode());
 
-						buffer[offset + TERMINAL_MODE_STRING_SIZE]        = '\n';
-						buffer[offset + TERMINAL_MODE_STRING_SIZE + 1ULL] = '\0';
+						buffer[offset + TERMINAL_MODE_STRING_SIZE]       = '\n';
+						buffer[offset + TERMINAL_MODE_STRING_SIZE + 1UL] = '\0';
 					}
-					else if (0L == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+					else if (0 == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
 					{
 						offset = integer_to_string(buffer + BUFFER_SIZE_STRING_SIZE, (guint64)plog_get_buffer_size());
 
-						buffer[offset + BUFFER_SIZE_STRING_SIZE]        = '\n';
-						buffer[offset + BUFFER_SIZE_STRING_SIZE + 1ULL] = '\0';
+						buffer[offset + BUFFER_SIZE_STRING_SIZE]       = '\n';
+						buffer[offset + BUFFER_SIZE_STRING_SIZE + 1UL] = '\0';
 					}
 
 					(void)g_fprintf(file, "%s", buffer);
@@ -343,7 +344,7 @@ void configuration_write(void)
 		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in read mode!");
 	}
 
-	if (FALSE == plog_set_buffer_size(0ULL))
+	if (FALSE == plog_set_buffer_size(0UL))
 	{
 		plog_error(LOG_PREFIX "Failed to free the buffer!");
 	}
@@ -354,7 +355,7 @@ void configuration_write(void)
 static void close_configuration_file(FILE* const file)
 {
 	const gint32 error_code = fclose(file);
-	if (0L != error_code)
+	if (0 != error_code)
 	{
 		plog_warn(LOG_PREFIX "Failed to close \"" PLOG_CONFIGURATION_FILE_NAME "\"! (error code: %" G_GINT32_FORMAT ")", error_code);
 	}
@@ -362,22 +363,22 @@ static void close_configuration_file(FILE* const file)
 
 static gsize integer_to_string(gchar* buffer, guint64 integer)
 {
-	gsize offset = 0ULL;
-	gsize index  = 0ULL;
+	gsize offset = 0UL;
+	gsize index  = 0UL;
 	gchar digit  = '\0';
 
 	do
 	{
-		digit    = (gchar)(integer % 10ULL) + '0';
-		integer /= 10ULL;
+		digit    = (gchar)(integer % 10UL) + '0';
+		integer /= 10UL;
 
-		for (index = offset++; index > 0ULL; --index)
+		for (index = offset++; index > 0UL; --index)
 		{
-			buffer[index] = buffer[index - 1ULL];
+			buffer[index] = buffer[index - 1UL];
 		}
 		buffer[0] = digit;
 	}
-	while (0ULL != integer);
+	while (0UL != integer);
 
 	return offset;
 }
