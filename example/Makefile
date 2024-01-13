@@ -10,7 +10,7 @@
 
 CFLAGS = `pkg-config --cflags glib-2.0` -Wno-format
 # CFLAGS += -DPLOG_STRIP_ALL
-LDFLAGS = -Wl,-rpath='.' -L../plog/$(LIB) -lplog
+LDFLAGS = -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../plog$(LIB) -L../plog/$(LIB) -lplog
 
 INCLUDES = -I../plog/include
 
@@ -18,7 +18,7 @@ SOURCES    := $(wildcard $(SRC)/*.c)
 OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 EXECUTABLE := plog-example
 
-all: | create_dirs $(EXECUTABLE) copy_library
+all: | create_dirs $(EXECUTABLE)
 
 ### CREATE DIRECTORIES ###
 create_dirs:
@@ -37,7 +37,3 @@ $(OBJ)/%.o: $(SRC)/%.c
 clean:
 	rm -rf $(OBJ)/*
 	rm -rf $(BIN)/*
-
-### COPY LIBRARY ###
-copy_library:
-	cp ../plog/$(LIB)/libplog.so bin/

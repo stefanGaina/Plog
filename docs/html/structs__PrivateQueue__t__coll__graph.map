@@ -1,0 +1,4 @@
+<map id="s_PrivateQueue_t" name="s_PrivateQueue_t">
+<area shape="rect" id="node1" title="Explicit data type of the queue for internal usage." alt="" coords="5,109,141,136"/>
+<area shape="rect" id="node2" href="$structs__Node__t.html" title="Data that will be stored in the queue." alt="" coords="32,5,115,32"/>
+</map>

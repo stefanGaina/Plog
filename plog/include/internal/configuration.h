@@ -20,6 +20,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 08.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 01.01.2024  Gaina Stefan               Added cpp extern guard.                                     *
  * @details This file defines function prototypes for reading and writing of plog.conf file. This is  *
  * used internally by Plog and not meant to be public API.                                            *
  * @todo N/A.                                                                                         *
@@ -49,11 +50,16 @@
  * FUNCTION PROTOTYPES                                                                                *
  *****************************************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Reads the configuration from plog.conf and if the file does not exist create one with
  * default values.
  * @param void
- * @return TRUE - the configuration has been read successfully | FALSE - an error occured.
+ * @return TRUE - the configuration has been read successfully.
+ * @return FALSE - an error occured.
 */
 extern gboolean configuration_read(void);
 
@@ -63,5 +69,9 @@ extern gboolean configuration_read(void);
  * @return void
 */
 extern void configuration_write(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*< INTERNAL_CONFIGURATION_H_ */

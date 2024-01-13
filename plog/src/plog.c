@@ -27,6 +27,7 @@
  * 16.09.2023  Gaina Stefan               Added mutex for Windows.                                    *
  * 15.12.2023  Gaina Stefan               Made Glib refactor.                                         *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 13.01.2024  Gaina Stefan               Added errno to error messages.                              *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -65,7 +66,7 @@ static gchar* file_name_buffer = NULL;
 /**
  * @brief The current severity level bitmask.
 */
-static atomic_uchar severity_level = 127U;
+static atomic_uchar severity_level = 0U;
 
 /**
  * @brief Flag indicating if the logs have to be printed in the terminal as well.
@@ -415,6 +416,8 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 	current_file_size += g_fprintf(file, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
 	current_file_size += g_vfprintf(file, format, argument_list);
 	current_file_size += g_fprintf(file, "\n");
+
+	(void)fflush(file);
 	check_file_size();
 
 	g_mutex_unlock(&lock);
@@ -464,7 +467,11 @@ static void check_file_size(void)
 	}
 
 	auxiliary_file = fopen(file_name_buffer, "w");
-	if (NULL != auxiliary_file)
+	if (NULL == auxiliary_file)
+	{
+		plog_error(LOG_PREFIX "Failed to open a new log file in write mode! (error message: %s)", strerror(errno));
+	}
+	else
 	{
 		if (0U != file_count_copy)
 		{
@@ -476,10 +483,6 @@ static void check_file_size(void)
 		{
 			current_file_count = 0U;
 		}
-	}
-	else
-	{
-		plog_error(LOG_PREFIX "Failed to open a new log file in write mode!");
 	}
 
 	current_file_size                       = 0UL;
@@ -521,6 +524,8 @@ static void print_from_queue(void)
 
 	/* Left unsafe on purpose. */
 	current_file_size += g_fprintf(file, "%s\n", buffer_copy);
+
+	(void)fflush(file);
 	check_file_size();
 
 	g_free(buffer_copy);
@@ -565,11 +570,7 @@ static void set_color(const guint8 severity_bit)
 			(void)g_fprintf(stdout, "\033[1;36m");
 			break;
 		}
-		case E_PLOG_SEVERITY_LEVEL_TRACE:
-		{
-			restore_color();
-			break;
-		}
+		// case E_PLOG_SEVERITY_LEVEL_TRACE: <- It's the default case.
 		case E_PLOG_SEVERITY_LEVEL_VERBOSE:
 		{
 			(void)g_fprintf(stdout, "\033[0;90m");
@@ -577,6 +578,7 @@ static void set_color(const guint8 severity_bit)
 		}
 		default:
 		{
+			restore_color();
 			break;
 		}
 	}

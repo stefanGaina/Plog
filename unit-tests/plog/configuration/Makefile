@@ -4,6 +4,7 @@
 #   Date:       Author:                    Reason:                                                    #
 #   15.12.2023  Gaina Stefan               Initial version.                                           #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
+#   13.01.2024  Gaina Stefan               Changed memcheck file name.                                #
 # Description: This Makefile is used to compile unit-tests for configuration.c, run them and generate #
 # coverage report.                                                                                    #
 #######################################################################################################
@@ -38,7 +39,7 @@ run_tests: execute_tests copy_results
 
 ### EXECUTE TESTS ###
 execute_tests:
-	$(VALGRIND) --log-file="../../../$(COVERAGE_REPORT)/$(TESTED_FILE_NAME)_memcheck.txt" $(OBJ)/$(EXECUTABLE)
+	$(VALGRIND) --log-file="../../../$(COVERAGE_REPORT)/memcheck_$(TESTED_FILE_NAME).txt" $(OBJ)/$(EXECUTABLE)
 
 ### COPY RESULTS ###
 copy_results:
@@ -56,3 +57,4 @@ clean:
 	rm -rf $(TESTED_FILE_DIR)/*.gcov
 	rm -rf $(TESTED_FILE_DIR)/*.gcda
 	rm -rf $(TESTED_FILE_DIR)/*.gcno
+	rm -rf plog.conf

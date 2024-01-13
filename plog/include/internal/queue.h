@@ -20,6 +20,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 08.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 01.01.2024  Gaina Stefan               Added cpp extern guard.                                     *
  * @details This file defines queue data structure that is used internally by Plog and not meant to   *
  * be public API.                                                                                     *
  * @todo N/A.                                                                                         *
@@ -52,6 +53,10 @@ Queue_t;
  * FUNCTION PROTOTYPES                                                                                *
  *****************************************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Initializes the queue. Do not call any other function before this.
  * @param queue: Queue object.
@@ -71,7 +76,8 @@ extern void queue_deinit(Queue_t* queue);
  * @param queue: Queue object.
  * @param[in] buffer: Log buffer to be stored (the queue does not take ownership).
  * @param severity_bit: Severity bit to be stored.
- * @return FALSE - failed to allocate memory for the new node | TRUE - otherwise.
+ * @return TRUE - the node has been successfully put.
+ * @return FALSE - failed to allocate memory for the new node.
 */
 extern gboolean queue_put(Queue_t* queue, gchar* buffer, guint8 severity_bit);
 
@@ -81,14 +87,16 @@ extern gboolean queue_put(Queue_t* queue, gchar* buffer, guint8 severity_bit);
  * @param queue: Queue object.
  * @param[out] buffer: Stored log buffer.
  * @param[out] severity_bit: Stored severity bit.
- * @return FALSE - buffer and severity bit are unusable | TRUE - otherwise.
+ * @return TRUE - buffer and severity bit are valid.
+ * @return FALSE - buffer and severity bit are invalid.
 */
 extern gboolean queue_pop(Queue_t* queue, gchar** buffer, guint8* severity_bit);
 
 /**
  * @brief Queries if the queue currently has any node.
  * @param queue: Queue object.
- * @return TRUE - the queue does not store any node | FALSE - otherwise.
+ * @return TRUE - the queue does not store any node.
+ * @return FALSE - the queue does store at least one node.
 */
 extern gboolean queue_is_empty(Queue_t* queue);
 
@@ -98,5 +106,9 @@ extern gboolean queue_is_empty(Queue_t* queue);
  * @return void
 */
 extern void queue_interrupt_wait(Queue_t* queue);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*< INTERNAL_QUEUE_H_ */

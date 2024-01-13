@@ -24,9 +24,7 @@
 
 #include <gmock/gmock.h>
 
-extern "C" {
 #include "internal/vector.h"
-}
 
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *

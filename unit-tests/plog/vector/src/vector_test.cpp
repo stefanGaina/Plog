@@ -20,8 +20,13 @@
  * @date:      @author:                   Reason for change:                                          *
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 13.01.2024  Gaina Stefan               Added vector_pop_success test.                              *
+ * Current coverage report:                                                                           *
+ * Line coverage: 100.0% (42/42)                                                                      *
+ * Functions:     100.0% (5/5)                                                                        *
+ * Branches:      100.0% (8/8)                                                                        *
  * @details This file unit-tests vector.c.                                                            *
- * @todo Cover the vector_pop() cases.                                                                *
+ * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
 
@@ -32,9 +37,7 @@
 #include <gtest/gtest.h>
 
 #include "glib_mock.hpp"
-extern "C" {
 #include "internal/vector.h"
-}
 
 /******************************************************************************************************
  * MACROS                                                                                             *
@@ -53,12 +56,13 @@ class VectorTest : public testing::Test
 {
 public:
 	VectorTest(void)
-		: m_glibMock{}
+		: glibMock{}
 	{
 	}
 
 	~VectorTest(void) = default;
 
+protected:
 	void SetUp(void) override
 	{
 	}
@@ -68,7 +72,7 @@ public:
 	}
 
 public:
-	GlibMock m_glibMock;
+	GlibMock glibMock;
 };
 
 /******************************************************************************************************
@@ -82,6 +86,7 @@ TEST_F(VectorTest, vector_init_success)
 	vector_init(&vector);
 	ASSERT_EQ(TRUE, vector_is_empty(&vector)) << "The vector is not empty after initialization!";
 
+	EXPECT_CALL(glibMock, g_free(NULL));
 	vector_clean(&vector);
 	ASSERT_EQ(TRUE, vector_is_empty(&vector)) << "The vector is not empty after clean!";
 }
@@ -96,10 +101,11 @@ TEST_F(VectorTest, vector_push_tryMalloc_fail)
 
 	vector_init(&vector);
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
 		.WillOnce(testing::Return((gpointer)NULL));
 	ASSERT_EQ(FALSE, vector_push(&vector, "LINE1")) << "Successfully pushed line into vector even though memory allocation failed!";
 
+	EXPECT_CALL(glibMock, g_free(NULL));
 	vector_clean(&vector);
 }
 
@@ -109,11 +115,11 @@ TEST_F(VectorTest, vector_push_tryRealloc_fail)
 
 	vector_init(&vector);
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
 		.WillOnce(testing::Return((gpointer)NOT_NULL));
-	EXPECT_CALL(m_glibMock, g_try_realloc(testing::_, testing::_))
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
 		.WillOnce(testing::Return((gpointer)NULL));
-	EXPECT_CALL(m_glibMock, g_free(testing::_))
+	EXPECT_CALL(glibMock, g_free(testing::_))
 		.Times(2);
 	ASSERT_EQ(FALSE, vector_push(&vector, "LINE1")) << "Successfully pushed line into vector even though memory reallocation failed!";
 
@@ -128,14 +134,14 @@ TEST_F(VectorTest, vector_push_success)
 
 	vector_init(&vector);
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
 		.WillOnce(testing::Return((gpointer)buffer1));
-	EXPECT_CALL(m_glibMock, g_try_realloc(testing::_, testing::_))
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
 		.WillOnce(testing::Return((gpointer)buffer2));
-	ASSERT_EQ(TRUE, vector_push(&vector, "LINE1")) << "Failed to push line into vector!";
+	ASSERT_EQ(TRUE, vector_push(&vector, "LINE")) << "Failed to push line into vector!";
 	ASSERT_EQ(FALSE, vector_is_empty(&vector)) << "The vector is empty after successfully pushing a line!";
 
-	EXPECT_CALL(m_glibMock, g_free(testing::_))
+	EXPECT_CALL(glibMock, g_free(testing::_))
 		.Times(2);
 	vector_clean(&vector);
 }
@@ -144,4 +150,38 @@ TEST_F(VectorTest, vector_push_success)
  * vector_pop                                                                                         *
  *****************************************************************************************************/
 
-// TODO
+TEST_F(VectorTest, vector_pop_success)
+{
+	static constexpr const gchar* const INPUT_STRING = "LINE";
+
+	Vector_t vector      = {};
+	gchar    buffer1[64] = {};
+	gchar    buffer2[64] = {};
+	gchar    buffer3[64] = {};
+
+	vector_init(&vector);
+
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)buffer1));
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+		.WillOnce(testing::Return((gpointer)buffer2));
+	ASSERT_EQ(TRUE, vector_push(&vector, INPUT_STRING)) << "Failed to push line into vector!";
+	ASSERT_EQ(FALSE, vector_is_empty(&vector)) << "The vector is empty after successfully pushing a line!";
+
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)buffer3));
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+		.WillOnce(testing::Return((gpointer)buffer2));
+	ASSERT_EQ(TRUE, vector_push(&vector, INPUT_STRING)) << "Failed to push line into vector!";
+	ASSERT_EQ(FALSE, vector_is_empty(&vector)) << "The vector is empty after successfully pushing a line!";
+
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+		.WillOnce(testing::Return((gpointer)buffer2));
+	EXPECT_CALL(glibMock, g_free(testing::_))
+		.Times(3);
+	vector_pop(&vector, buffer1, sizeof(buffer1));
+	ASSERT_EQ(0, strcmp(buffer1, INPUT_STRING)) << "Popped string is not matching!";
+	ASSERT_EQ(FALSE, vector_is_empty(&vector)) << "The vector is not empty after popping!";
+
+	vector_clean(&vector);
+}

@@ -6,6 +6,7 @@
 #   08.12.2023  Gaina Stefan               Added example.                                             #
 #   15.12.2023  Gaina Stefan               Added unit test.                                           #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
+#   13.01.2024  Gaina Stefan               Added the generation of the doxygen files.                 #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -17,7 +18,7 @@ export BIN := bin
 export COVERAGE_REPORT := coverage_report
 
 GENHTML       = vendor/lcov/genhtml.perl
-GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory $(COVERAGE_REPORT)/
+GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory $(COVERAGE_REPORT)
 
 INFO_FILES = $(COVERAGE_REPORT)/configuration.info \
 			 $(COVERAGE_REPORT)/plog_version.info  \
@@ -26,7 +27,9 @@ INFO_FILES = $(COVERAGE_REPORT)/configuration.info \
 			 $(COVERAGE_REPORT)/vector.info
 
 ### MAKE SUBDIRECTORIES ###
-all:
+all: build doxygen
+
+build:
 	$(MAKE) -C plog
 	$(MAKE) -C test
 	$(MAKE) -C example
@@ -38,15 +41,16 @@ clean:
 	$(MAKE) clean -C example
 
 ### MAKE UNIT-TESTS ###
-ut: create_dir ut-clean
+ut: ut-clean
+	mkdir -p $(COVERAGE_REPORT)
 	$(MAKE) -C unit-tests
 	perl $(GENHTML) $(INFO_FILES) $(GENHTML_FLAGS)
-
-### CREATE DIRECTORY ###
-create_dir:
-	mkdir -p $(COVERAGE_REPORT)
 
 ### CLEAN UNIT-TESTS ###
 ut-clean:
 	rm -rf $(COVERAGE_REPORT)/*
 	$(MAKE) clean -C unit-tests
+
+### MAKE DOXYGEN ###
+doxygen:
+	doxygen docs/doxygen.conf

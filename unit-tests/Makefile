@@ -5,11 +5,12 @@
 #   22.06.2023  Gaina Stefan               Initial version.                                           #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 #   15.12.2023  Gaina Stefan               Move unit tests in different directories.                  #
+#   13.01.2024  Gaina Stefan               Clean unnecessary exports.                                 #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
-export CXX   = g++
-export LCOV := ../../vendor/lcov/lcov.perl
+export LCOV     := ../../vendor/lcov/lcov.perl
+export VALGRIND := valgrind --leak-check=summary --show-leak-kinds=all
 
 export CXXFLAGS = -fpermissive -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
 export LDFLAGS  = -L../../../vendor/gtest/$(LIB) -lgtest -lgtest_main -lpthread -L../../../vendor/gmock/$(LIB) -lgmock -lgmock_main

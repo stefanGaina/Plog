@@ -4,11 +4,11 @@
 #   Date:       Author:                    Reason:                                                    #
 #   15.12.2023  Gaina Stefan               Initial version.                                           #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
+#   13.01.2024  Gaina Stefan               Clean unnecessary export.                                  #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
 export TESTED_FILE_DIR := ../../../plog/$(SRC)
-export VALGRIND        := valgrind --leak-check=summary --show-leak-kinds=all
 
 all:
 	$(MAKE) -C configuration

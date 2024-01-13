@@ -8,7 +8,7 @@
 # Description: This Makefile is used to generate the Plog library.                                    #
 #######################################################################################################
 
-CFLAGS = `pkg-config --cflags glib-2.0` -Wall -Werror -Wpointer-arith -fPIC
+CFLAGS  = `pkg-config --cflags glib-2.0` -Wall -Werror -fPIC
 LDFLAGS = `pkg-config --libs glib-2.0`
 
 INCLUDES = -Iinclude

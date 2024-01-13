@@ -20,6 +20,11 @@
  * @date:      @author:                   Reason for change:                                          *
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 13.01.2024  Gaina Stefan               Added mock expectation calls.                               *
+ * Current coverage report:                                                                           *
+ * Line coverage: 100.0% (73/73)                                                                      *
+ * Functions:     100.0% (6/6)                                                                        *
+ * Branches:      100.0% (12/12)                                                                      *
  * @details This file unit-tests queue.c.                                                             *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -32,9 +37,7 @@
 #include <gtest/gtest.h>
 
 #include "glib_mock.hpp"
-extern "C" {
 #include "internal/queue.h"
-}
 
 /******************************************************************************************************
  * MACROS                                                                                             *
@@ -53,12 +56,13 @@ class QueueTest : public testing::Test
 {
 public:
 	QueueTest(void)
-		: m_glibMock{}
+		: glibMock{}
 	{
 	}
 
 	~QueueTest(void) = default;
 
+protected:
 	void SetUp(void) override
 	{
 	}
@@ -68,7 +72,7 @@ public:
 	}
 
 public:
-	GlibMock m_glibMock;
+	GlibMock glibMock;
 };
 
 /******************************************************************************************************
@@ -96,7 +100,7 @@ TEST_F(QueueTest, queue_put_tryMalloc_fail)
 
 	queue_init(&queue);
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
 		.WillOnce(testing::Return((gpointer)NULL));
 	ASSERT_EQ(FALSE, queue_put(&queue, NULL, 0U)) << "Successfully put node in queue even though memory allocation failed!";
 
@@ -110,8 +114,8 @@ TEST_F(QueueTest, queue_put_success)
 
 	queue_init(&queue);
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
-		.WillOnce(testing::Invoke([&node] (const gsize n_bytes)
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Invoke([&node] (const gsize n_bytes) -> gpointer
 		{
 			void* const auxiliary = malloc(n_bytes);
 
@@ -119,13 +123,13 @@ TEST_F(QueueTest, queue_put_success)
 			if (NULL == node)
 			{
 				ADD_FAILURE() << "Failed to allocate memory for node!";
-				return (gpointer)NULL;
+				return NULL;
 			}
-			return (gpointer)node;
+			return node;
 		}));
 	ASSERT_EQ(TRUE, queue_put(&queue, NULL, 0U)) << "Failed to put node in queue!";
 
-	EXPECT_CALL(m_glibMock, g_free(testing::_));
+	EXPECT_CALL(glibMock, g_free(testing::_));
 	queue_deinit(&queue);
 	free(node);
 }
@@ -146,8 +150,8 @@ TEST_F(QueueTest, queue_pop_success)
 
 	queue_init(&queue);
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
-		.WillOnce(testing::Invoke([&node1] (const gsize n_bytes)
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Invoke([&node1] (const gsize n_bytes) -> gpointer
 		{
 			void* const auxiliary = malloc(n_bytes);
 
@@ -155,14 +159,14 @@ TEST_F(QueueTest, queue_pop_success)
 			if (NULL == node1)
 			{
 				ADD_FAILURE() << "Failed to allocate memory for node1!";
-				return (gpointer)NULL;
+				return NULL;
 			}
-			return (gpointer)node1;
+			return node1;
 		}));
 	ASSERT_EQ(TRUE, queue_put(&queue, buffer1, 127U)) << "Failed to put node in queue!";
 
-	EXPECT_CALL(m_glibMock, g_try_malloc(testing::_))
-		.WillOnce(testing::Invoke([&node2] (const gsize n_bytes)
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Invoke([&node2] (const gsize n_bytes) -> gpointer
 		{
 			void* const auxiliary = malloc(n_bytes);
 
@@ -170,23 +174,23 @@ TEST_F(QueueTest, queue_pop_success)
 			if (NULL == node2)
 			{
 				ADD_FAILURE() << "Failed to allocate memory for node2!";
-				return (gpointer)NULL;
+				return NULL;
 			}
-			return (gpointer)node2;
+			return node2;
 		}));
 	ASSERT_EQ(TRUE, queue_put(&queue, buffer2, 63U)) << "Failed to put node in queue!";
 
-	EXPECT_CALL(m_glibMock, g_free(testing::_));
+	EXPECT_CALL(glibMock, g_free(testing::_));
 	ASSERT_EQ(TRUE, queue_pop(&queue, &buffer, &severity_level)) << "Failed to pop node from queue";
 	ASSERT_EQ(buffer1, buffer) << "Incorrect buffer popped!";
 	ASSERT_EQ(127U, severity_level) << "Invalid severity level popped!";
 
-	EXPECT_CALL(m_glibMock, g_free(testing::_));
+	EXPECT_CALL(glibMock, g_free(testing::_));
 	ASSERT_EQ(TRUE, queue_pop(&queue, &buffer, &severity_level)) << "Failed to pop node from queue";
 	ASSERT_EQ(buffer2, buffer) << "Incorrect buffer popped!";
 	ASSERT_EQ(63U, severity_level) << "Invalid severity level popped!";
 
-	EXPECT_CALL(m_glibMock, g_cond_wait(testing::_, testing::_));
+	EXPECT_CALL(glibMock, g_cond_wait(testing::_, testing::_));
 	ASSERT_EQ(TRUE, queue_is_empty(&queue)) << "The queue is not empty after popping 2 nodes!";
 	ASSERT_EQ(FALSE, queue_pop(&queue, &buffer, &severity_level));
 	ASSERT_EQ(buffer2, buffer) << "Buffer changed after failed pop!";

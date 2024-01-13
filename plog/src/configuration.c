@@ -20,6 +20,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 13.01.2024  Gaina Stefan               Added file size and file count.                             *
  * @details This file implements the interface defined in configuration.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -143,12 +144,12 @@ gboolean configuration_read(void)
 	file = fopen(PLOG_CONFIGURATION_FILE_NAME, "r");
 	if (NULL == file)
 	{
-		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in read mode!");
+		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in read mode! (error message: %s)", strerror(errno));
 
 		file = fopen(PLOG_CONFIGURATION_FILE_NAME, "w");
 		if (NULL == file)
 		{
-			plog_error(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in write mode!");
+			plog_error(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in write mode! (error message: %s)", strerror(errno));
 			return FALSE;
 		}
 
@@ -156,8 +157,8 @@ gboolean configuration_read(void)
 		plog_set_severity_level(127U);
 		plog_set_file_size(0UL);
 		plog_set_file_count(0U);
-		(void)plog_set_buffer_size(0UL);
 		plog_set_terminal_mode(FALSE);
+		(void)plog_set_buffer_size(0UL);
 	}
 	else
 	{
@@ -249,7 +250,7 @@ gboolean configuration_read(void)
 				continue;
 			}
 
-			plog_warn(LOG_PREFIX "Invalid configuration line: %s", buffer);
+			plog_warn(LOG_PREFIX "Invalid configuration line: %s (error message: %s)", buffer, strerror(errno));
 		}
 	}
 
@@ -268,7 +269,11 @@ void configuration_write(void)
 	vector_init(&vector);
 
 	file = fopen(PLOG_CONFIGURATION_FILE_NAME, "r");
-	if (NULL != file)
+	if (NULL == file)
+	{
+		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in read mode! (error message: %s)", strerror(errno));
+	}
+	else
 	{
 		while (NULL != fgets(buffer, sizeof(buffer), file))
 		{
@@ -285,7 +290,11 @@ void configuration_write(void)
 		if (TRUE == is_read_successful)
 		{
 			file = fopen(PLOG_CONFIGURATION_FILE_NAME, "w");
-			if (NULL != file)
+			if (NULL == file)
+			{
+				plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in write mode! (error message: %s)", strerror(errno));
+			}
+			else
 			{
 				while (FALSE == vector_is_empty(&vector))
 				{
@@ -331,17 +340,9 @@ void configuration_write(void)
 				}
 				close_configuration_file(file);
 			}
-			else
-			{
-				plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in write mode!");
-			}
 		}
 
 		vector_clean(&vector);
-	}
-	else
-	{
-		plog_warn(LOG_PREFIX "Failed to open \"" PLOG_CONFIGURATION_FILE_NAME "\" in read mode!");
 	}
 
 	if (FALSE == plog_set_buffer_size(0UL))
@@ -349,15 +350,16 @@ void configuration_write(void)
 		plog_error(LOG_PREFIX "Failed to free the buffer!");
 	}
 	plog_set_severity_level(0U);
+	plog_set_file_size(0UL);
+	plog_set_file_count(0U);
 	plog_set_terminal_mode(FALSE);
 }
 
 static void close_configuration_file(FILE* const file)
 {
-	const gint32 error_code = fclose(file);
-	if (0 != error_code)
+	if (0 != fclose(file))
 	{
-		plog_warn(LOG_PREFIX "Failed to close \"" PLOG_CONFIGURATION_FILE_NAME "\"! (error code: %" G_GINT32_FORMAT ")", error_code);
+		plog_warn(LOG_PREFIX "Failed to close \"" PLOG_CONFIGURATION_FILE_NAME "\"! (error message: %s)", strerror(errno));
 	}
 }
 

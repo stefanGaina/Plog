@@ -20,6 +20,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 08.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 01.01.2024  Gaina Stefan               Added cpp extern guard.                                     *
  * @details This file defines vector data structure that is used internally by Plog and not meant to  *
  * be public API.                                                                                     *
  * @todo N/A.                                                                                         *
@@ -52,6 +53,10 @@ Vector_t;
  * FUNCTION PROTOTYPES                                                                                *
  *****************************************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Initializes the vector. Do not call any other function before this.
  * @param vector: Vector object.
@@ -70,7 +75,8 @@ extern void vector_clean(Vector_t* vector);
  * @brief Pushes a string (makes a copy) into the vector.
  * @param vector: Vector object.
  * @param buffer: The string that will be copied.
- * @return TRUE - the string has been successfully pushed | FALSE - an error has occurred.
+ * @return TRUE - the string has been successfully pushed.
+ * @return FALSE - an error has occurred.
 */
 extern gboolean vector_push(Vector_t* vector, const gchar* buffer);
 
@@ -86,8 +92,13 @@ extern void vector_pop(Vector_t* vector, gchar* buffer, gsize buffer_size);
 /**
  * @brief Queries if the vector currently stores any string.
  * @param vector: Vector object.
- * @return TRUE - the vector does not store any string | FALSE - otherwise.
+ * @return TRUE - the vector does not store any string.
+ * @return FALSE - otherwise.
 */
 extern gboolean vector_is_empty(const Vector_t* vector);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*< VECTOR_H_ */

@@ -20,7 +20,12 @@
  * @date:      @author:                   Reason for change:                                          *
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 13.01.2024  Gaina Stefan               Added coverage report.                                      *
  * @details This file unit-tests plog_version.c.                                                      *
+ * Current coverage report:                                                                           *
+ * Line coverage: 100.0% (2/2)                                                                        *
+ * Functions:     100.0% (1/1)                                                                        *
+ * Branches:      N/A    (0/0)                                                                        *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
