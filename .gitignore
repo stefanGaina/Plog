@@ -19,3 +19,6 @@ coverage_report
 *.info
 read_only.txt
 messages
+
+# Compilation timer
+vendor/Compilation-Timer/time
