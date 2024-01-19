@@ -24,6 +24,7 @@
  * 16.09.2023  Gaina Stefan               Updated version to 1.0.2.                                   *
  * 08.12.2023  Gaina Stefan               Updated version to 2.0.0.                                   *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 19.01.2024  Gaina Stefan               Added PLOG_STRIP_ALL block.                                 *
  * @details This file defines the type definitions and function prototype of getting the version of   *
  * Plog.                                                                                              *
  * @todo N/A.                                                                                         *
@@ -36,6 +37,8 @@
 /******************************************************************************************************
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
+
+#ifndef PLOG_STRIP_ALL
 
 #include <glib.h>
 
@@ -91,5 +94,7 @@ extern plog_Version_t plog_get_version(void);
 #ifdef __cplusplus
 }
 #endif
+
+#endif /*< PLOG_STRIP_ALL */
 
 #endif /*< PLOG_VERSION_H_ */

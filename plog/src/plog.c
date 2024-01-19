@@ -17,8 +17,7 @@
 
 /******************************************************************************************************
  * @file plog.c                                                                                       *
- * @date:      @author:                   Reason for change:                                          *
- * 22.06.2023  Gaina Stefan               Initial version.                                            *
+ * @date:      @author:                   Reason for change (last 10 changes):                        *
  * 22.06.2023  Gaina Stefan               Added plog_get_version.                                     *
  * 29.06.2023  Gaina Stefan               Moved plog_get_version to plog_version.c.                   *
  * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
@@ -28,6 +27,7 @@
  * 15.12.2023  Gaina Stefan               Made Glib refactor.                                         *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
  * 13.01.2024  Gaina Stefan               Added errno to error messages.                              *
+ * 19.01.2024  Gaina Stefan               Fixed compiler warnings.                                    *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -378,7 +378,7 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 		bytes_copied = g_snprintf(buffer, buffer_size, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
 		if (0 <= bytes_copied)
 		{
-			if (buffer_size > bytes_copied + 1)
+			if (buffer_size > (gsize)bytes_copied + 1UL)
 			{
 				bytes_copied2 = g_vsnprintf((gchar*)(buffer + bytes_copied), buffer_size - bytes_copied, format, argument_list);
 			}
@@ -494,6 +494,8 @@ static void check_file_size(void)
 
 static gpointer work_function(gpointer const data)
 {
+	(void)data;
+
 	while (TRUE == is_working)
 	{
 		print_from_queue();
@@ -570,7 +572,7 @@ static void set_color(const guint8 severity_bit)
 			(void)g_fprintf(stdout, "\033[1;36m");
 			break;
 		}
-		// case E_PLOG_SEVERITY_LEVEL_TRACE: <- It's the default case.
+		// case E_PLOG_SEVERITY_LEVEL_TRACE: <- it's the default case.
 		case E_PLOG_SEVERITY_LEVEL_VERBOSE:
 		{
 			(void)g_fprintf(stdout, "\033[0;90m");

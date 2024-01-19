@@ -5,10 +5,11 @@
 #   29.06.2023  Gaina Stefan               Initial version.                                           #
 #   08.12.2023  Gaina Stefan               Added glib.                                                #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
+#   19.01.2024  Gaina Stefan               Added compiler flags.                                      #
 # Description: This Makefile is used to generate the Plog library.                                    #
 #######################################################################################################
 
-CFLAGS  = `pkg-config --cflags glib-2.0` -Wall -Werror -fPIC
+CFLAGS  = `pkg-config --cflags glib-2.0` -Wextra -Wall -Werror -fPIC -O2
 LDFLAGS = `pkg-config --libs glib-2.0`
 
 INCLUDES = -Iinclude
