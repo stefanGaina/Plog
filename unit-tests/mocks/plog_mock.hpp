@@ -13,7 +13,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 #ifndef PLOG_MOCK_HPP_
 #define PLOG_MOCK_HPP_
@@ -79,12 +79,12 @@ class PlogMock : public Plog
 public:
 	PlogMock(void)
 	{
-		s_plogMock = this;
+		plogMock = this;
 	}
 
 	virtual ~PlogMock(void)
 	{
-		s_plogMock = nullptr;
+		plogMock = nullptr;
 	}
 
 	MOCK_METHOD1(plog_init, gboolean(const gchar*));
@@ -101,14 +101,14 @@ public:
 	MOCK_METHOD0(plog_get_buffer_size, gsize(void));
 
 public:
-	static PlogMock* s_plogMock;
+	static PlogMock* plogMock;
 };
 
 /******************************************************************************************************
  * LOCAL VARIABLES                                                                                    *
  *****************************************************************************************************/
 
-PlogMock* PlogMock::s_plogMock = nullptr;
+PlogMock* PlogMock::plogMock = nullptr;
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
@@ -118,102 +118,102 @@ extern "C" {
 
 gboolean plog_init(const gchar* const file_name)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_init(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_init(): nullptr == PlogMock::plogMock";
 		return FALSE;
 	}
-	return PlogMock::s_plogMock->plog_init(file_name);
+	return PlogMock::plogMock->plog_init(file_name);
 }
 
 void plog_deinit(void)
 {
-	ASSERT_NE(nullptr, PlogMock::s_plogMock) << "plog_deinit(): nullptr == PlogMock::s_plogMock";
-	PlogMock::s_plogMock->plog_deinit();
+	ASSERT_NE(nullptr, PlogMock::plogMock) << "plog_deinit(): nullptr == PlogMock::plogMock";
+	PlogMock::plogMock->plog_deinit();
 }
 
 void plog_set_severity_level(const guint8 severity_level_mask)
 {
-	ASSERT_NE(nullptr, PlogMock::s_plogMock) << "plog_set_severity_level(): nullptr == PlogMock::s_plogMock";
-	PlogMock::s_plogMock->plog_set_severity_level(severity_level_mask);
+	ASSERT_NE(nullptr, PlogMock::plogMock) << "plog_set_severity_level(): nullptr == PlogMock::plogMock";
+	PlogMock::plogMock->plog_set_severity_level(severity_level_mask);
 }
 
 guint8 plog_get_severity_level(void)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_get_severity_level(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_get_severity_level(): nullptr == PlogMock::plogMock";
 		return 0U;
 	}
-	return PlogMock::s_plogMock->plog_get_severity_level();
+	return PlogMock::plogMock->plog_get_severity_level();
 }
 
 void plog_set_file_size(const gsize file_size)
 {
-	ASSERT_NE(nullptr, PlogMock::s_plogMock) << "plog_set_file_size(): nullptr == PlogMock::s_plogMock";
-	PlogMock::s_plogMock->plog_set_file_size(file_size);
+	ASSERT_NE(nullptr, PlogMock::plogMock) << "plog_set_file_size(): nullptr == PlogMock::plogMock";
+	PlogMock::plogMock->plog_set_file_size(file_size);
 }
 
 gsize plog_get_file_size(void)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_get_file_size(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_get_file_size(): nullptr == PlogMock::plogMock";
 		return 0UL;
 	}
-	return PlogMock::s_plogMock->plog_get_file_size();
+	return PlogMock::plogMock->plog_get_file_size();
 }
 
 void plog_set_file_count(const guint8 file_count)
 {
-	ASSERT_NE(nullptr, PlogMock::s_plogMock) << "plog_set_file_count(): nullptr == PlogMock::s_plogMock";
-	PlogMock::s_plogMock->plog_set_file_count(file_count);
+	ASSERT_NE(nullptr, PlogMock::plogMock) << "plog_set_file_count(): nullptr == PlogMock::plogMock";
+	PlogMock::plogMock->plog_set_file_count(file_count);
 }
 
 guint8 plog_get_file_count(void)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_get_file_count(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_get_file_count(): nullptr == PlogMock::plogMock";
 		return 0U;
 	}
-	return PlogMock::s_plogMock->plog_get_file_count();
+	return PlogMock::plogMock->plog_get_file_count();
 }
 
 void plog_set_terminal_mode(const gboolean terminal_mode)
 {
-	ASSERT_NE(nullptr, PlogMock::s_plogMock) << "plog_set_terminal_mode(): nullptr == PlogMock::s_plogMock";
-	PlogMock::s_plogMock->plog_set_terminal_mode(terminal_mode);
+	ASSERT_NE(nullptr, PlogMock::plogMock) << "plog_set_terminal_mode(): nullptr == PlogMock::plogMock";
+	PlogMock::plogMock->plog_set_terminal_mode(terminal_mode);
 }
 
 gboolean plog_get_terminal_mode(void)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_get_terminal_mode(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_get_terminal_mode(): nullptr == PlogMock::plogMock";
 		return FALSE;
 	}
-	return PlogMock::s_plogMock->plog_get_terminal_mode();
+	return PlogMock::plogMock->plog_get_terminal_mode();
 }
 
 gboolean plog_set_buffer_size(const gsize buffer_size)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_set_buffer_size(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_set_buffer_size(): nullptr == PlogMock::plogMock";
 		return FALSE;
 	}
-	return PlogMock::s_plogMock->plog_set_buffer_size(buffer_size);
+	return PlogMock::plogMock->plog_set_buffer_size(buffer_size);
 }
 
 gsize plog_get_buffer_size(void)
 {
-	if (nullptr == PlogMock::s_plogMock)
+	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_get_buffer_size(): nullptr == PlogMock::s_plogMock";
+		ADD_FAILURE() << "plog_get_buffer_size(): nullptr == PlogMock::plogMock";
 		return 0UL;
 	}
-	return PlogMock::s_plogMock->plog_get_buffer_size();
+	return PlogMock::plogMock->plog_get_buffer_size();
 }
 
 void plog_internal(guint8 severity_bit, const gchar* severity_tag, const gchar* function_name, const gchar* format, ...)

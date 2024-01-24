@@ -8,6 +8,7 @@
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
 #   13.01.2024  Gaina Stefan               Added the generation of the doxygen files.                 #
 #   18.01.2024  Gaina Stefan               Added compilation timer.                                   #
+#   24.01.2024  Gaina Stefan               Moved logic to unit-tests Makefile.                        #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -15,17 +16,6 @@ export SRC := src
 export OBJ := obj
 export LIB := lib
 export BIN := bin
-
-export COVERAGE_REPORT := coverage_report
-
-GENHTML       = vendor/lcov/genhtml.perl
-GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory $(COVERAGE_REPORT)
-
-INFO_FILES = $(COVERAGE_REPORT)/configuration.info \
-			 $(COVERAGE_REPORT)/plog_version.info  \
-			 $(COVERAGE_REPORT)/plog.info          \
-			 $(COVERAGE_REPORT)/queue.info         \
-			 $(COVERAGE_REPORT)/vector.info
 
 COMPILATION_TIMER = cd vendor/Compilation-Timer && ./compilation-timer
 
@@ -46,14 +36,11 @@ clean: start_timer
 
 ### MAKE UNIT-TESTS ###
 ut: start_timer ut-clean
-	mkdir -p $(COVERAGE_REPORT)
 	$(MAKE) -C unit-tests
-	perl $(GENHTML) $(INFO_FILES) $(GENHTML_FLAGS)
 	$(COMPILATION_TIMER) end
 
 ### CLEAN UNIT-TESTS ###
 ut-clean:
-	rm -rf $(COVERAGE_REPORT)/*
 	$(MAKE) clean -C unit-tests
 
 ### MAKE DOXYGEN ###

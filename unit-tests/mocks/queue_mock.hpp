@@ -13,7 +13,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 #ifndef QUEUE_MOCK_HPP_
 #define QUEUE_MOCK_HPP_
@@ -48,12 +48,12 @@ class QueueMock : public Queue
 public:
 	QueueMock(void)
 	{
-		s_queueMock = this;
+		queueMock = this;
 	}
 
 	virtual ~QueueMock(void)
 	{
-		s_queueMock = nullptr;
+		queueMock = nullptr;
 	}
 
 	MOCK_METHOD1(queue_init, void(Queue_t*));
@@ -64,14 +64,14 @@ public:
 	MOCK_METHOD1(queue_interrupt_wait, void(Queue_t*));
 
 public:
-	static QueueMock* s_queueMock;
+	static QueueMock* queueMock;
 };
 
 /******************************************************************************************************
  * LOCAL VARIABLES                                                                                    *
  *****************************************************************************************************/
 
-QueueMock* QueueMock::s_queueMock = nullptr;
+QueueMock* QueueMock::queueMock = nullptr;
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
@@ -81,50 +81,50 @@ extern "C" {
 
 void queue_init(Queue_t* const queue)
 {
-	ASSERT_NE(nullptr, QueueMock::s_queueMock) << "queue_init(): nullptr == QueueMock::s_queueMock";
-	QueueMock::s_queueMock->queue_init(queue);
+	ASSERT_NE(nullptr, QueueMock::queueMock) << "queue_init(): nullptr == QueueMock::queueMock";
+	QueueMock::queueMock->queue_init(queue);
 }
 
 void queue_deinit(Queue_t* const queue)
 {
-	ASSERT_NE(nullptr, QueueMock::s_queueMock) << "queue_deinit(): nullptr == QueueMock::s_queueMock";
-	QueueMock::s_queueMock->queue_deinit(queue);
+	ASSERT_NE(nullptr, QueueMock::queueMock) << "queue_deinit(): nullptr == QueueMock::queueMock";
+	QueueMock::queueMock->queue_deinit(queue);
 }
 
 gboolean queue_put(Queue_t* const queue, gchar* const buffer, const guint8 severity_bit)
 {
-	if (nullptr == QueueMock::s_queueMock)
+	if (nullptr == QueueMock::queueMock)
 	{
-		ADD_FAILURE() << "queue_put(): nullptr == QueueMock::s_queueMock";
+		ADD_FAILURE() << "queue_put(): nullptr == QueueMock::queueMock";
 		return FALSE;
 	}
-	return QueueMock::s_queueMock->queue_put(queue, buffer, severity_bit);
+	return QueueMock::queueMock->queue_put(queue, buffer, severity_bit);
 }
 
 gboolean queue_pop(Queue_t* const queue, gchar** const buffer, guint8* const severity_bit)
 {
-	if (nullptr == QueueMock::s_queueMock)
+	if (nullptr == QueueMock::queueMock)
 	{
-		ADD_FAILURE() << "queue_pop(): nullptr == QueueMock::s_queueMock";
+		ADD_FAILURE() << "queue_pop(): nullptr == QueueMock::queueMock";
 		return FALSE;
 	}
-	return QueueMock::s_queueMock->queue_pop(queue, buffer, severity_bit);
+	return QueueMock::queueMock->queue_pop(queue, buffer, severity_bit);
 }
 
 gboolean queue_is_empty(Queue_t* const queue)
 {
-	if (nullptr == QueueMock::s_queueMock)
+	if (nullptr == QueueMock::queueMock)
 	{
-		ADD_FAILURE() << "queue_is_empty(): nullptr == QueueMock::s_queueMock";
+		ADD_FAILURE() << "queue_is_empty(): nullptr == QueueMock::queueMock";
 		return FALSE;
 	}
-	return QueueMock::s_queueMock->queue_is_empty(queue);
+	return QueueMock::queueMock->queue_is_empty(queue);
 }
 
 void queue_interrupt_wait(Queue_t* const queue)
 {
-	ASSERT_NE(nullptr, QueueMock::s_queueMock) << "queue_interrupt_wait(): nullptr == QueueMock::s_queueMock";
-	QueueMock::s_queueMock->queue_interrupt_wait(queue);
+	ASSERT_NE(nullptr, QueueMock::queueMock) << "queue_interrupt_wait(): nullptr == QueueMock::queueMock";
+	QueueMock::queueMock->queue_interrupt_wait(queue);
 }
 
 }

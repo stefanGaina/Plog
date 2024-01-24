@@ -4,13 +4,14 @@
 #   Date:       Author:                    Reason:                                                    #
 #   15.12.2023  Gaina Stefan               Initial version.                                           #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
+#   24.01.2024  Gaina Stefan               Fixed libplog.so linkage.                                  #
 # Description: This Makefile is used to generate an application that loads Plog library and gives an  #
 # example of how the functions might get called.                                                      #
 #######################################################################################################
 
 CFLAGS = `pkg-config --cflags glib-2.0` -Wno-format
 # CFLAGS += -DPLOG_STRIP_ALL
-LDFLAGS = -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../plog$(LIB) -L../plog/$(LIB) -lplog
+LDFLAGS = -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../plog/$(LIB) -L../plog/$(LIB) -lplog
 
 INCLUDES = -I../plog/include
 

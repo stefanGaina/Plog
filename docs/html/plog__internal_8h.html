@@ -100,6 +100,9 @@ Functions</h2></td></tr>
 <tr class="memitem:acfae896be21d8d3083d439275c976043"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#acfae896be21d8d3083d439275c976043">plog_internal</a> (guint8 severity_bit, const gchar *severity_tag, const gchar *function_name, const gchar *format,...)</td></tr>
 <tr class="memdesc:acfae896be21d8d3083d439275c976043"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#acfae896be21d8d3083d439275c976043">More...</a><br /></td></tr>
 <tr class="separator:acfae896be21d8d3083d439275c976043"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac70be287c9914dc80c00336604ce529d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ac70be287c9914dc80c00336604ce529d">plog_internal_assert</a> (gboolean condition, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</td></tr>
+<tr class="memdesc:ac70be287c9914dc80c00336604ce529d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints an error message if the condition did not pass.  <a href="plog__internal_8h.html#ac70be287c9914dc80c00336604ce529d">More...</a><br /></td></tr>
+<tr class="separator:ac70be287c9914dc80c00336604ce529d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="acfae896be21d8d3083d439275c976043"></a>
@@ -154,6 +157,65 @@ Functions</h2></td></tr>
     <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
     <tr><td class="paramname">format</td><td>String that contains the text to be written. </td></tr>
     <tr><td class="paramname">VA_ARGS</td><td>The parameters passed in a printf style (optional). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ac70be287c9914dc80c00336604ce529d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac70be287c9914dc80c00336604ce529d">&#9670;&nbsp;</a></span>plog_internal_assert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void plog_internal_assert </td>
+          <td>(</td>
+          <td class="paramtype">gboolean&#160;</td>
+          <td class="paramname"><em>condition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>message</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>file_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>function_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint32&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Performs sanity check and prints an error message if the condition did not pass. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>The condition that needs to be true for the assertion to pass. Otherwise the program will be aborted. </td></tr>
+    <tr><td class="paramname">message</td><td>The message that will be printed if the condition did not pass. </td></tr>
+    <tr><td class="paramname">file_name</td><td>String that contains the name of the caller file. </td></tr>
+    <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
+    <tr><td class="paramname">line</td><td>The code line where this function is called. </td></tr>
   </table>
   </dd>
 </dl>

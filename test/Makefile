@@ -6,22 +6,24 @@
 #   29.06.2023  Gaina Stefan               Changed plog library name.                                 #
 #   13.09.2023  Gaina Stefan               Fixed warnings on Linux.                                   #
 #   20.12.2023  Gaina Stefan               Updated copyright.                                         #
+#   24.01.2024  Gaina Stefan               Updated for API-Test 2.0.0.                                #
 # Description: This Makefile is used to generate an application that loads Plog library and tests its #
 # API using API-Test.                                                                                 #
 #######################################################################################################
 
 CFLAGS  = `pkg-config --cflags glib-2.0` -Wall -Werror -Wno-format-security
-LDFLAGS = -Wl,-rpath='.' -L../vendor/apitest/$(LIB) -lapitest \
-		  -Wl,-rpath='.' -L../plog/$(LIB) -lplog
+LDFLAGS = `pkg-config --libs glib-2.0`                                                                       \
+		  -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../vendor/API-Test/$(LIB) -L../vendor/API-Test/$(LIB) -lapitest \
+		  -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../plog/$(LIB) -L../plog/$(LIB) -lplog
 
-INCLUDES = -I../vendor/apitest/include \
+INCLUDES = -I../vendor/API-Test/include \
 		   -I../plog/include
 
 SOURCES    := $(wildcard $(SRC)/*.c)
 OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
-EXECUTABLE := plog-test.exe
+EXECUTABLE := plog-test
 
-all: | create_dirs $(EXECUTABLE) copy_libraries
+all: | create_dirs $(EXECUTABLE)
 
 ### CREATE DIRECTORIES ###
 create_dirs:
@@ -40,8 +42,3 @@ $(OBJ)/%.o: $(SRC)/%.c
 clean:
 	rm -rf $(OBJ)/*
 	rm -rf $(BIN)/*
-
-### COPY LIBRARIES ###
-copy_libraries:
-	cp ../vendor/apitest/$(LIB)/libapitest.so bin/
-	cp ../plog/$(LIB)/libplog.so bin/

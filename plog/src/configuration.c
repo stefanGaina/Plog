@@ -13,7 +13,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 /******************************************************************************************************
  * @file configuration.c                                                                              *
@@ -21,6 +21,7 @@
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
  * 13.01.2024  Gaina Stefan               Added file size and file count.                             *
+ * 24.01.2024  Gaina Stefan               Added a missing const.                                      *
  * @details This file implements the interface defined in configuration.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -363,7 +364,7 @@ static void close_configuration_file(FILE* const file)
 	}
 }
 
-static gsize integer_to_string(gchar* buffer, guint64 integer)
+static gsize integer_to_string(gchar* const buffer, guint64 integer)
 {
 	gsize offset = 0UL;
 	gsize index  = 0UL;

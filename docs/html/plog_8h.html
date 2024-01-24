@@ -126,6 +126,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ac3ab0f69710c224e23dc97071073d96c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8h.html#ac3ab0f69710c224e23dc97071073d96c">plog_verbose</a>(format, ...)&#160;&#160;&#160;<a class="el" href="plog_8c.html#a164cfed64f827538c9c222d576f26640">plog_internal</a>(<a class="el" href="plog_8h.html#a2553d8fa5ed8fc9fd1194a44416e0a3aa2e5bb762c33287d15c950201871d44d2">E_PLOG_SEVERITY_LEVEL_VERBOSE</a>, &quot;verbose&quot;, __FUNCTION__, format, ##__VA_ARGS__)</td></tr>
 <tr class="memdesc:ac3ab0f69710c224e23dc97071073d96c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message for verbose details.  <a href="plog_8h.html#ac3ab0f69710c224e23dc97071073d96c">More...</a><br /></td></tr>
 <tr class="separator:ac3ab0f69710c224e23dc97071073d96c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa60fbfb3a31901ec4317b2f978f5e867"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8h.html#aa60fbfb3a31901ec4317b2f978f5e867">plog_assert</a>(condition)&#160;&#160;&#160;<a class="el" href="plog_8c.html#a4a391245264d008b310636578cb2cf70">plog_internal_assert</a>(condition, #condition, __FILE__, __FUNCTION__, __LINE__)</td></tr>
+<tr class="memdesc:aa60fbfb3a31901ec4317b2f978f5e867"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints an error message with the file, function, code line and the condition that did not pass.  <a href="plog_8h.html#aa60fbfb3a31901ec4317b2f978f5e867">More...</a><br /></td></tr>
+<tr class="separator:aa60fbfb3a31901ec4317b2f978f5e867"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -464,6 +467,33 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">format</td><td>String that contains the text to be written. </td></tr>
     <tr><td class="paramname">VA_ARGS</td><td>The parameters passed in a printf style (optional). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="aa60fbfb3a31901ec4317b2f978f5e867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa60fbfb3a31901ec4317b2f978f5e867">&#9670;&nbsp;</a></span>plog_assert</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define plog_assert</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">condition</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="plog_8c.html#a4a391245264d008b310636578cb2cf70">plog_internal_assert</a>(condition, #condition, __FILE__, __FUNCTION__, __LINE__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Performs sanity check and prints an error message with the file, function, code line and the condition that did not pass. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>The condition that needs to be true for the assertion to pass. Otherwise the program will be aborted. </td></tr>
   </table>
   </dd>
 </dl>

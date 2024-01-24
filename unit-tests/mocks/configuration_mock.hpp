@@ -13,7 +13,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 #ifndef CONFIGURATION_MOCK_HPP_
 #define CONFIGURATION_MOCK_HPP_
@@ -44,26 +44,26 @@ class ConfigurationMock : public Configuration
 public:
 	ConfigurationMock(void)
 	{
-		s_configurationMock = this;
+		configurationMock = this;
 	}
 
 	virtual ~ConfigurationMock(void)
 	{
-		s_configurationMock = nullptr;
+		configurationMock = nullptr;
 	}
 
 	MOCK_METHOD0(configuration_read, gboolean(void));
 	MOCK_METHOD0(configuration_write, void(void));
 
 public:
-	static ConfigurationMock* s_configurationMock;
+	static ConfigurationMock* configurationMock;
 };
 
 /******************************************************************************************************
  * LOCAL VARIABLES                                                                                    *
  *****************************************************************************************************/
 
-ConfigurationMock* ConfigurationMock::s_configurationMock = nullptr;
+ConfigurationMock* ConfigurationMock::configurationMock = nullptr;
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
@@ -73,18 +73,18 @@ extern "C" {
 
 gboolean configuration_read(void)
 {
-	if (nullptr == ConfigurationMock::s_configurationMock)
+	if (nullptr == ConfigurationMock::configurationMock)
 	{
-		ADD_FAILURE() << "configuration_read(): nullptr == ConfigurationMock::s_configurationMock";
+		ADD_FAILURE() << "configuration_read(): nullptr == ConfigurationMock::configurationMock";
 		return FALSE;
 	}
-	return ConfigurationMock::s_configurationMock->configuration_read();
+	return ConfigurationMock::configurationMock->configuration_read();
 }
 
 void configuration_write(void)
 {
-	ASSERT_NE(nullptr, ConfigurationMock::s_configurationMock) << "configuration_write(): nullptr == ConfigurationMock::s_configurationMock";
-	ConfigurationMock::s_configurationMock->configuration_write();
+	ASSERT_NE(nullptr, ConfigurationMock::configurationMock) << "configuration_write(): nullptr == ConfigurationMock::configurationMock";
+	ConfigurationMock::configurationMock->configuration_write();
 }
 
 }

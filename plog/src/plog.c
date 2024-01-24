@@ -13,12 +13,11 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 /******************************************************************************************************
  * @file plog.c                                                                                       *
  * @date:      @author:                   Reason for change (last 10 changes):                        *
- * 22.06.2023  Gaina Stefan               Added plog_get_version.                                     *
  * 29.06.2023  Gaina Stefan               Moved plog_get_version to plog_version.c.                   *
  * 10.09.2023  Gaina Stefan               Added terminal mode.                                        *
  * 13.09.2023  Gaina Stefan               Added color for Windows.                                    *
@@ -28,6 +27,7 @@
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
  * 13.01.2024  Gaina Stefan               Added errno to error messages.                              *
  * 19.01.2024  Gaina Stefan               Fixed compiler warnings.                                    *
+ * 24.01.2024  Gaina Stefan               Added plog_internal_assert().                               *
  * @details This file implements the interface defined in plog.h.                                     *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -422,6 +422,17 @@ void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, c
 
 	g_mutex_unlock(&lock);
 	va_end(argument_list);
+}
+
+void plog_internal_assert(const gboolean condition, const gchar* const message, const gchar* const file_name,
+	const gchar* const function_name, const gint32 line)
+{
+	if (FALSE == condition)
+	{
+		plog_internal(E_PLOG_SEVERITY_LEVEL_FATAL, "assertion_failed", function_name, "%s:%" G_GINT32_FORMAT ": (%s)", file_name, line, message);
+		(void)plog_set_buffer_size(0UL);
+		abort();
+	}
 }
 
 static void check_file_size(void)

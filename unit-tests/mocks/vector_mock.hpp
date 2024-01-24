@@ -13,7 +13,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 #ifndef VECTOR_MOCK_HPP_
 #define VECTOR_MOCK_HPP_
@@ -47,12 +47,12 @@ class VectorMock : public Vector
 public:
 	VectorMock(void)
 	{
-		s_vectorMock = this;
+		vectorMock = this;
 	}
 
 	virtual ~VectorMock(void)
 	{
-		s_vectorMock = nullptr;
+		vectorMock = nullptr;
 	}
 
 	MOCK_METHOD1(vector_init, void(Vector_t*));
@@ -62,14 +62,14 @@ public:
 	MOCK_METHOD1(vector_is_empty, gboolean(const Vector_t*));
 
 public:
-	static VectorMock* s_vectorMock;
+	static VectorMock* vectorMock;
 };
 
 /******************************************************************************************************
  * LOCAL VARIABLES                                                                                    *
  *****************************************************************************************************/
 
-VectorMock* VectorMock::s_vectorMock = nullptr;
+VectorMock* VectorMock::vectorMock = nullptr;
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
@@ -79,40 +79,40 @@ extern "C" {
 
 void vector_init(Vector_t* const vector)
 {
-	ASSERT_NE(nullptr, VectorMock::s_vectorMock) << "vector_init(): nullptr == VectorMock::s_vectorMock";
-	VectorMock::s_vectorMock->vector_init(vector);
+	ASSERT_NE(nullptr, VectorMock::vectorMock) << "vector_init(): nullptr == VectorMock::vectorMock";
+	VectorMock::vectorMock->vector_init(vector);
 }
 
 void vector_clean(Vector_t* const vector)
 {
-	ASSERT_NE(nullptr, VectorMock::s_vectorMock) << "vector_clean(): nullptr == VectorMock::s_vectorMock";
-	VectorMock::s_vectorMock->vector_clean(vector);
+	ASSERT_NE(nullptr, VectorMock::vectorMock) << "vector_clean(): nullptr == VectorMock::vectorMock";
+	VectorMock::vectorMock->vector_clean(vector);
 }
 
 gboolean vector_push(Vector_t* const vector, const gchar* const buffer)
 {
-	if (nullptr == VectorMock::s_vectorMock)
+	if (nullptr == VectorMock::vectorMock)
 	{
-		ADD_FAILURE() << "vector_push(): nullptr == VectorMock::s_vectorMock";
+		ADD_FAILURE() << "vector_push(): nullptr == VectorMock::vectorMock";
 		return FALSE;
 	}
-	return VectorMock::s_vectorMock->vector_push(vector, buffer);
+	return VectorMock::vectorMock->vector_push(vector, buffer);
 }
 
 void vector_pop(Vector_t* const vector, gchar* const buffer, const gsize buffer_size)
 {
-	ASSERT_NE(nullptr, VectorMock::s_vectorMock) << "vector_pop(): nullptr == VectorMock::s_vectorMock";
-	VectorMock::s_vectorMock->vector_pop(vector, buffer, buffer_size);
+	ASSERT_NE(nullptr, VectorMock::vectorMock) << "vector_pop(): nullptr == VectorMock::vectorMock";
+	VectorMock::vectorMock->vector_pop(vector, buffer, buffer_size);
 }
 
 gboolean vector_is_empty(const Vector_t* const vector)
 {
-	if (nullptr == VectorMock::s_vectorMock)
+	if (nullptr == VectorMock::vectorMock)
 	{
-		ADD_FAILURE() << "vector_is_empty(): nullptr == VectorMock::s_vectorMock";
+		ADD_FAILURE() << "vector_is_empty(): nullptr == VectorMock::vectorMock";
 		return FALSE;
 	}
-	return VectorMock::s_vectorMock->vector_is_empty(vector);
+	return VectorMock::vectorMock->vector_is_empty(vector);
 }
 
 }

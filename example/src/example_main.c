@@ -20,6 +20,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 15.12.2023  Gaina Stefan               Initial version.                                            *
  * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
+ * 24.01.2024  Gaina Stefan               Added an assert.                                            *
  * @details This file implements a program that showcases how the API can be called and a short       *
  * performance test to enfesize the benefits and drawbacks of the features.                           *
  * @todo N/A.                                                                                         *
@@ -101,6 +102,8 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 	plog_info("Logs/functions after initialization will have an effect!");
+
+	plog_assert(1 == 1);
 
 	severity_level = plog_get_severity_level();
 	plog_set_severity_level(E_PLOG_SEVERITY_LEVEL_FATAL | E_PLOG_SEVERITY_LEVEL_ERROR);

@@ -13,7 +13,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
  *    the original software.                                                                          *
  * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ *****************************************************************************************************/
 
 #ifndef GLIB_MOCK_HPP_
 #define GLIB_MOCK_HPP_
@@ -48,12 +48,12 @@ class GlibMock : public Glib
 public:
 	GlibMock(void)
 	{
-		s_glibMock = this;
+		glibMock = this;
 	}
 
 	virtual ~GlibMock(void)
 	{
-		s_glibMock = nullptr;
+		glibMock = nullptr;
 	}
 
 	MOCK_METHOD2(g_try_realloc, gpointer(gpointer, gsize));
@@ -65,14 +65,14 @@ public:
 	MOCK_METHOD2(g_cond_wait, void(GCond*, GMutex*));
 
 public:
-	static GlibMock* s_glibMock;
+	static GlibMock* glibMock;
 };
 
 /******************************************************************************************************
  * LOCAL VARIABLES                                                                                    *
  *****************************************************************************************************/
 
-GlibMock* GlibMock::s_glibMock = nullptr;
+GlibMock* GlibMock::glibMock = nullptr;
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
@@ -82,60 +82,60 @@ extern "C" {
 
 gpointer g_try_realloc(gpointer const mem, const gsize n_bytes)
 {
-	if (nullptr == GlibMock::s_glibMock)
+	if (nullptr == GlibMock::glibMock)
 	{
-		ADD_FAILURE() << "g_try_realloc(): nullptr == GlibMock::s_glibMock";
+		ADD_FAILURE() << "g_try_realloc(): nullptr == GlibMock::glibMock";
 		return nullptr;
 	}
-	return GlibMock::s_glibMock->g_try_realloc(mem, n_bytes);
+	return GlibMock::glibMock->g_try_realloc(mem, n_bytes);
 }
 
 GThread* g_thread_try_new(const gchar* const name, GThreadFunc const func, gpointer const data, GError** const error)
 {
-	if (nullptr == GlibMock::s_glibMock)
+	if (nullptr == GlibMock::glibMock)
 	{
-		ADD_FAILURE() << "g_thread_try_new(): nullptr == GlibMock::s_glibMock";
+		ADD_FAILURE() << "g_thread_try_new(): nullptr == GlibMock::glibMock";
 		return nullptr;
 	}
-	return GlibMock::s_glibMock->g_thread_try_new(name, func, data, error);
+	return GlibMock::glibMock->g_thread_try_new(name, func, data, error);
 }
 
 void g_free(gpointer const mem)
 {
-	ASSERT_NE(nullptr, GlibMock::s_glibMock) << "g_free(): nullptr == GlibMock::s_glibMock";
-	GlibMock::s_glibMock->g_free(mem);
+	ASSERT_NE(nullptr, GlibMock::glibMock) << "g_free(): nullptr == GlibMock::glibMock";
+	GlibMock::glibMock->g_free(mem);
 }
 
 gpointer g_thread_join(GThread* const thread)
 {
-	if (nullptr == GlibMock::s_glibMock)
+	if (nullptr == GlibMock::glibMock)
 	{
-		ADD_FAILURE() << "g_thread_join(): nullptr == GlibMock::s_glibMock";
+		ADD_FAILURE() << "g_thread_join(): nullptr == GlibMock::glibMock";
 		return nullptr;
 	}
-	return GlibMock::s_glibMock->g_thread_join(thread);
+	return GlibMock::glibMock->g_thread_join(thread);
 }
 
 void g_thread_exit(gpointer const retval)
 {
-	ASSERT_NE(nullptr, GlibMock::s_glibMock) << "g_thread_exit(): nullptr == GlibMock::s_glibMock";
-	GlibMock::s_glibMock->g_thread_exit(retval);
+	ASSERT_NE(nullptr, GlibMock::glibMock) << "g_thread_exit(): nullptr == GlibMock::glibMock";
+	GlibMock::glibMock->g_thread_exit(retval);
 }
 
 gpointer g_try_malloc(const gsize n_bytes)
 {
-	if (nullptr == GlibMock::s_glibMock)
+	if (nullptr == GlibMock::glibMock)
 	{
-		ADD_FAILURE() << "g_try_malloc(): nullptr == GlibMock::s_glibMock";
+		ADD_FAILURE() << "g_try_malloc(): nullptr == GlibMock::glibMock";
 		return nullptr;
 	}
-	return GlibMock::s_glibMock->g_try_malloc(n_bytes);
+	return GlibMock::glibMock->g_try_malloc(n_bytes);
 }
 
 void g_cond_wait(GCond* const cond, GMutex* const mutex)
 {
-	ASSERT_NE(nullptr, GlibMock::s_glibMock) << "g_cond_wait(): nullptr == GlibMock::s_glibMock";
-	GlibMock::s_glibMock->g_cond_wait(cond, mutex);
+	ASSERT_NE(nullptr, GlibMock::glibMock) << "g_cond_wait(): nullptr == GlibMock::glibMock";
+	GlibMock::glibMock->g_cond_wait(cond, mutex);
 }
 
 }
