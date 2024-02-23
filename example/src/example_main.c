@@ -1,34 +1,32 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2024                                                                            *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ * Plog Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *****************************************************************************************************/
 
-/******************************************************************************************************
- * @file example_main.c                                                                               *
- * @date:      @author:                   Reason for change:                                          *
- * 15.12.2023  Gaina Stefan               Initial version.                                            *
- * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
- * 24.01.2024  Gaina Stefan               Added an assert.                                            *
- * @details This file implements a program that showcases how the API can be called and a short       *
- * performance test to enfesize the benefits and drawbacks of the features.                           *
- * @todo N/A.                                                                                         *
- * @bug No known bugs.                                                                                *
+/** ***************************************************************************************************
+ * @file configuration.c
+ * @author Gaina Stefan
+ * @date 15.12.2023
+ * @brief This file implements a program that showcases how the API can be called and a short
+ * performance test to enfesize the benefits and drawbacks of the features.
+ * @todo N/A.
+ * @bug No known bugs.
  *****************************************************************************************************/
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <stdlib.h>
@@ -36,16 +34,16 @@
 #include <plog.h>
 
 /******************************************************************************************************
- * MACROS                                                                                             *
+ * MACROS
  *****************************************************************************************************/
 
-/**
+/** ***************************************************************************************************
  * @brief How many times the logging macros will be invoked.
-*/
+ *****************************************************************************************************/
 #define PERFORMANE_TEST_COUNT 100000UL
 
 /******************************************************************************************************
- * ENTRY POINT                                                                                        *
+ * ENTRY POINT
  *****************************************************************************************************/
 
 int main(int argc, char* argv[])
@@ -54,20 +52,18 @@ int main(int argc, char* argv[])
 	(void)fprintf(stdout, "Plog has been stripped from compilation!\n");
 	plog_fatal("Function no longer has log function calls!");
 #else
-	const plog_Version_t version        = plog_get_version();
-	const gchar*         log_file_name  = NULL;
-	guint8               severity_level = 0U;
-	gsize                file_size      = 0UL;
-	guint8               file_count     = 0U;
-	gboolean             terminal_mode  = FALSE;
-	gsize                buffer_size    = 0UL;
-	gsize                index          = 0UL;
-	struct timespec      start_time     = {};
-	struct timespec      end_time       = {};
+	const plog_Version_t version		= plog_get_version();
+	const gchar*		 log_file_name	= NULL;
+	guint8				 severity_level = 0U;
+	gsize				 file_size		= 0UL;
+	guint8				 file_count		= 0U;
+	gboolean			 terminal_mode	= FALSE;
+	gsize				 buffer_size	= 0UL;
+	gsize				 index			= 0UL;
+	struct timespec		 start_time		= {};
+	struct timespec		 end_time		= {};
 
-	if (PLOG_VERSION_MAJOR != version.major
-	 || PLOG_VERSION_MINOR != version.minor
-	 || PLOG_VERSION_PATCH != version.patch)
+	if (PLOG_VERSION_MAJOR != version.major || PLOG_VERSION_MINOR != version.minor || PLOG_VERSION_PATCH != version.patch)
 	{
 		(void)fprintf(stdout, "Plog version mismatch!\n");
 		return EXIT_FAILURE;
@@ -134,26 +130,26 @@ int main(int argc, char* argv[])
 	clock_gettime(CLOCK_MONOTONIC, &start_time);
 	for (index = 1UL; index <= PERFORMANE_TEST_COUNT; ++index)
 	{
-		plog_fatal("Performance test! (%"   G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
-		plog_error("Performance test! (%"   G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
-		plog_info("Performance test! (%"    G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
-		plog_warn("Performance test! (%"    G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
-		plog_debug("Performance test! (%"   G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
-		plog_trace("Performance test! (%"   G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
+		plog_fatal("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
+		plog_error("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
+		plog_info("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
+		plog_warn("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
+		plog_debug("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
+		plog_trace("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
 		plog_verbose("Performance test! (%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT ")", index, PERFORMANE_TEST_COUNT);
 	}
 	clock_gettime(CLOCK_MONOTONIC, &end_time);
 
 	plog_warn("Main thread has been unblocked after %" G_GUINT64_FORMAT " milliseconds!",
-		(((guint64)end_time.tv_sec * 1000UL) + ((guint64)end_time.tv_nsec / 1000000UL))
-		- (((guint64)start_time.tv_sec * 1000UL) + ((guint64)start_time.tv_nsec / 1000000UL)));
+			  (((guint64)end_time.tv_sec * 1000UL) + ((guint64)end_time.tv_nsec / 1000000UL)) -
+				  (((guint64)start_time.tv_sec * 1000UL) + ((guint64)start_time.tv_nsec / 1000000UL)));
 
 	plog_deinit();
 	clock_gettime(CLOCK_MONOTONIC, &end_time);
 
 	(void)fprintf(stdout, "Printing the logs finished after: %" G_GUINT64_FORMAT " milliseconds!\n",
-		(((guint64)end_time.tv_sec * 1000UL) + ((guint64)end_time.tv_nsec / 1000000UL))
-		- (((guint64)start_time.tv_sec * 1000UL) + ((guint64)start_time.tv_nsec / 1000000UL)));
+				  (((guint64)end_time.tv_sec * 1000UL) + ((guint64)end_time.tv_nsec / 1000000UL)) -
+					  (((guint64)start_time.tv_sec * 1000UL) + ((guint64)start_time.tv_nsec / 1000000UL)));
 
 	plog_debug("Logs/functions after deinitialization will have no effect!");
 	plog_trace("The terminal mode and buffer size have been changed!");

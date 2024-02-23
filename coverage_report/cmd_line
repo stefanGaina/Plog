@@ -1,0 +1,1 @@
+genhtml.perl ../coverage_report/configuration.info ../coverage_report/plog_version.info ../coverage_report/plog.info ../coverage_report/queue.info ../coverage_report/vector.info --branch-coverage --num-spaces=4 --output-directory ../coverage_report --dark-mode

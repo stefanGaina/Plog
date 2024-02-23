@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['severity_5fbit_158',['severity_bit',['../structs__Node__t.html#adade150e3c84c7fcc6471bb128226f4a',1,'s_Node_t']]],
-  ['size_159',['size',['../structs__PrivateVector__t.html#a68119881dfcfe5cb8dced4aa6fedbfbf',1,'s_PrivateVector_t']]]
+  ['next_195',['next',['../structs__Node__t.html#a37e30ec8b5125dc998b33e8c41e83724',1,'s_Node_t']]]
 ];

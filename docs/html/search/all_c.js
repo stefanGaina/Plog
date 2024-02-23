@@ -1,6 +1,13 @@
 var searchData=
 [
-  ['tail_90',['tail',['../structs__PrivateQueue__t.html#ab4383e0d22264036b552eefec9d9f30f',1,'s_PrivateQueue_t']]],
-  ['terminal_5fmode_5fstring_91',['TERMINAL_MODE_STRING',['../configuration_8c.html#ac27007bcc91b62092b6305903dbd3434',1,'configuration.c']]],
-  ['terminal_5fmode_5fstring_5fsize_92',['TERMINAL_MODE_STRING_SIZE',['../configuration_8c.html#a1faa3cacff52737fbfa88e48fbb57d3e',1,'configuration.c']]]
+  ['queue_87',['queue',['../plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0',1,'plog.c']]],
+  ['queue_2ec_88',['queue.c',['../queue_8c.html',1,'']]],
+  ['queue_2eh_89',['queue.h',['../queue_8h.html',1,'']]],
+  ['queue_5fdeinit_90',['queue_deinit',['../queue_8h.html#a7f4ef2ce1b09cd6825d79c5ffe872f91',1,'queue_deinit(Queue_t *queue):&#160;queue.c'],['../queue_8c.html#a30c8e83df2d6a4e19e712055b6ddadcb',1,'queue_deinit(Queue_t *const public_queue):&#160;queue.c']]],
+  ['queue_5finit_91',['queue_init',['../queue_8h.html#a7e67e00595dac3fd16ff5e7faa50ae7e',1,'queue_init(Queue_t *queue):&#160;queue.c'],['../queue_8c.html#ab2a7fce6302ea75d4a3b88f9c9f57d4b',1,'queue_init(Queue_t *const public_queue):&#160;queue.c']]],
+  ['queue_5finterrupt_5fwait_92',['queue_interrupt_wait',['../queue_8h.html#ab2dcd68c65dcc5f1c5e399b3f481c08e',1,'queue_interrupt_wait(Queue_t *queue):&#160;queue.c'],['../queue_8c.html#ad397540ea0e0e72ec52639fb6ce71683',1,'queue_interrupt_wait(Queue_t *const public_queue):&#160;queue.c']]],
+  ['queue_5fis_5fempty_93',['queue_is_empty',['../queue_8h.html#a2d6e4a274fbaf961dcac40a8510dedc8',1,'queue_is_empty(Queue_t *queue):&#160;queue.c'],['../queue_8c.html#a5e45f9f6910af6e4187ecc0857464ba6',1,'queue_is_empty(Queue_t *const public_queue):&#160;queue.c']]],
+  ['queue_5fpop_94',['queue_pop',['../queue_8h.html#aebf4026f5186d31bdff5fb2947e99ae7',1,'queue_pop(Queue_t *queue, gchar **buffer, guint8 *severity_bit):&#160;queue.c'],['../queue_8c.html#a1c328e990f37fcc4be92d0a0b04723c6',1,'queue_pop(Queue_t *const public_queue, gchar **const buffer, guint8 *const severity_bit):&#160;queue.c']]],
+  ['queue_5fput_95',['queue_put',['../queue_8h.html#aa094e2bf1d0c72191f1510f5a8cbf9d6',1,'queue_put(Queue_t *queue, gchar *buffer, guint8 severity_bit):&#160;queue.c'],['../queue_8c.html#a503c76762e487b9df941595b0ea69511',1,'queue_put(Queue_t *const public_queue, gchar *const buffer, const guint8 severity_bit):&#160;queue.c']]],
+  ['queue_5ft_96',['Queue_t',['../queue_8h.html#a9fd36a6825479c392215f59082e69e2f',1,'queue.h']]]
 ];

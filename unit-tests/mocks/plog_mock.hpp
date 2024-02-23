@@ -1,25 +1,25 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2024                                                                            *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
+ * Plog Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************************************/
 
 #ifndef PLOG_MOCK_HPP_
 #define PLOG_MOCK_HPP_
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <gmock/gmock.h>
@@ -27,7 +27,7 @@
 #include "plog.h"
 
 /******************************************************************************************************
- * MACROS                                                                                             *
+ * MACROS
  *****************************************************************************************************/
 
 #undef plog_fatal
@@ -52,7 +52,7 @@
 #define plog_verbose(format, ...)
 
 /******************************************************************************************************
- * TYPE DEFINITIONS                                                                                   *
+ * TYPE DEFINITIONS
  *****************************************************************************************************/
 
 class Plog
@@ -60,18 +60,18 @@ class Plog
 public:
 	virtual ~Plog(void) = default;
 
-	virtual gboolean plog_init(const gchar* file_name) = 0;
-	virtual void plog_deinit(void) = 0;
-	virtual void plog_set_severity_level(guint8 severity_level_mask) = 0;
-	virtual guint8 plog_get_severity_level(void) = 0;
-	virtual void plog_set_file_size(gsize file_size) = 0;
-	virtual gsize plog_get_file_size(void) = 0;
-	virtual void plog_set_file_count(guint8 file_count) = 0;
-	virtual guint8 plog_get_file_count(void) = 0;
-	virtual void plog_set_terminal_mode(gboolean terminal_mode) = 0;
-	virtual gboolean plog_get_terminal_mode(void) = 0;
-	virtual gboolean plog_set_buffer_size(gsize buffer_size) = 0;
-	virtual gsize plog_get_buffer_size(void) = 0;
+	virtual gboolean plog_init(const gchar* file_name)					 = 0;
+	virtual void	 plog_deinit(void)									 = 0;
+	virtual void	 plog_set_severity_level(guint8 severity_level_mask) = 0;
+	virtual guint8	 plog_get_severity_level(void)						 = 0;
+	virtual void	 plog_set_file_size(gsize file_size)				 = 0;
+	virtual gsize	 plog_get_file_size(void)							 = 0;
+	virtual void	 plog_set_file_count(guint8 file_count)				 = 0;
+	virtual guint8	 plog_get_file_count(void)							 = 0;
+	virtual void	 plog_set_terminal_mode(gboolean terminal_mode)		 = 0;
+	virtual gboolean plog_get_terminal_mode(void)						 = 0;
+	virtual gboolean plog_set_buffer_size(gsize buffer_size)			 = 0;
+	virtual gsize	 plog_get_buffer_size(void)							 = 0;
 };
 
 class PlogMock : public Plog
@@ -105,13 +105,13 @@ public:
 };
 
 /******************************************************************************************************
- * LOCAL VARIABLES                                                                                    *
+ * LOCAL VARIABLES
  *****************************************************************************************************/
 
 PlogMock* PlogMock::plogMock = nullptr;
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
 extern "C" {
@@ -219,7 +219,6 @@ gsize plog_get_buffer_size(void)
 void plog_internal(guint8 severity_bit, const gchar* severity_tag, const gchar* function_name, const gchar* format, ...)
 {
 }
-
 }
 
 #endif /*< PLOG_MOCK_HPP_ */

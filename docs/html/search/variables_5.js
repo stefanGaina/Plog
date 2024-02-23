@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['major_154',['major',['../structs__plog__Version__t.html#a4fd09f9661c2f719c76881d80967cb8a',1,'s_plog_Version_t']]],
-  ['minor_155',['minor',['../structs__plog__Version__t.html#a91d94abbaf9c955fb234a5f87fd0d21c',1,'s_plog_Version_t']]]
+  ['is_5fterminal_5fenabled_190',['is_terminal_enabled',['../plog_8c.html#a3bb458a03ad19eb0d0ac16d8c3b15584',1,'plog.c']]],
+  ['is_5fworking_191',['is_working',['../plog_8c.html#a59f4a85e783c5c3df9d2900289a7abd3',1,'plog.c']]]
 ];

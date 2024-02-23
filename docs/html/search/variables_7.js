@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['patch_157',['patch',['../structs__plog__Version__t.html#a8cfb0e72573c49cd654a46e9d58f1208',1,'s_plog_Version_t']]]
+  ['major_193',['major',['../structs__plog__Version__t.html#a4fd09f9661c2f719c76881d80967cb8a',1,'s_plog_Version_t']]],
+  ['minor_194',['minor',['../structs__plog__Version__t.html#a91d94abbaf9c955fb234a5f87fd0d21c',1,'s_plog_Version_t']]]
 ];

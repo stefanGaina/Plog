@@ -12,7 +12,7 @@ lib
 bin
 
 # Unit-test
-coverage_report
+# coverage_report
 *.gcno
 *.gcda
 *.gcov

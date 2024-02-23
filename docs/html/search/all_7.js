@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['next_31',['next',['../structs__Node__t.html#a37e30ec8b5125dc998b33e8c41e83724',1,'s_Node_t']]],
-  ['node_5ft_32',['Node_t',['../queue_8c.html#a094cc4141836ed8bfd8d5b09efffc393',1,'queue.c']]]
+  ['integer_5fto_5fstring_32',['integer_to_string',['../configuration_8c.html#ad9a42bd79373571eaf30ec36171fab8e',1,'configuration.c']]],
+  ['is_5fterminal_5fenabled_33',['is_terminal_enabled',['../plog_8c.html#a3bb458a03ad19eb0d0ac16d8c3b15584',1,'plog.c']]],
+  ['is_5fworking_34',['is_working',['../plog_8c.html#a59f4a85e783c5c3df9d2900289a7abd3',1,'plog.c']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tail_160',['tail',['../structs__PrivateQueue__t.html#ab4383e0d22264036b552eefec9d9f30f',1,'s_PrivateQueue_t']]]
+  ['patch_196',['patch',['../structs__plog__Version__t.html#a8cfb0e72573c49cd654a46e9d58f1208',1,'s_plog_Version_t']]]
 ];

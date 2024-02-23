@@ -1,37 +1,35 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2024                                                                            *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ * Plog Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *****************************************************************************************************/
 
-/******************************************************************************************************
- * @file plog_test.cpp                                                                                *
- * @date:      @author:                   Reason for change:                                          *
- * 22.06.2023  Gaina Stefan               Initial version.                                            *
- * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
- * 13.10.2024  Gaina Stefan               Updated the tests.                                          *
- * Current coverage report:                                                                           *
- * Line coverage: 64.0% (146/228)                                                                     *
- * Functions:     68.4% (13/19)                                                                       *
- * Branches:      45.0% (37/81)                                                                       *
- * @details This file unit-tests plog.c.                                                              *
- * @todo Finish the remaining tests.                                                                  *
- * @bug No known bugs.                                                                                *
+/** ***************************************************************************************************
+ * @file plog_test.c
+ * @author Gaina Stefan
+ * @date 15.12.2023
+ * @brief This file unit-tests plog.c.
+ * @details Current coverage report:
+ * Line coverage: 62.4% (146/234)
+ * Functions:     65.0% (13/20)
+ * Branches:      44.6% (37/83)
+ * @todo Finish the remaining tests.
+ * @bug No known bugs.
  *****************************************************************************************************/
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -42,22 +40,23 @@
 #include "plog.h"
 
 /******************************************************************************************************
- * CONSTANTS                                                                                          *
+ * CONSTANTS
  *****************************************************************************************************/
 
+/** ***************************************************************************************************
+ * @brief Dummy address to pass the != NULL check.
+ *****************************************************************************************************/
 #define NOT_NULL (void*)1
 
+/** ***************************************************************************************************
+ * @brief Bitmask containing all the log severity levels.
+ *****************************************************************************************************/
 static constexpr const guint8 SEVERITY_LEVEL_ALL =
-	E_PLOG_SEVERITY_LEVEL_FATAL |
-	E_PLOG_SEVERITY_LEVEL_ERROR |
-	E_PLOG_SEVERITY_LEVEL_WARN  |
-	E_PLOG_SEVERITY_LEVEL_INFO  |
-	E_PLOG_SEVERITY_LEVEL_DEBUG |
-	E_PLOG_SEVERITY_LEVEL_TRACE |
-	E_PLOG_SEVERITY_LEVEL_VERBOSE;
+	E_PLOG_SEVERITY_LEVEL_FATAL | E_PLOG_SEVERITY_LEVEL_ERROR | E_PLOG_SEVERITY_LEVEL_WARN | E_PLOG_SEVERITY_LEVEL_INFO | E_PLOG_SEVERITY_LEVEL_DEBUG |
+	E_PLOG_SEVERITY_LEVEL_TRACE | E_PLOG_SEVERITY_LEVEL_VERBOSE;
 
 /******************************************************************************************************
- * TEST CLASS                                                                                         *
+ * TEST CLASS
  *****************************************************************************************************/
 
 class PlogTest : public testing::Test
@@ -65,8 +64,8 @@ class PlogTest : public testing::Test
 public:
 	PlogTest(void)
 		: configurationMock{}
-		, queueMock        {}
-		, glibMock         {}
+		, queueMock{}
+		, glibMock{}
 	{
 	}
 
@@ -84,12 +83,12 @@ protected:
 
 public:
 	ConfigurationMock configurationMock;
-	QueueMock         queueMock;
-	GlibMock          glibMock;
+	QueueMock		  queueMock;
+	GlibMock		  glibMock;
 };
 
 /******************************************************************************************************
- * plog_init                                                                                          *
+ * plog_init
  *****************************************************************************************************/
 
 TEST_F(PlogTest, plog_init_fileOpen_fail)
@@ -99,16 +98,16 @@ TEST_F(PlogTest, plog_init_fileOpen_fail)
 
 TEST_F(PlogTest, plog_init_configurationRead_fail)
 {
-	EXPECT_CALL(configurationMock, configuration_read())
+	EXPECT_CALL(configurationMock, configuration_read()) /**/
 		.WillOnce(testing::Return(FALSE));
 	ASSERT_EQ(FALSE, plog_init(NULL)) << "Successfully initialized Plog without reading configuration!";
 }
 
 TEST_F(PlogTest, plog_init_tryMalloc_fail)
 {
-	EXPECT_CALL(configurationMock, configuration_read())
+	EXPECT_CALL(configurationMock, configuration_read()) /**/
 		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL))
+	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
 		.WillOnce(testing::Return((gpointer)NULL));
 	ASSERT_EQ(FALSE, plog_init(NULL)) << "Successfully initialized Plog without copying file name!";
 }
@@ -117,9 +116,9 @@ TEST_F(PlogTest, plog_init_alreadyInit_success)
 {
 	gchar buffer[128] = "";
 
-	EXPECT_CALL(configurationMock, configuration_read())
+	EXPECT_CALL(configurationMock, configuration_read()) /**/
 		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL))
+	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
 		.WillOnce(testing::Return((gpointer)buffer));
 	ASSERT_EQ(TRUE, plog_init("")) << "Failed to initialize Plog with default file name!";
 	ASSERT_EQ(FALSE, plog_init(NULL)) << "Multiple initialization succeeded!";
@@ -129,7 +128,7 @@ TEST_F(PlogTest, plog_init_alreadyInit_success)
 }
 
 /******************************************************************************************************
- * plog_set_buffer_size                                                                               *
+ * plog_set_buffer_size
  *****************************************************************************************************/
 
 TEST_F(PlogTest, plog_set_buffer_size_notInitialized_fail)
@@ -142,13 +141,13 @@ TEST_F(PlogTest, plog_set_buffer_size_tryRealloc_fail)
 {
 	gchar buffer[128] = "";
 
-	EXPECT_CALL(configurationMock, configuration_read())
+	EXPECT_CALL(configurationMock, configuration_read()) /**/
 		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL))
+	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
 		.WillOnce(testing::Return((gpointer)buffer));
 	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
 
-	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_)) /**/
 		.WillOnce(testing::Return((gpointer)NULL));
 	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without reallocation!";
 
@@ -161,16 +160,16 @@ TEST_F(PlogTest, plog_set_buffer_size_tryNewThread_fail)
 {
 	gchar buffer[128] = "";
 
-	EXPECT_CALL(configurationMock, configuration_read())
+	EXPECT_CALL(configurationMock, configuration_read()) /**/
 		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL))
+	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
 		.WillOnce(testing::Return((gpointer)buffer));
 	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
 
-	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_)) /**/
 		.WillOnce(testing::Return((gpointer)buffer));
 	EXPECT_CALL(queueMock, queue_init(testing::_));
-	EXPECT_CALL(glibMock, g_thread_try_new(testing::_, testing::_, testing::_, testing::_))
+	EXPECT_CALL(glibMock, g_thread_try_new(testing::_, testing::_, testing::_, testing::_)) /**/
 		.WillOnce(testing::Return((GThread*)NULL));
 	EXPECT_CALL(glibMock, g_free(testing::_));
 	EXPECT_CALL(queueMock, queue_deinit(testing::_));
@@ -320,16 +319,16 @@ TEST_F(PlogTest, plog_set_buffer_size_tryNewThread_fail)
 // }
 
 /******************************************************************************************************
- * plog_internal                                                                                      *
+ * plog_internal
  *****************************************************************************************************/
 
 TEST_F(PlogTest, plog_internal_success)
 {
 	gchar buffer[128] = "";
 
-	EXPECT_CALL(configurationMock, configuration_read())
+	EXPECT_CALL(configurationMock, configuration_read()) /**/
 		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_)) /**/
 		.WillRepeatedly(testing::Return((gpointer)buffer));
 	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
 
@@ -366,5 +365,3 @@ TEST_F(PlogTest, plog_internal_success)
 // {
 //	plog_info("Terminal log!");
 // }
-
-

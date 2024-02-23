@@ -1,15 +1,8 @@
 #######################################################################################################
-# Copyright (C) Plog 2024                                                                             #
-# Module history:                                                                                     #
-#   Date:       Author:                    Reason:                                                    #
-#   22.06.2023  Gaina Stefan               Initial version.                                           #
-#   08.12.2023  Gaina Stefan               Added example.                                             #
-#   15.12.2023  Gaina Stefan               Added unit test.                                           #
-#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
-#   13.01.2024  Gaina Stefan               Added the generation of the doxygen files.                 #
-#   18.01.2024  Gaina Stefan               Added compilation timer.                                   #
-#   24.01.2024  Gaina Stefan               Moved logic to unit-tests Makefile.                        #
-# Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
+# Copyright (C) Plog 2024
+# Author: Gaina Stefan
+# Date: 22.06.2023
+# Description: This Makefile is used to invoke the Makefiles in the subdirectories.
 #######################################################################################################
 
 export SRC := src
@@ -17,10 +10,11 @@ export OBJ := obj
 export LIB := lib
 export BIN := bin
 
+FORMAT            = clang-format -i
 COMPILATION_TIMER = cd vendor/Compilation-Timer && ./compilation-timer
 
 ### MAKE SUBDIRECTORIES ###
-all: start_timer build doxygen end_timer
+all: start_timer format build doxygen end_timer
 
 build:
 	$(MAKE) -C plog
@@ -36,6 +30,8 @@ clean: start_timer
 
 ### MAKE UNIT-TESTS ###
 ut: start_timer ut-clean
+	$(FORMAT) unit-tests/*/*/*/*.cpp
+	$(FORMAT) unit-tests/*/*.hpp
 	$(MAKE) -C unit-tests
 	$(COMPILATION_TIMER) end
 
@@ -46,6 +42,13 @@ ut-clean:
 ### MAKE DOXYGEN ###
 doxygen:
 	doxygen docs/doxygen.conf
+
+### MAKE FORMAT ###
+format:
+	$(FORMAT) plog/src/*.c
+	$(FORMAT) plog/include/*.h
+	$(FORMAT) example/src/*.c
+	$(FORMAT) test/src/*.c
 
 ### START TIMER ###
 start_timer:

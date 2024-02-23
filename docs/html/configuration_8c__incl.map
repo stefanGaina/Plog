@@ -1,13 +1,13 @@
 <map id="plog/src/configuration.c" name="plog/src/configuration.c">
-<area shape="rect" id="node1" title=" " alt="" coords="263,5,436,32"/>
+<area shape="rect" id="node1" title="This file implements the interface defined in configuration.h." alt="" coords="263,5,436,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,80,72,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="97,80,165,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="189,80,293,107"/>
-<area shape="rect" id="node5" href="$plog_8h.html" title=" " alt="" coords="318,80,381,107"/>
-<area shape="rect" id="node9" href="$configuration_8h.html" title=" " alt="" coords="419,155,592,181"/>
-<area shape="rect" id="node10" href="$common_8h.html" title=" " alt="" coords="457,80,602,107"/>
-<area shape="rect" id="node11" href="$vector_8h.html" title=" " alt="" coords="616,155,744,181"/>
-<area shape="rect" id="node6" href="$plog__version_8h.html" title=" " alt="" coords="135,155,252,181"/>
-<area shape="rect" id="node8" href="$plog__internal_8h.html" title=" " alt="" coords="275,155,394,181"/>
+<area shape="rect" id="node5" href="$plog_8h.html" title="This file defines the type definitions and public interface of Plog." alt="" coords="318,80,381,107"/>
+<area shape="rect" id="node9" href="$configuration_8h.html" title="This file defines function prototypes for reading and writing of plog.conf file. This is used interna..." alt="" coords="419,155,592,181"/>
+<area shape="rect" id="node10" href="$common_8h.html" title="This file defines a common macro that is used internally by Plog and not meant to be public API." alt="" coords="457,80,602,107"/>
+<area shape="rect" id="node11" href="$vector_8h.html" title="This file defines vector data structure that is used internally by Plog and not meant to be public AP..." alt="" coords="616,155,744,181"/>
+<area shape="rect" id="node6" href="$plog__version_8h.html" title="This file defines the type definitions and function prototype of getting the version of Plog." alt="" coords="135,155,252,181"/>
+<area shape="rect" id="node8" href="$plog__internal_8h.html" title="This file defines macros and interfaces of Plog that are meant to be internal." alt="" coords="275,155,394,181"/>
 <area shape="rect" id="node7" title=" " alt="" coords="391,229,449,256"/>
 </map>

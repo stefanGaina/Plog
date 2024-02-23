@@ -1,25 +1,25 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2024                                                                            *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
+ * Plog Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************************************/
 
 #ifndef VECTOR_MOCK_HPP_
 #define VECTOR_MOCK_HPP_
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <gmock/gmock.h>
@@ -27,7 +27,7 @@
 #include "internal/vector.h"
 
 /******************************************************************************************************
- * TYPE DEFINITIONS                                                                                   *
+ * TYPE DEFINITIONS
  *****************************************************************************************************/
 
 class Vector
@@ -35,11 +35,11 @@ class Vector
 public:
 	virtual ~Vector(void) = default;
 
-	virtual void vector_init(Vector_t* vector) = 0;
-	virtual void vector_clean(Vector_t* vector) = 0;
-	virtual gboolean vector_push(Vector_t* vector, const gchar* buffer) = 0;
-	virtual void vector_pop(Vector_t* vector, gchar* buffer, gsize buffer_size) = 0;
-	virtual gboolean vector_is_empty(const Vector_t* vector) = 0;
+	virtual void	 vector_init(Vector_t* vector)									= 0;
+	virtual void	 vector_clean(Vector_t* vector)									= 0;
+	virtual gboolean vector_push(Vector_t* vector, const gchar* buffer)				= 0;
+	virtual void	 vector_pop(Vector_t* vector, gchar* buffer, gsize buffer_size) = 0;
+	virtual gboolean vector_is_empty(const Vector_t* vector)						= 0;
 };
 
 class VectorMock : public Vector
@@ -66,13 +66,13 @@ public:
 };
 
 /******************************************************************************************************
- * LOCAL VARIABLES                                                                                    *
+ * LOCAL VARIABLES
  *****************************************************************************************************/
 
 VectorMock* VectorMock::vectorMock = nullptr;
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
 extern "C" {
@@ -114,7 +114,6 @@ gboolean vector_is_empty(const Vector_t* const vector)
 	}
 	return VectorMock::vectorMock->vector_is_empty(vector);
 }
-
 }
 
 #endif /*< VECTOR_MOCK_HPP_ */

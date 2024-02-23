@@ -1,13 +1,9 @@
 #######################################################################################################
-# Copyright (C) Plog 2024                                                                             #
-# Module history:                                                                                     #
-#   Date:       Author:                    Reason:                                                    #
-#   15.12.2023  Gaina Stefan               Initial version.                                           #
-#   20.12.2023  Gaina Stefan               Updated copyright.                                         #
-#   13.01.2024  Gaina Stefan               Changed memcheck file name.                                #
-#   24.01.2024  Gaina Stefan               Added flags to lcov.                                       #
-# Description: This Makefile is used to compile unit-tests for configuration.c, run them and generate #
-# coverage report.                                                                                    #
+# Copyright (C) Plog 2024
+# Author: Gaina Stefan
+# Date: 15.12.2023
+# Description: This Makefile is used to compile unit-tests for configuration.c, run them and generate
+# coverage report.
 #######################################################################################################
 
 CXXFLAGS += `pkg-config --cflags glib-2.0`

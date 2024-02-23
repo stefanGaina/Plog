@@ -1,52 +1,50 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2024                                                                            *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ * Plog Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *****************************************************************************************************/
 
-/******************************************************************************************************
- * @file vector.c                                                                                     *
- * @date:      @author:                   Reason for change:                                          *
- * 08.12.2023  Gaina Stefan               Initial version.                                            *
- * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
- * @details This file implements the interface defined in vector.h.                                   *
- * @todo N/A.                                                                                         *
- * @bug No known bugs.                                                                                *
+/** ***************************************************************************************************
+ * @file vector.c
+ * @author Gaina Stefan
+ * @date 08.12.2023
+ * @brief This file implements the interface defined in vector.h.
+ * @todo N/A.
+ * @bug No known bugs.
  *****************************************************************************************************/
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include "internal/vector.h"
 
 /******************************************************************************************************
- * TYPE DEFINITIONS                                                                                   *
+ * TYPE DEFINITIONS
  *****************************************************************************************************/
 
-/**
+/** ***************************************************************************************************
  * @brief Explicit data type of the vector for internal usage.
-*/
+ *****************************************************************************************************/
 typedef struct s_PrivateVector_t
 {
 	gchar** buffer; /**< Dynamic array of strings. */
-	gsize   size;   /**< The size of the array.    */
-}
-PrivateVector_t;
+	gsize	size;	/**< The size of the array.    */
+} PrivateVector_t;
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
 void vector_init(Vector_t* const public_vector)
@@ -60,7 +58,7 @@ void vector_init(Vector_t* const public_vector)
 void vector_clean(Vector_t* const public_vector)
 {
 	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
-	gsize                  index  = 0UL;
+	gsize				   index  = 0UL;
 
 	for (; index < vector->size; ++index)
 	{
@@ -74,10 +72,10 @@ void vector_clean(Vector_t* const public_vector)
 
 gboolean vector_push(Vector_t* const public_vector, const gchar* const buffer)
 {
-	PrivateVector_t* const vector           = (PrivateVector_t*)public_vector;
-	const gsize            buffer_size      = strlen(buffer) + 1UL;
-	gchar*                 buffer_copy      = NULL;
-	gchar**                buffer_auxiliary = NULL;
+	PrivateVector_t* const vector			= (PrivateVector_t*)public_vector;
+	const gsize			   buffer_size		= strlen(buffer) + 1UL;
+	gchar*				   buffer_copy		= NULL;
+	gchar**				   buffer_auxiliary = NULL;
 
 	buffer_copy = (gchar*)g_try_malloc(buffer_size);
 	if (NULL == buffer_copy)
@@ -93,7 +91,7 @@ gboolean vector_push(Vector_t* const public_vector, const gchar* const buffer)
 	}
 
 	(void)g_strlcpy(buffer_copy, buffer, buffer_size);
-	vector->buffer                 = buffer_auxiliary;
+	vector->buffer				   = buffer_auxiliary;
 	vector->buffer[vector->size++] = buffer_copy;
 
 	return TRUE;
@@ -102,7 +100,7 @@ gboolean vector_push(Vector_t* const public_vector, const gchar* const buffer)
 void vector_pop(Vector_t* const public_vector, gchar* const buffer, const gsize buffer_size)
 {
 	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
-	gsize                  index  = 0UL;
+	gsize				   index  = 0UL;
 
 	(void)g_strlcpy(buffer, vector->buffer[0], buffer_size);
 	g_free(vector->buffer[0]);

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['major_29',['major',['../structs__plog__Version__t.html#a4fd09f9661c2f719c76881d80967cb8a',1,'s_plog_Version_t']]],
-  ['minor_30',['minor',['../structs__plog__Version__t.html#a91d94abbaf9c955fb234a5f87fd0d21c',1,'s_plog_Version_t']]]
+  ['head_31',['head',['../structs__PrivateQueue__t.html#a26456dd5f3564a70fc7e9261fdf820d8',1,'s_PrivateQueue_t']]]
 ];

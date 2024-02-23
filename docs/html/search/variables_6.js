@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['next_156',['next',['../structs__Node__t.html#a37e30ec8b5125dc998b33e8c41e83724',1,'s_Node_t']]]
+  ['lock_192',['lock',['../structs__PrivateQueue__t.html#abdd0ba84ba008d7dc6bfccc2fa89002f',1,'s_PrivateQueue_t::lock()'],['../plog_8c.html#a89bf897d1ce30024d6be1db7bd11b79c',1,'lock():&#160;plog.c']]]
 ];

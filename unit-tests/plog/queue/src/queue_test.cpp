@@ -1,37 +1,35 @@
 /******************************************************************************************************
- * Plog Copyright (C) 2024                                                                            *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ * Plog Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *****************************************************************************************************/
 
-/******************************************************************************************************
- * @file queue_test.cpp                                                                               *
- * @date:      @author:                   Reason for change:                                          *
- * 15.12.2023  Gaina Stefan               Initial version.                                            *
- * 20.12.2023  Gaina Stefan               Updated copyright.                                          *
- * 13.01.2024  Gaina Stefan               Added mock expectation calls.                               *
- * Current coverage report:                                                                           *
- * Line coverage: 100.0% (73/73)                                                                      *
- * Functions:     100.0% (6/6)                                                                        *
- * Branches:      100.0% (12/12)                                                                      *
- * @details This file unit-tests queue.c.                                                             *
- * @todo N/A.                                                                                         *
- * @bug No known bugs.                                                                                *
+/** ***************************************************************************************************
+ * @file queue_test.c
+ * @author Gaina Stefan
+ * @date 15.12.2023
+ * @brief This file unit-tests queue.c.
+ * @details Current coverage report:
+ * Line coverage: 100.0% (73/73)
+ * Functions:     100.0% (6/6)
+ * Branches:      100.0% (12/12)
+ * @todo N/A.
+ * @bug No known bugs.
  *****************************************************************************************************/
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -40,16 +38,16 @@
 #include "internal/queue.h"
 
 /******************************************************************************************************
- * MACROS                                                                                             *
+ * MACROS
  *****************************************************************************************************/
 
-/**
+/** ***************************************************************************************************
  * @brief Dummy address to pass the != NULL check.
-*/
+ *****************************************************************************************************/
 #define NOT_NULL (void*)1
 
 /******************************************************************************************************
- * TEST CLASS                                                                                         *
+ * TEST CLASS
  *****************************************************************************************************/
 
 class QueueTest : public testing::Test
@@ -76,7 +74,7 @@ public:
 };
 
 /******************************************************************************************************
- * queue_init                                                                                         *
+ * queue_init
  *****************************************************************************************************/
 
 TEST_F(QueueTest, queue_init_success)
@@ -91,7 +89,7 @@ TEST_F(QueueTest, queue_init_success)
 }
 
 /******************************************************************************************************
- * queue_put                                                                                          *
+ * queue_put
  *****************************************************************************************************/
 
 TEST_F(QueueTest, queue_put_tryMalloc_fail)
@@ -100,7 +98,7 @@ TEST_F(QueueTest, queue_put_tryMalloc_fail)
 
 	queue_init(&queue);
 
-	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_)) /**/
 		.WillOnce(testing::Return((gpointer)NULL));
 	ASSERT_EQ(FALSE, queue_put(&queue, NULL, 0U)) << "Successfully put node in queue even though memory allocation failed!";
 
@@ -109,24 +107,25 @@ TEST_F(QueueTest, queue_put_tryMalloc_fail)
 
 TEST_F(QueueTest, queue_put_success)
 {
-	Queue_t  queue = {};
+	Queue_t	 queue = {};
 	gpointer node  = NULL;
 
 	queue_init(&queue);
 
 	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
-		.WillOnce(testing::Invoke([&node] (const gsize n_bytes) -> gpointer
-		{
-			void* const auxiliary = malloc(n_bytes);
-
-			(void)memcpy((gpointer*)&node, (const void*)&auxiliary, sizeof(node));
-			if (NULL == node)
+		.WillOnce(testing::Invoke(
+			[&node](const gsize n_bytes) -> gpointer
 			{
-				ADD_FAILURE() << "Failed to allocate memory for node!";
-				return NULL;
-			}
-			return node;
-		}));
+				void* const auxiliary = malloc(n_bytes);
+
+				(void)memcpy((gpointer*)&node, (const void*)&auxiliary, sizeof(node));
+				if (NULL == node)
+				{
+					ADD_FAILURE() << "Failed to allocate memory for node!";
+					return NULL;
+				}
+				return node;
+			}));
 	ASSERT_EQ(TRUE, queue_put(&queue, NULL, 0U)) << "Failed to put node in queue!";
 
 	EXPECT_CALL(glibMock, g_free(testing::_));
@@ -135,49 +134,51 @@ TEST_F(QueueTest, queue_put_success)
 }
 
 /******************************************************************************************************
- * queue_pop                                                                                          *
+ * queue_pop
  *****************************************************************************************************/
 
 TEST_F(QueueTest, queue_pop_success)
 {
-	Queue_t  queue          = {};
-	gpointer node1          = NULL;
-	gpointer node2          = NULL;
-	gchar    buffer1[]      = "BUFFER1";
-	gchar    buffer2[]      = "BUFFER2";
-	gchar*   buffer         = NULL;
-	guint8   severity_level = 0U;
+	Queue_t	 queue			= {};
+	gpointer node1			= NULL;
+	gpointer node2			= NULL;
+	gchar	 buffer1[]		= "BUFFER1";
+	gchar	 buffer2[]		= "BUFFER2";
+	gchar*	 buffer			= NULL;
+	guint8	 severity_level = 0U;
 
 	queue_init(&queue);
 
 	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
-		.WillOnce(testing::Invoke([&node1] (const gsize n_bytes) -> gpointer
-		{
-			void* const auxiliary = malloc(n_bytes);
-
-			(void)memcpy((gpointer*)&node1, (const void*)&auxiliary, sizeof(node1));
-			if (NULL == node1)
+		.WillOnce(testing::Invoke(
+			[&node1](const gsize n_bytes) -> gpointer
 			{
-				ADD_FAILURE() << "Failed to allocate memory for node1!";
-				return NULL;
-			}
-			return node1;
-		}));
+				void* const auxiliary = malloc(n_bytes);
+
+				(void)memcpy((gpointer*)&node1, (const void*)&auxiliary, sizeof(node1));
+				if (NULL == node1)
+				{
+					ADD_FAILURE() << "Failed to allocate memory for node1!";
+					return NULL;
+				}
+				return node1;
+			}));
 	ASSERT_EQ(TRUE, queue_put(&queue, buffer1, 127U)) << "Failed to put node in queue!";
 
 	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
-		.WillOnce(testing::Invoke([&node2] (const gsize n_bytes) -> gpointer
-		{
-			void* const auxiliary = malloc(n_bytes);
-
-			(void)memcpy((gpointer*)&node2, (const void*)&auxiliary, sizeof(node2));
-			if (NULL == node2)
+		.WillOnce(testing::Invoke(
+			[&node2](const gsize n_bytes) -> gpointer
 			{
-				ADD_FAILURE() << "Failed to allocate memory for node2!";
-				return NULL;
-			}
-			return node2;
-		}));
+				void* const auxiliary = malloc(n_bytes);
+
+				(void)memcpy((gpointer*)&node2, (const void*)&auxiliary, sizeof(node2));
+				if (NULL == node2)
+				{
+					ADD_FAILURE() << "Failed to allocate memory for node2!";
+					return NULL;
+				}
+				return node2;
+			}));
 	ASSERT_EQ(TRUE, queue_put(&queue, buffer2, 63U)) << "Failed to put node in queue!";
 
 	EXPECT_CALL(glibMock, g_free(testing::_));
@@ -202,7 +203,7 @@ TEST_F(QueueTest, queue_pop_success)
 }
 
 /******************************************************************************************************
- * queue_interrupt_wait                                                                               *
+ * queue_interrupt_wait
  *****************************************************************************************************/
 
 TEST_F(QueueTest, queue_interrupt_wait_success)
