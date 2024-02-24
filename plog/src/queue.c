@@ -95,7 +95,7 @@ void queue_deinit(Queue_t* const public_queue)
 	g_mutex_clear(&queue->lock);
 }
 
-gboolean queue_put(Queue_t* const public_queue, gchar* const buffer, const guint8 severity_bit)
+gboolean queue_push(Queue_t* const public_queue, gchar* const buffer, const guint8 severity_bit)
 {
 	PrivateQueue_t* const queue = (PrivateQueue_t*)public_queue;
 	Node_t*				  node	= NULL;

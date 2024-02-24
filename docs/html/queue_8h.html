@@ -121,10 +121,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a7f4ef2ce1b09cd6825d79c5ffe872f91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8h.html#a7f4ef2ce1b09cd6825d79c5ffe872f91">queue_deinit</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *<a class="el" href="plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0">queue</a>)</td></tr>
 <tr class="memdesc:a7f4ef2ce1b09cd6825d79c5ffe872f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deinitializes the queue. Do not call any other function after this.  <a href="queue_8h.html#a7f4ef2ce1b09cd6825d79c5ffe872f91">More...</a><br /></td></tr>
 <tr class="separator:a7f4ef2ce1b09cd6825d79c5ffe872f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa094e2bf1d0c72191f1510f5a8cbf9d6"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8h.html#aa094e2bf1d0c72191f1510f5a8cbf9d6">queue_put</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *<a class="el" href="plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0">queue</a>, gchar *<a class="el" href="plog_8c.html#a6aa5afbb32a6db34083ef66d72b7b2cc">buffer</a>, guint8 severity_bit)</td></tr>
-<tr class="memdesc:aa094e2bf1d0c72191f1510f5a8cbf9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puts a node in the queue.  <a href="queue_8h.html#aa094e2bf1d0c72191f1510f5a8cbf9d6">More...</a><br /></td></tr>
-<tr class="separator:aa094e2bf1d0c72191f1510f5a8cbf9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebf4026f5186d31bdff5fb2947e99ae7"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8h.html#aebf4026f5186d31bdff5fb2947e99ae7">queue_pop</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *<a class="el" href="plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0">queue</a>, gchar **<a class="el" href="plog_8c.html#a6aa5afbb32a6db34083ef66d72b7b2cc">buffer</a>, guint8 *severity_bit)</td></tr>
+<tr class="memitem:a963845482ac29a5b4954f5b9acac15f8"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8h.html#a963845482ac29a5b4954f5b9acac15f8">queue_push</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *<a class="el" href="plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0">queue</a>, gchar *buffer, guint8 severity_bit)</td></tr>
+<tr class="memdesc:a963845482ac29a5b4954f5b9acac15f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a node in the queue.  <a href="queue_8h.html#a963845482ac29a5b4954f5b9acac15f8">More...</a><br /></td></tr>
+<tr class="separator:a963845482ac29a5b4954f5b9acac15f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebf4026f5186d31bdff5fb2947e99ae7"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8h.html#aebf4026f5186d31bdff5fb2947e99ae7">queue_pop</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *<a class="el" href="plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0">queue</a>, gchar **buffer, guint8 *severity_bit)</td></tr>
 <tr class="memdesc:aebf4026f5186d31bdff5fb2947e99ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops a node from the queue (if the queue is empty this function blocks until it is no longer empty, has been deinitialized or <a class="el" href="queue_8h.html#ab2dcd68c65dcc5f1c5e399b3f481c08e" title="Interupts the wait inside queue_pop in case the queue is empty.">queue_interrupt_wait()</a> has been called).  <a href="queue_8h.html#aebf4026f5186d31bdff5fb2947e99ae7">More...</a><br /></td></tr>
 <tr class="separator:aebf4026f5186d31bdff5fb2947e99ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d6e4a274fbaf961dcac40a8510dedc8"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8h.html#a2d6e4a274fbaf961dcac40a8510dedc8">queue_is_empty</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *<a class="el" href="plog_8c.html#a29a2829fd7bb3e732fa0a3a58607d8d0">queue</a>)</td></tr>
@@ -216,14 +216,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa094e2bf1d0c72191f1510f5a8cbf9d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa094e2bf1d0c72191f1510f5a8cbf9d6">&#9670;&nbsp;</a></span>queue_put()</h2>
+<a id="a963845482ac29a5b4954f5b9acac15f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a963845482ac29a5b4954f5b9acac15f8">&#9670;&nbsp;</a></span>queue_push()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">gboolean queue_put </td>
+          <td class="memname">gboolean queue_push </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *&#160;</td>
           <td class="paramname"><em>queue</em>, </td>
@@ -248,7 +248,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Puts a node in the queue. </p>
+<p>Pushes a node in the queue. </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

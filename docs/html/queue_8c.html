@@ -115,10 +115,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a30c8e83df2d6a4e19e712055b6ddadcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8c.html#a30c8e83df2d6a4e19e712055b6ddadcb">queue_deinit</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *const public_queue)</td></tr>
 <tr class="memdesc:a30c8e83df2d6a4e19e712055b6ddadcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deinitializes the queue. Do not call any other function after this.  <a href="queue_8c.html#a30c8e83df2d6a4e19e712055b6ddadcb">More...</a><br /></td></tr>
 <tr class="separator:a30c8e83df2d6a4e19e712055b6ddadcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a503c76762e487b9df941595b0ea69511"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8c.html#a503c76762e487b9df941595b0ea69511">queue_put</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *const public_queue, gchar *const <a class="el" href="plog_8c.html#a6aa5afbb32a6db34083ef66d72b7b2cc">buffer</a>, const guint8 severity_bit)</td></tr>
-<tr class="memdesc:a503c76762e487b9df941595b0ea69511"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puts a node in the queue.  <a href="queue_8c.html#a503c76762e487b9df941595b0ea69511">More...</a><br /></td></tr>
-<tr class="separator:a503c76762e487b9df941595b0ea69511"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c328e990f37fcc4be92d0a0b04723c6"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8c.html#a1c328e990f37fcc4be92d0a0b04723c6">queue_pop</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *const public_queue, gchar **const <a class="el" href="plog_8c.html#a6aa5afbb32a6db34083ef66d72b7b2cc">buffer</a>, guint8 *const severity_bit)</td></tr>
+<tr class="memitem:ac54cd4321e4ca261728127ee40a2c6a2"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8c.html#ac54cd4321e4ca261728127ee40a2c6a2">queue_push</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *const public_queue, gchar *const buffer, const guint8 severity_bit)</td></tr>
+<tr class="memdesc:ac54cd4321e4ca261728127ee40a2c6a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a node in the queue.  <a href="queue_8c.html#ac54cd4321e4ca261728127ee40a2c6a2">More...</a><br /></td></tr>
+<tr class="separator:ac54cd4321e4ca261728127ee40a2c6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c328e990f37fcc4be92d0a0b04723c6"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8c.html#a1c328e990f37fcc4be92d0a0b04723c6">queue_pop</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *const public_queue, gchar **const buffer, guint8 *const severity_bit)</td></tr>
 <tr class="memdesc:a1c328e990f37fcc4be92d0a0b04723c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops a node from the queue (if the queue is empty this function blocks until it is no longer empty, has been deinitialized or <a class="el" href="queue_8h.html#ab2dcd68c65dcc5f1c5e399b3f481c08e" title="Interupts the wait inside queue_pop in case the queue is empty.">queue_interrupt_wait()</a> has been called).  <a href="queue_8c.html#a1c328e990f37fcc4be92d0a0b04723c6">More...</a><br /></td></tr>
 <tr class="separator:a1c328e990f37fcc4be92d0a0b04723c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e45f9f6910af6e4187ecc0857464ba6"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="queue_8c.html#a5e45f9f6910af6e4187ecc0857464ba6">queue_is_empty</a> (<a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *const public_queue)</td></tr>
@@ -224,14 +224,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a503c76762e487b9df941595b0ea69511"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a503c76762e487b9df941595b0ea69511">&#9670;&nbsp;</a></span>queue_put()</h2>
+<a id="ac54cd4321e4ca261728127ee40a2c6a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac54cd4321e4ca261728127ee40a2c6a2">&#9670;&nbsp;</a></span>queue_push()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">gboolean queue_put </td>
+          <td class="memname">gboolean queue_push </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="queue_8h.html#a9fd36a6825479c392215f59082e69e2f">Queue_t</a> *&#160;</td>
           <td class="paramname"><em>queue</em>, </td>
@@ -256,7 +256,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Puts a node in the queue. </p>
+<p>Pushes a node in the queue. </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

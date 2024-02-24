@@ -21,9 +21,9 @@
  * @date 15.12.2023
  * @brief This file unit-tests plog.c.
  * @details Current coverage report:
- * Line coverage: 62.4% (146/234)
- * Functions:     65.0% (13/20)
- * Branches:      44.6% (37/83)
+ * Line coverage: 54.5% (121/222)
+ * Functions:     57.1% (12/21)
+ * Branches:      39.2% (31/79)
  * @todo Finish the remaining tests.
  * @bug No known bugs.
  *****************************************************************************************************/
@@ -128,57 +128,57 @@ TEST_F(PlogTest, plog_init_alreadyInit_success)
 }
 
 /******************************************************************************************************
- * plog_set_buffer_size
+ * plog_set_buffer_mode
  *****************************************************************************************************/
 
-TEST_F(PlogTest, plog_set_buffer_size_notInitialized_fail)
-{
-	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without initialization!";
-	ASSERT_EQ(0UL, plog_get_buffer_size());
-}
+// TEST_F(PlogTest, plog_set_buffer_size_notInitialized_fail)
+// {
+// 	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without initialization!";
+// 	ASSERT_EQ(0UL, plog_get_buffer_size());
+// }
 
-TEST_F(PlogTest, plog_set_buffer_size_tryRealloc_fail)
-{
-	gchar buffer[128] = "";
+// TEST_F(PlogTest, plog_set_buffer_size_tryRealloc_fail)
+// {
+// 	gchar buffer[128] = "";
 
-	EXPECT_CALL(configurationMock, configuration_read()) /**/
-		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
-		.WillOnce(testing::Return((gpointer)buffer));
-	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
+// 	EXPECT_CALL(configurationMock, configuration_read()) /**/
+// 		.WillOnce(testing::Return(TRUE));
+// 	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
+// 		.WillOnce(testing::Return((gpointer)buffer));
+// 	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
 
-	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_)) /**/
-		.WillOnce(testing::Return((gpointer)NULL));
-	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without reallocation!";
+// 	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_)) /**/
+// 		.WillOnce(testing::Return((gpointer)NULL));
+// 	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without reallocation!";
 
-	ASSERT_EQ(0UL, plog_get_buffer_size());
-	EXPECT_CALL(configurationMock, configuration_write());
-	EXPECT_CALL(glibMock, g_free(testing::_));
-}
+// 	ASSERT_EQ(0UL, plog_get_buffer_size());
+// 	EXPECT_CALL(configurationMock, configuration_write());
+// 	EXPECT_CALL(glibMock, g_free(testing::_));
+// }
 
-TEST_F(PlogTest, plog_set_buffer_size_tryNewThread_fail)
-{
-	gchar buffer[128] = "";
+// TEST_F(PlogTest, plog_set_buffer_size_tryNewThread_fail)
+// {
+// 	gchar buffer[128] = "";
 
-	EXPECT_CALL(configurationMock, configuration_read()) /**/
-		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
-		.WillOnce(testing::Return((gpointer)buffer));
-	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
+// 	EXPECT_CALL(configurationMock, configuration_read()) /**/
+// 		.WillOnce(testing::Return(TRUE));
+// 	EXPECT_CALL(glibMock, g_try_malloc(strlen(PLOG_DEFAULT_FILE_NAME) + 5UL)) /**/
+// 		.WillOnce(testing::Return((gpointer)buffer));
+// 	ASSERT_EQ(TRUE, plog_init(NULL)) << "Failed to initialize Plog with default file name!";
 
-	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_)) /**/
-		.WillOnce(testing::Return((gpointer)buffer));
-	EXPECT_CALL(queueMock, queue_init(testing::_));
-	EXPECT_CALL(glibMock, g_thread_try_new(testing::_, testing::_, testing::_, testing::_)) /**/
-		.WillOnce(testing::Return((GThread*)NULL));
-	EXPECT_CALL(glibMock, g_free(testing::_));
-	EXPECT_CALL(queueMock, queue_deinit(testing::_));
-	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without creating worker thread!";
+// 	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_)) /**/
+// 		.WillOnce(testing::Return((gpointer)buffer));
+// 	EXPECT_CALL(queueMock, queue_init(testing::_));
+// 	EXPECT_CALL(glibMock, g_thread_try_new(testing::_, testing::_, testing::_, testing::_)) /**/
+// 		.WillOnce(testing::Return((GThread*)NULL));
+// 	EXPECT_CALL(glibMock, g_free(testing::_));
+// 	EXPECT_CALL(queueMock, queue_deinit(testing::_));
+// 	ASSERT_EQ(FALSE, plog_set_buffer_size(128UL)) << "Succeeded to set buffer size to 128 without creating worker thread!";
 
-	ASSERT_EQ(0UL, plog_get_buffer_size()) << "Buffer size has been set even though it failed!";
-	EXPECT_CALL(configurationMock, configuration_write());
-	EXPECT_CALL(glibMock, g_free(testing::_));
-}
+// 	ASSERT_EQ(0UL, plog_get_buffer_size()) << "Buffer size has been set even though it failed!";
+// 	EXPECT_CALL(configurationMock, configuration_write());
+// 	EXPECT_CALL(glibMock, g_free(testing::_));
+// }
 
 // TEST_FF(PlogTest, plog_set_buffer_size_success)
 // {
@@ -256,7 +256,7 @@ TEST_F(PlogTest, plog_set_buffer_size_tryNewThread_fail)
 // 	ASSERT_EQ(E_PLOG_SEVERITY_LEVEL_INFO, plog_get_severity_level()) << "Failed to set severity level!";
 
 // 	EXPECT_CALL(glibMock, g_free(testing::_));
-// 	EXPECT_CALL(queueMock, queue_put(testing::_, testing::_, testing::_));
+// 	EXPECT_CALL(queueMock, queue_push(testing::_, testing::_, testing::_));
 // 	plog_info("File only log!");
 // 	(void)pthread_mutex_lock(&mutex);
 // 	(void)pthread_cond_signal(&cond);
@@ -266,7 +266,7 @@ TEST_F(PlogTest, plog_set_buffer_size_tryNewThread_fail)
 // 	ASSERT_EQ(TRUE, plog_get_terminal_mode()) << "Terminal mode has not been set!";
 
 // 	EXPECT_CALL(glibMock, g_free(testing::_));
-// 	EXPECT_CALL(queueMock, queue_put(testing::_, testing::_, testing::_));
+// 	EXPECT_CALL(queueMock, queue_push(testing::_, testing::_, testing::_));
 // 	plog_info("Terminal log!");
 // 	(void)pthread_mutex_lock(&mutex);
 // 	(void)pthread_cond_signal(&cond);

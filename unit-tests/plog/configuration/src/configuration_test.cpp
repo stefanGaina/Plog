@@ -23,7 +23,7 @@
  * @details Current coverage report:
  * Line coverage: 99.3%  (142/143)
  * Functions:     100.0% (4/4)
- * Branches:      98.4%  (63/64)
+ * Branches:      98.5%  (65/66)
  * @todo Find a way to make fclose() fail to achieve 100.0% coverage (not a priority).
  * @bug configuration_read_fileNotFound_success needs to be executed first for plog.conf file to be
  * created. This breaks the principle that tests should not depend on other tests but in this case is
@@ -83,7 +83,7 @@ TEST_F(ConfigurationTest, configuration_read_fileNotFound_success)
 	EXPECT_CALL(plogMock, plog_set_file_size(0UL));
 	EXPECT_CALL(plogMock, plog_set_file_count(0U));
 	EXPECT_CALL(plogMock, plog_set_terminal_mode(FALSE));
-	EXPECT_CALL(plogMock, plog_set_buffer_size(0UL));
+	EXPECT_CALL(plogMock, plog_set_buffer_mode(FALSE));
 	EXPECT_EQ(TRUE, configuration_read());
 }
 
@@ -154,9 +154,10 @@ TEST_F(ConfigurationTest, configuration_read_success)
 		"TERMINAL_MODE = 0\n\n"
 
 		"# Size of the buffer of each log, 0 - asynchronically logging is disabled.\n"
-		"BUFFER_SIZE = 18446744073709551616\n"
-		"BUFFER_SIZE = 0\n"
-		"BUFFER_SIZE = 0\n");
+		"BUFFER_MODE = 18446744073709551616\n"
+		"BUFFER_MODE = 0\n"
+		"BUFFER_MODE = 1\n"
+		"BUFFER_MODE = 0\n");
 
 	if (0 != fclose(file))
 	{
@@ -168,7 +169,8 @@ TEST_F(ConfigurationTest, configuration_read_success)
 	EXPECT_CALL(plogMock, plog_set_file_count(testing::_));
 	EXPECT_CALL(plogMock, plog_set_terminal_mode(testing::_)) /**/
 		.Times(2);
-	EXPECT_CALL(plogMock, plog_set_buffer_size(testing::_)) /**/
+	EXPECT_CALL(plogMock, plog_set_buffer_mode(testing::_)) /**/
+		.WillOnce(testing::Return(FALSE))
 		.WillOnce(testing::Return(FALSE))
 		.WillOnce(testing::Return(TRUE));
 	EXPECT_EQ(TRUE, configuration_read());
@@ -200,7 +202,8 @@ TEST_F(ConfigurationTest, configuration_write_fileNotReadable_fail)
 	}
 
 	EXPECT_CALL(vectorMock, vector_init(testing::_));
-	EXPECT_CALL(plogMock, plog_set_buffer_size(0UL)).WillOnce(testing::Return(FALSE));
+	EXPECT_CALL(plogMock, plog_set_buffer_mode(FALSE)) /**/
+		.WillOnce(testing::Return(FALSE));
 	EXPECT_CALL(plogMock, plog_set_severity_level(0U));
 	EXPECT_CALL(plogMock, plog_set_file_size(0UL));
 	EXPECT_CALL(plogMock, plog_set_file_count(0U));
@@ -224,7 +227,7 @@ TEST_F(ConfigurationTest, configuration_write_vectorPush_fail)
 	EXPECT_CALL(vectorMock, vector_push(testing::_, testing::_)) /**/
 		.WillOnce(testing::Return(FALSE));
 	EXPECT_CALL(vectorMock, vector_clean(testing::_));
-	EXPECT_CALL(plogMock, plog_set_buffer_size(0UL)) /**/
+	EXPECT_CALL(plogMock, plog_set_buffer_mode(FALSE)) /**/
 		.WillOnce(testing::Return(TRUE));
 	EXPECT_CALL(plogMock, plog_set_severity_level(0U));
 	EXPECT_CALL(plogMock, plog_set_file_size(0UL));
@@ -258,7 +261,7 @@ TEST_F(ConfigurationTest, configuration_write_fileNotWriteable_fail)
 	EXPECT_CALL(vectorMock, vector_push(testing::_, testing::_)) /**/
 		.WillRepeatedly(testing::Return(TRUE));
 	EXPECT_CALL(vectorMock, vector_clean(testing::_));
-	EXPECT_CALL(plogMock, plog_set_buffer_size(0UL)) /**/
+	EXPECT_CALL(plogMock, plog_set_buffer_mode(FALSE)) /**/
 		.WillOnce(testing::Return(TRUE));
 	EXPECT_CALL(plogMock, plog_set_severity_level(0U));
 	EXPECT_CALL(plogMock, plog_set_file_size(0UL));
@@ -281,7 +284,7 @@ TEST_F(ConfigurationTest, configuration_write_vectorPush_success)
 {
 	std::vector<std::string> vector = {};
 
-	vector.push_back("BUFFER_SIZE = 1024\n");
+	vector.push_back("BUFFER_MODE = 1\n");
 	vector.push_back("TERMINAL_MODE = 1\n\n");
 	vector.push_back("LOG_FILE_COUNT = 2\n\n");
 	vector.push_back("LOG_FILE_SIZE = 20480\n\n");
@@ -293,7 +296,8 @@ TEST_F(ConfigurationTest, configuration_write_vectorPush_success)
 		.WillRepeatedly(testing::Return(TRUE));
 	ON_CALL(vectorMock, vector_is_empty(testing::_))
 		.WillByDefault(testing::Invoke([&vector](const Vector_t* const public_vector) -> gboolean { return true == vector.empty() ? TRUE : FALSE; }));
-	EXPECT_CALL(vectorMock, vector_is_empty(testing::_)).Times(7);
+	EXPECT_CALL(vectorMock, vector_is_empty(testing::_)) /**/
+		.Times(7);
 	EXPECT_CALL(vectorMock, vector_pop(testing::_, testing::_, testing::_))
 		.WillRepeatedly(testing::Invoke(
 			[&vector](Vector_t* const public_vector, gchar* const buffer, const gsize buffer_size) -> void
@@ -309,10 +313,10 @@ TEST_F(ConfigurationTest, configuration_write_vectorPush_success)
 		.WillOnce(testing::Return((guint8)2U));
 	EXPECT_CALL(plogMock, plog_get_terminal_mode()) /**/
 		.WillOnce(testing::Return(TRUE));
-	EXPECT_CALL(plogMock, plog_get_buffer_size()) /**/
-		.WillOnce(testing::Return((gsize)1024UL));
+	EXPECT_CALL(plogMock, plog_get_buffer_mode()) /**/
+		.WillOnce(testing::Return(TRUE));
 	EXPECT_CALL(vectorMock, vector_clean(testing::_));
-	EXPECT_CALL(plogMock, plog_set_buffer_size(0UL)) /**/
+	EXPECT_CALL(plogMock, plog_set_buffer_mode(FALSE)) /**/
 		.WillOnce(testing::Return(TRUE));
 	EXPECT_CALL(plogMock, plog_set_severity_level(0U));
 	EXPECT_CALL(plogMock, plog_set_file_size(0UL));

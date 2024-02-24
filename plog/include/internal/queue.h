@@ -71,14 +71,14 @@ extern void queue_init(Queue_t* queue);
 extern void queue_deinit(Queue_t* queue);
 
 /** ***************************************************************************************************
- * @brief Puts a node in the queue.
+ * @brief Pushes a node in the queue.
  * @param queue: Queue object.
  * @param[in] buffer: Log buffer to be stored (the queue does not take ownership).
  * @param severity_bit: Severity bit to be stored.
  * @return TRUE - the node has been successfully put.
  * @return FALSE - failed to allocate memory for the new node.
  *****************************************************************************************************/
-extern gboolean queue_put(Queue_t* queue, gchar* buffer, guint8 severity_bit);
+extern gboolean queue_push(Queue_t* queue, gchar* buffer, guint8 severity_bit);
 
 /** ***************************************************************************************************
  * @brief Pops a node from the queue (if the queue is empty this function blocks until it is no longer

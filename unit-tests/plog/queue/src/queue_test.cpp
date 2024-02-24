@@ -89,10 +89,10 @@ TEST_F(QueueTest, queue_init_success)
 }
 
 /******************************************************************************************************
- * queue_put
+ * queue_push
  *****************************************************************************************************/
 
-TEST_F(QueueTest, queue_put_tryMalloc_fail)
+TEST_F(QueueTest, queue_push_tryMalloc_fail)
 {
 	Queue_t queue = {};
 
@@ -100,12 +100,12 @@ TEST_F(QueueTest, queue_put_tryMalloc_fail)
 
 	EXPECT_CALL(glibMock, g_try_malloc(testing::_)) /**/
 		.WillOnce(testing::Return((gpointer)NULL));
-	ASSERT_EQ(FALSE, queue_put(&queue, NULL, 0U)) << "Successfully put node in queue even though memory allocation failed!";
+	ASSERT_EQ(FALSE, queue_push(&queue, NULL, 0U)) << "Successfully put node in queue even though memory allocation failed!";
 
 	queue_deinit(&queue);
 }
 
-TEST_F(QueueTest, queue_put_success)
+TEST_F(QueueTest, queue_push_success)
 {
 	Queue_t	 queue = {};
 	gpointer node  = NULL;
@@ -126,7 +126,7 @@ TEST_F(QueueTest, queue_put_success)
 				}
 				return node;
 			}));
-	ASSERT_EQ(TRUE, queue_put(&queue, NULL, 0U)) << "Failed to put node in queue!";
+	ASSERT_EQ(TRUE, queue_push(&queue, NULL, 0U)) << "Failed to put node in queue!";
 
 	EXPECT_CALL(glibMock, g_free(testing::_));
 	queue_deinit(&queue);
@@ -163,7 +163,7 @@ TEST_F(QueueTest, queue_pop_success)
 				}
 				return node1;
 			}));
-	ASSERT_EQ(TRUE, queue_put(&queue, buffer1, 127U)) << "Failed to put node in queue!";
+	ASSERT_EQ(TRUE, queue_push(&queue, buffer1, 127U)) << "Failed to put node in queue!";
 
 	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
 		.WillOnce(testing::Invoke(
@@ -179,7 +179,7 @@ TEST_F(QueueTest, queue_pop_success)
 				}
 				return node2;
 			}));
-	ASSERT_EQ(TRUE, queue_put(&queue, buffer2, 63U)) << "Failed to put node in queue!";
+	ASSERT_EQ(TRUE, queue_push(&queue, buffer2, 63U)) << "Failed to put node in queue!";
 
 	EXPECT_CALL(glibMock, g_free(testing::_));
 	ASSERT_EQ(TRUE, queue_pop(&queue, &buffer, &severity_level)) << "Failed to pop node from queue";

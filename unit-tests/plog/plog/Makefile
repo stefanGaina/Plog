@@ -7,7 +7,7 @@
 #######################################################################################################
 
 CXXFLAGS += `pkg-config --cflags glib-2.0`
-CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
+CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage -O2
 LDFLAGS  += `pkg-config --libs glib-2.0`
 
 INCLUDES = -I../../../vendor/gtest/include \

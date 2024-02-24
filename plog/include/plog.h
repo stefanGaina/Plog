@@ -246,8 +246,8 @@
 /** ***************************************************************************************************
  * @brief Performs sanity check and prints an error message with the file, function, code line and
  * the condition that did not pass.
- * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the program
- * will be aborted.
+ * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
+ * program will be aborted.
  * @return void
  *****************************************************************************************************/
 #define plog_assert(condition) plog_internal_assert(condition, #condition, __FILE__, __FUNCTION__, __LINE__)
@@ -294,7 +294,8 @@ extern "C" {
 /** ***************************************************************************************************
  * @brief Initializes the plog library, opening the file where the logs will be written. Logging before
  * calling this will not have any effect.
- * @param file_name: Path to an existing file (that has write rights). If it does not exist one will be created.
+ * @param file_name: Path to an existing file (that has write rights). If it does not exist one will
+ * be created.
  * @return TRUE - initialization has been successful.
  * @return FALSE - an error occured.
  *****************************************************************************************************/
@@ -371,20 +372,20 @@ extern void plog_set_terminal_mode(gboolean terminal_mode);
 extern gboolean plog_get_terminal_mode(void);
 
 /** ***************************************************************************************************
- * @brief Sets a new buffer size.
- * @param buffer_size: Size of the buffer storing the log that will be printed asynchronically (0 means
- * asynchronically logging is disabled).
- * @return TRUE - the buffer size has been successfully set.
+ * @brief Sets a new buffer mode.
+ * @param buffer_mode: TRUE - the logs are stored in a buffer that will be printed asynchronically |
+ * FALSE - asynchronically logging is disabled.
+ * @return TRUE - the buffer mode has been successfully set.
  * @return FALSE - an error occured.
  *****************************************************************************************************/
-extern gboolean plog_set_buffer_size(gsize buffer_size);
+extern gboolean plog_set_buffer_mode(gboolean buffer_mode);
 
 /** ***************************************************************************************************
- * @brief Querries the buffer size.
+ * @brief Querries the buffer mode.
  * @param void
- * @return The current buffer size.
+ * @return The current buffer mode.
  *****************************************************************************************************/
-extern gsize plog_get_buffer_size(void);
+extern gboolean plog_get_buffer_mode(void);
 
 #ifdef __cplusplus
 }

@@ -37,7 +37,7 @@ public:
 
 	virtual void	 queue_init(Queue_t* queue)										 = 0;
 	virtual void	 queue_deinit(Queue_t* queue)									 = 0;
-	virtual gboolean queue_put(Queue_t* queue, gchar* buffer, guint8 severity_bit)	 = 0;
+	virtual gboolean queue_push(Queue_t* queue, gchar* buffer, guint8 severity_bit)	 = 0;
 	virtual gboolean queue_pop(Queue_t* queue, gchar** buffer, guint8* severity_bit) = 0;
 	virtual gboolean queue_is_empty(Queue_t* queue)									 = 0;
 	virtual void	 queue_interrupt_wait(Queue_t* queue)							 = 0;
@@ -58,7 +58,7 @@ public:
 
 	MOCK_METHOD1(queue_init, void(Queue_t*));
 	MOCK_METHOD1(queue_deinit, void(Queue_t*));
-	MOCK_METHOD3(queue_put, gboolean(Queue_t*, gchar*, guint8));
+	MOCK_METHOD3(queue_push, gboolean(Queue_t*, gchar*, guint8));
 	MOCK_METHOD3(queue_pop, gboolean(Queue_t*, gchar**, guint8*));
 	MOCK_METHOD1(queue_is_empty, gboolean(Queue_t*));
 	MOCK_METHOD1(queue_interrupt_wait, void(Queue_t*));
@@ -91,14 +91,14 @@ void queue_deinit(Queue_t* const queue)
 	QueueMock::queueMock->queue_deinit(queue);
 }
 
-gboolean queue_put(Queue_t* const queue, gchar* const buffer, const guint8 severity_bit)
+gboolean queue_push(Queue_t* const queue, gchar* const buffer, const guint8 severity_bit)
 {
 	if (nullptr == QueueMock::queueMock)
 	{
-		ADD_FAILURE() << "queue_put(): nullptr == QueueMock::queueMock";
+		ADD_FAILURE() << "queue_push(): nullptr == QueueMock::queueMock";
 		return FALSE;
 	}
-	return QueueMock::queueMock->queue_put(queue, buffer, severity_bit);
+	return QueueMock::queueMock->queue_push(queue, buffer, severity_bit);
 }
 
 gboolean queue_pop(Queue_t* const queue, gchar** const buffer, guint8* const severity_bit)

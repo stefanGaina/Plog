@@ -70,8 +70,8 @@ public:
 	virtual guint8	 plog_get_file_count(void)							 = 0;
 	virtual void	 plog_set_terminal_mode(gboolean terminal_mode)		 = 0;
 	virtual gboolean plog_get_terminal_mode(void)						 = 0;
-	virtual gboolean plog_set_buffer_size(gsize buffer_size)			 = 0;
-	virtual gsize	 plog_get_buffer_size(void)							 = 0;
+	virtual gboolean plog_set_buffer_mode(gboolean buffer_mode)			 = 0;
+	virtual gboolean plog_get_buffer_mode(void)							 = 0;
 };
 
 class PlogMock : public Plog
@@ -97,8 +97,8 @@ public:
 	MOCK_METHOD0(plog_get_file_count, guint8(void));
 	MOCK_METHOD1(plog_set_terminal_mode, void(gboolean));
 	MOCK_METHOD0(plog_get_terminal_mode, gboolean(void));
-	MOCK_METHOD1(plog_set_buffer_size, gboolean(gsize));
-	MOCK_METHOD0(plog_get_buffer_size, gsize(void));
+	MOCK_METHOD1(plog_set_buffer_mode, gboolean(gboolean));
+	MOCK_METHOD0(plog_get_buffer_mode, gboolean(void));
 
 public:
 	static PlogMock* plogMock;
@@ -196,28 +196,33 @@ gboolean plog_get_terminal_mode(void)
 	return PlogMock::plogMock->plog_get_terminal_mode();
 }
 
-gboolean plog_set_buffer_size(const gsize buffer_size)
+gboolean plog_set_buffer_mode(const gboolean buffer_mode)
 {
 	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_set_buffer_size(): nullptr == PlogMock::plogMock";
+		ADD_FAILURE() << "plog_set_buffer_mode(): nullptr == PlogMock::plogMock";
 		return FALSE;
 	}
-	return PlogMock::plogMock->plog_set_buffer_size(buffer_size);
+	return PlogMock::plogMock->plog_set_buffer_mode(buffer_mode);
 }
 
-gsize plog_get_buffer_size(void)
+gboolean plog_get_buffer_mode(void)
 {
 	if (nullptr == PlogMock::plogMock)
 	{
-		ADD_FAILURE() << "plog_get_buffer_size(): nullptr == PlogMock::plogMock";
+		ADD_FAILURE() << "plog_get_buffer_mode(): nullptr == PlogMock::plogMock";
 		return 0UL;
 	}
-	return PlogMock::plogMock->plog_get_buffer_size();
+	return PlogMock::plogMock->plog_get_buffer_mode();
 }
 
-void plog_internal(guint8 severity_bit, const gchar* severity_tag, const gchar* function_name, const gchar* format, ...)
+void plog_internal_function(guint8 severity_bit, const gchar* format, ...)
 {
+}
+
+const gchar* plog_internal_get_time(void)
+{
+	return "DUMMY_TIME";
 }
 }
 

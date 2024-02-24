@@ -84,12 +84,12 @@
 /** ***************************************************************************************************
  * @brief The string indicating the buffer size value is following.
  *****************************************************************************************************/
-#define BUFFER_SIZE_STRING "BUFFER_SIZE = "
+#define BUFFER_MODE_STRING "BUFFER_MODE = "
 
 /** ***************************************************************************************************
  * @brief The length of the buffer size string.
  *****************************************************************************************************/
-#define BUFFER_SIZE_STRING_SIZE 14UL
+#define BUFFER_MODE_STRING_SIZE 14UL
 
 /******************************************************************************************************
  * LOCAL FUNCTIONS
@@ -132,8 +132,8 @@ gboolean configuration_read(void)
 		"# 1 - logs will also be printed in terminal | 0 - logs will only be printed in the file.\n"
 		"" TERMINAL_MODE_STRING "0\n\n"
 
-		"# Size of the buffer of each log, 0 - asynchronically logging is disabled.\n"
-		"" BUFFER_SIZE_STRING "0\n";
+		"# 1 - logs will be printed asynchronically | 0 - caller thread will be blocked until logs are printed.\n"
+		"" BUFFER_MODE_STRING "0\n";
 
 	FILE*	file		= NULL;
 	gchar	buffer[256] = "";
@@ -156,7 +156,7 @@ gboolean configuration_read(void)
 		plog_set_file_size(0UL);
 		plog_set_file_count(0U);
 		plog_set_terminal_mode(FALSE);
-		(void)plog_set_buffer_size(0UL);
+		(void)plog_set_buffer_mode(FALSE);
 
 		goto CLOSE_FILE;
 	}
@@ -228,19 +228,19 @@ gboolean configuration_read(void)
 			continue;
 		}
 
-		if (0 == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+		if (0 == g_ascii_strncasecmp(buffer, BUFFER_MODE_STRING, BUFFER_MODE_STRING_SIZE))
 		{
 			errno	  = 0;
-			auxiliary = g_ascii_strtoull(buffer + BUFFER_SIZE_STRING_SIZE, NULL, 0U);
+			auxiliary = g_ascii_strtoull(buffer + BUFFER_MODE_STRING_SIZE, NULL, 0U);
 			if (0 != errno)
 			{
-				plog_error(LOG_PREFIX "Invalid buffer size! (text: %s)", buffer + BUFFER_SIZE_STRING_SIZE);
+				plog_error(LOG_PREFIX "Invalid buffer size! (text: %s)", buffer + BUFFER_MODE_STRING_SIZE);
 				continue;
 			}
 
-			if (FALSE == plog_set_buffer_size(((gsize)auxiliary)))
+			if (FALSE == plog_set_buffer_mode(((gboolean)auxiliary)))
 			{
-				plog_error(LOG_PREFIX "Failed to set buffer size! (value: %" G_GSIZE_FORMAT ")", (gsize)auxiliary);
+				plog_error(LOG_PREFIX "Failed to set buffer size! (value: %s)", TRUE == (gboolean)auxiliary ? "TRUE" : "FALSE");
 				continue;
 			}
 
@@ -329,12 +329,12 @@ void configuration_write(void)
 			buffer[offset + TERMINAL_MODE_STRING_SIZE]		 = '\n';
 			buffer[offset + TERMINAL_MODE_STRING_SIZE + 1UL] = '\0';
 		}
-		else if (0 == g_ascii_strncasecmp(buffer, BUFFER_SIZE_STRING, BUFFER_SIZE_STRING_SIZE))
+		else if (0 == g_ascii_strncasecmp(buffer, BUFFER_MODE_STRING, BUFFER_MODE_STRING_SIZE))
 		{
-			offset = integer_to_string(buffer + BUFFER_SIZE_STRING_SIZE, (guint64)plog_get_buffer_size());
+			offset = integer_to_string(buffer + BUFFER_MODE_STRING_SIZE, (guint64)plog_get_buffer_mode());
 
-			buffer[offset + BUFFER_SIZE_STRING_SIZE]	   = '\n';
-			buffer[offset + BUFFER_SIZE_STRING_SIZE + 1UL] = '\0';
+			buffer[offset + BUFFER_MODE_STRING_SIZE]	   = '\n';
+			buffer[offset + BUFFER_MODE_STRING_SIZE + 1UL] = '\0';
 		}
 
 		(void)g_fprintf(file, "%s", buffer);
@@ -345,9 +345,9 @@ void configuration_write(void)
 RESET_CONFIGURATION:
 	vector_clean(&vector);
 
-	if (FALSE == plog_set_buffer_size(0UL))
+	if (FALSE == plog_set_buffer_mode(FALSE))
 	{
-		plog_error(LOG_PREFIX "Failed to free the buffer!");
+		plog_error(LOG_PREFIX "Failed to disable buffer mode!");
 	}
 
 	plog_set_severity_level(0U);

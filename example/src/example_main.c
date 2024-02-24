@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 	gsize				 file_size		= 0UL;
 	guint8				 file_count		= 0U;
 	gboolean			 terminal_mode	= FALSE;
-	gsize				 buffer_size	= 0UL;
+	gboolean			 buffer_mode	= FALSE;
 	gsize				 index			= 0UL;
 	struct timespec		 start_time		= {};
 	struct timespec		 end_time		= {};
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 	plog_set_file_size(512UL * 1024UL);
 	plog_set_file_count(10U);
 	plog_set_terminal_mode(TRUE);
-	plog_set_buffer_size(1024UL);
+	plog_set_buffer_mode(TRUE);
 	plog_warn("As well as any other function!");
 
 	if (FALSE == plog_init(log_file_name))
@@ -120,12 +120,12 @@ int main(int argc, char* argv[])
 	plog_info("Logs after the terminal mode has been switched!");
 	plog_set_terminal_mode(terminal_mode);
 
-	buffer_size = plog_get_buffer_size();
-	if (FALSE == plog_set_buffer_size(0UL == buffer_size ? 512UL : 0UL))
+	buffer_mode = plog_get_buffer_mode();
+	if (FALSE == plog_set_buffer_mode(!buffer_mode))
 	{
-		plog_error("Failed to set buffer size!");
+		plog_error("Failed to invert buffer mode!");
 	}
-	(void)plog_set_buffer_size(buffer_size);
+	(void)plog_set_buffer_mode(buffer_mode);
 
 	clock_gettime(CLOCK_MONOTONIC, &start_time);
 	for (index = 1UL; index <= PERFORMANE_TEST_COUNT; ++index)

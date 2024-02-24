@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['buffer_5fsize_5fstring_218',['BUFFER_SIZE_STRING',['../configuration_8c.html#a9c558522d4e86f910d2ea73faa334063',1,'configuration.c']]],
-  ['buffer_5fsize_5fstring_5fsize_219',['BUFFER_SIZE_STRING_SIZE',['../configuration_8c.html#a1222ebb3e9a55935b568d4555b2cbc0e',1,'configuration.c']]]
+  ['buffer_5fmode_5fstring_219',['BUFFER_MODE_STRING',['../configuration_8c.html#a81de36e750626828bc486b97cd6b9e03',1,'configuration.c']]],
+  ['buffer_5fmode_5fstring_5fsize_220',['BUFFER_MODE_STRING_SIZE',['../configuration_8c.html#acd11a0ff8fcbc2fef445c12c34ca17b2',1,'configuration.c']]]
 ];

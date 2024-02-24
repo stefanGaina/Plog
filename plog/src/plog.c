@@ -21,7 +21,7 @@
  * @date 29.06.2023
  * @brief This file implements the interface defined in plog.h.
  * @todo N/A.
- * @bug No known bugs.
+ * @bug plog_internal_get_time is not thread safe.
  *****************************************************************************************************/
 
 /******************************************************************************************************
@@ -100,16 +100,6 @@ static atomic_ullong current_file_size = 0UL;
 static atomic_uchar current_file_count = 0U;
 
 /** ***************************************************************************************************
- * @brief Buffer in which the logs are composed.
- *****************************************************************************************************/
-static gchar* buffer = NULL;
-
-/** ***************************************************************************************************
- * @brief The size of the buffer.
- *****************************************************************************************************/
-static gsize buffer_size = 0UL;
-
-/** ***************************************************************************************************
  * @brief Queue in which the logs are being stored and consumed asynchronically.
  *****************************************************************************************************/
 static Queue_t queue = {};
@@ -117,6 +107,15 @@ static Queue_t queue = {};
 /******************************************************************************************************
  * LOCAL FUNCTIONS
  *****************************************************************************************************/
+
+/** ***************************************************************************************************
+ * @brief Adds "[%s] [%s] [%s] " to the beginning of the format to allow passing of time, severity tag
+ * and function name.
+ * @param format: The format passed by the user.
+ * @return The format with header added (it needs to be freed by the caller).
+ * @return NULL - in case of dynamic memory allocation failure.
+ *****************************************************************************************************/
+static gchar* add_header_format(const gchar* const format);
 
 /** ***************************************************************************************************
  * @brief Checks if file size has been achieved and opens another file if it is the case.
@@ -138,13 +137,6 @@ static gpointer work_function(gpointer data);
  * @return void
  *****************************************************************************************************/
 static void print_from_queue(void);
-
-/** ***************************************************************************************************
- * @brief This function is not meant to be called outside plog macros.
- * @param void
- * @return A string representing the current time in a "mmm dd hh:mm:ss yyyy" format.
- *****************************************************************************************************/
-static const gchar* get_time(void);
 
 /** ***************************************************************************************************
  * @brief Sets the color of the text printed in the terminal.
@@ -197,7 +189,7 @@ gboolean plog_init(const gchar* file_name)
 		return FALSE;
 	}
 
-	file_name_size	 = strlen(file_name) + 1UL;
+	file_name_size	 = strlen(file_name) + sizeof(gchar);
 	file_name_buffer = (gchar*)g_try_malloc(file_name_size + 4UL * sizeof(gchar));
 	if (NULL == file_name_buffer)
 	{
@@ -277,10 +269,8 @@ gboolean plog_get_terminal_mode(void)
 	return (gboolean)is_terminal_enabled;
 }
 
-gboolean plog_set_buffer_size(const gsize new_buffer_size)
+gboolean plog_set_buffer_mode(const gboolean buffer_mode)
 {
-	gchar* auxiliary_buffer = NULL;
-
 	if (NULL == file)
 	{
 		plog_error(LOG_PREFIX "Plog is not initialized!");
@@ -289,17 +279,7 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 
 	g_mutex_lock(&lock);
 
-	auxiliary_buffer = (gchar*)g_try_realloc((gpointer)buffer, new_buffer_size);
-	if (NULL == auxiliary_buffer && 0UL != new_buffer_size)
-	{
-		g_mutex_unlock(&lock);
-		return FALSE;
-	}
-
-	buffer		= auxiliary_buffer;
-	buffer_size = new_buffer_size;
-
-	if (NULL == auxiliary_buffer && TRUE == is_working)
+	if (FALSE == buffer_mode && TRUE == is_working)
 	{
 		is_working = FALSE;
 		queue_interrupt_wait(&queue);
@@ -313,7 +293,7 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 		}
 		queue_deinit(&queue);
 	}
-	else if (NULL != auxiliary_buffer && FALSE == is_working)
+	else if (TRUE == buffer_mode && FALSE == is_working)
 	{
 		queue_init(&queue);
 		is_working = TRUE;
@@ -321,12 +301,8 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 		thread = g_thread_try_new("worker_thread", work_function, NULL, NULL);
 		if (NULL == thread)
 		{
-			g_free(buffer);
-			buffer = NULL;
-
 			queue_deinit(&queue);
-			buffer_size = 0UL;
-			is_working	= FALSE;
+			is_working = FALSE;
 
 			g_mutex_unlock(&lock);
 			return FALSE;
@@ -337,82 +313,69 @@ gboolean plog_set_buffer_size(const gsize new_buffer_size)
 	return TRUE;
 }
 
-gsize plog_get_buffer_size(void)
+gboolean plog_get_buffer_mode(void)
 {
-	gsize result = 0UL;
-
-	g_mutex_lock(&lock);
-	result = buffer_size;
-	g_mutex_unlock(&lock);
-
-	return result;
+	return (gboolean)is_working;
 }
 
-void plog_internal(const guint8 severity_bit, const gchar* const severity_tag, const gchar* const function_name, const gchar* const format, ...)
+void plog_internal_function(const guint8 severity_bit, const gchar* format, ...)
 {
-	va_list argument_list	   = {};
-	va_list argument_list_copy = {};
-	gint32	bytes_copied	   = 0;
-	gint32	bytes_copied2	   = 0;
-	gchar*	buffer_copy		   = NULL;
+	va_list argument_list = {};
+	gchar*	buffer		  = NULL;
 
-	if (severity_bit != (severity_bit & severity_level) || NULL == file) /*< Left unsafe on purpose. */
+	if (severity_bit != (severity_bit & severity_level) || NULL == file)
+	{
+		return;
+	}
+
+	format = add_header_format(format);
+	if (NULL == format)
 	{
 		return;
 	}
 
 	va_start(argument_list, format);
+	(void)g_vasprintf(&buffer, format, argument_list);
+	va_end(argument_list);
+
+	if (NULL == buffer)
+	{
+		g_free((gpointer)format);
+		format = NULL;
+		return;
+	}
+
 	g_mutex_lock(&lock);
 
 	if (TRUE == is_working)
 	{
-		bytes_copied = g_snprintf(buffer, buffer_size, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
-		if (0 <= bytes_copied)
+		if (FALSE == queue_push(&queue, buffer, severity_bit))
 		{
-			if (buffer_size > (gsize)bytes_copied + 1UL)
-			{
-				bytes_copied2 = g_vsnprintf((gchar*)(buffer + bytes_copied), buffer_size - bytes_copied, format, argument_list);
-			}
-
-			buffer_copy = (gchar*)g_try_malloc((gsize)bytes_copied + (gsize)bytes_copied2 + 1UL);
-			if (NULL != buffer_copy)
-			{
-				(void)g_strlcpy(buffer_copy, buffer, (gsize)bytes_copied + (gsize)bytes_copied2 + 1UL);
-				if (FALSE == queue_put(&queue, buffer_copy, severity_bit))
-				{
-					g_free(buffer_copy);
-					buffer_copy = NULL;
-				}
-			}
+			g_free(buffer);
+			buffer = NULL;
 		}
 
 		g_mutex_unlock(&lock);
-		va_end(argument_list);
 		return;
 	}
 
 	if (TRUE == is_terminal_enabled)
 	{
 		set_color(severity_bit);
-		(void)g_fprintf(stdout, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
-
-		va_copy(argument_list_copy, argument_list);
-		(void)g_vfprintf(stdout, format, argument_list_copy);
-		va_end(argument_list_copy);
+		(void)g_fprintf(stdout, "%s", buffer);
 
 		restore_color();
 		(void)g_fprintf(stdout, "\n");
 	}
 
-	current_file_size += g_fprintf(file, "[%s] [%s] [%s] ", get_time(), function_name, severity_tag);
-	current_file_size += g_vfprintf(file, format, argument_list);
-	current_file_size += g_fprintf(file, "\n");
-
+	current_file_size += g_fprintf(file, "%s\n", buffer);
 	(void)fflush(file);
 	check_file_size();
 
 	g_mutex_unlock(&lock);
-	va_end(argument_list);
+
+	g_free(buffer);
+	buffer = NULL;
 }
 
 void plog_internal_assert(const gboolean condition, const gchar* const message, const gchar* const file_name, const gchar* const function_name, const gint32 line)
@@ -420,9 +383,35 @@ void plog_internal_assert(const gboolean condition, const gchar* const message, 
 	if (FALSE == condition)
 	{
 		plog_internal(E_PLOG_SEVERITY_LEVEL_FATAL, "assertion_failed", function_name, "%s:%" G_GINT32_FORMAT ": (%s)", file_name, line, message);
-		(void)plog_set_buffer_size(0UL);
+		(void)plog_set_buffer_mode(FALSE);
 		abort();
 	}
+}
+
+const gchar* plog_internal_get_time(void)
+{
+	const time_t now		 = time(NULL);
+	gchar* const time_string = ctime(&now);
+
+	time_string[strlen(time_string) - 1UL] = '\0'; /*< Remove the '\n'.                 */
+	return (const gchar*)(time_string + 4);		   /*< Remove the day of the week part. */
+}
+
+static gchar* add_header_format(const gchar* const format)
+{
+	static const gchar* const HEADER_FORMAT		   = "[%s] [%s] [%s] ";
+	static const gsize		  HEADER_FORMAT_LENGTH = strlen(HEADER_FORMAT);
+
+	const gsize	 new_format_size = HEADER_FORMAT_LENGTH + strlen(format) + sizeof(gchar);
+	gchar* const new_format		 = (gchar*)g_try_malloc(new_format_size);
+
+	if (NULL != new_format)
+	{
+		(void)g_strlcpy(new_format, HEADER_FORMAT, new_format_size);
+		(void)g_strlcat(new_format, format, new_format_size);
+	}
+
+	return new_format;
 }
 
 static void check_file_size(void)
@@ -533,15 +522,6 @@ static void print_from_queue(void)
 
 	g_free(buffer_copy);
 	buffer_copy = NULL;
-}
-
-static const gchar* get_time(void)
-{
-	const time_t now		 = time(NULL);
-	gchar* const time_string = ctime(&now);
-
-	time_string[strlen(time_string) - 1UL] = '\0'; /*< Remove the '\n'.                 */
-	return (const gchar*)(time_string + 4);		   /*< Remove the day of the week part. */
 }
 
 static void set_color(const guint8 severity_bit)

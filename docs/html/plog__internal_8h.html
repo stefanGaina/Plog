@@ -68,6 +68,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">plog_internal.h File Reference</div>  </div>
@@ -100,14 +101,23 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="plog__internal_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a48e2ddf754119952f73a27596e2a2bae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">plog_internal</a>(severity_bit,  severity_tag,  function_name,  format, ...)&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, format, <a class="el" href="plog_8c.html#ad84ccf2de33eeaaa8aac298d27534c16">plog_internal_get_time</a>(), severity_tag, function_name, ##__VA_ARGS__)</td></tr>
+<tr class="memdesc:a48e2ddf754119952f73a27596e2a2bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">This macro is not meant to be invoked outside plog macros.  <a href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">More...</a><br /></td></tr>
+<tr class="separator:a48e2ddf754119952f73a27596e2a2bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acfae896be21d8d3083d439275c976043"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#acfae896be21d8d3083d439275c976043">plog_internal</a> (guint8 severity_bit, const gchar *severity_tag, const gchar *function_name, const gchar *format,...)</td></tr>
-<tr class="memdesc:acfae896be21d8d3083d439275c976043"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#acfae896be21d8d3083d439275c976043">More...</a><br /></td></tr>
-<tr class="separator:acfae896be21d8d3083d439275c976043"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">plog_internal_function</a> (guint8 severity_bit, const gchar *format,...)</td></tr>
+<tr class="memdesc:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">More...</a><br /></td></tr>
+<tr class="separator:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac70be287c9914dc80c00336604ce529d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ac70be287c9914dc80c00336604ce529d">plog_internal_assert</a> (gboolean condition, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</td></tr>
 <tr class="memdesc:ac70be287c9914dc80c00336604ce529d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints an error message if the condition did not pass.  <a href="plog__internal_8h.html#ac70be287c9914dc80c00336604ce529d">More...</a><br /></td></tr>
 <tr class="separator:ac70be287c9914dc80c00336604ce529d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad84ccf2de33eeaaa8aac298d27534c16"><td class="memItemLeft" align="right" valign="top">const gchar *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ad84ccf2de33eeaaa8aac298d27534c16">plog_internal_get_time</a> (void)</td></tr>
+<tr class="memdesc:ad84ccf2de33eeaaa8aac298d27534c16"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#ad84ccf2de33eeaaa8aac298d27534c16">More...</a><br /></td></tr>
+<tr class="separator:ad84ccf2de33eeaaa8aac298d27534c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file defines macros and interfaces of Plog that are meant to be internal. </p>
@@ -116,30 +126,80 @@ Functions</h2></td></tr>
 <dl class="section date"><dt>Date</dt><dd>22.06.2023 </dd></dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>N/A. </dd></dl>
 <dl class="bug"><dt><b><a class="el" href="bug.html#_bug000006">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="acfae896be21d8d3083d439275c976043"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfae896be21d8d3083d439275c976043">&#9670;&nbsp;</a></span>plog_internal()</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a48e2ddf754119952f73a27596e2a2bae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48e2ddf754119952f73a27596e2a2bae">&#9670;&nbsp;</a></span>plog_internal</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plog_internal </td>
+          <td class="memname">#define plog_internal</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">severity_bit, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">severity_tag, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">function_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, format, <a class="el" href="plog_8c.html#ad84ccf2de33eeaaa8aac298d27534c16">plog_internal_get_time</a>(), severity_tag, function_name, ##__VA_ARGS__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This macro is not meant to be invoked outside plog macros. </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">severity_bit</td><td>The message will not be logged if the severity bit is not set in severity level mask. </td></tr>
+    <tr><td class="paramname">time</td><td>Time string retrieved from <a class="el" href="plog__internal_8h.html#ad84ccf2de33eeaaa8aac298d27534c16" title="This function is not meant to be called outside plog macros.">plog_internal_get_time()</a>. </td></tr>
+    <tr><td class="paramname">severity_tag</td><td>The tag that will be attached between time and the actual message (indicating the severity of the message). </td></tr>
+    <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
+    <tr><td class="paramname">format</td><td>String that contains the text to be written. </td></tr>
+    <tr><td class="paramname">VA_ARGS</td><td>The parameters passed in a printf style (optional). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a0fb71f5f9dceb4c1637775afb053b8e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fb71f5f9dceb4c1637775afb053b8e3">&#9670;&nbsp;</a></span>plog_internal_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void plog_internal_function </td>
           <td>(</td>
           <td class="paramtype">guint8&#160;</td>
           <td class="paramname"><em>severity_bit</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const gchar *&#160;</td>
-          <td class="paramname"><em>severity_tag</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const gchar *&#160;</td>
-          <td class="paramname"><em>function_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -166,10 +226,8 @@ Functions</h2></td></tr>
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">severity_bit</td><td>The message will not be logged if the severity bit is not set in severity level mask. </td></tr>
-    <tr><td class="paramname">severity_tag</td><td>The tag that will be attached between time and the actual message (indicating the severity of the message). </td></tr>
-    <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
     <tr><td class="paramname">format</td><td>String that contains the text to be written. </td></tr>
-    <tr><td class="paramname">VA_ARGS</td><td>The parameters passed in a printf style (optional). </td></tr>
+    <tr><td class="paramname">VA_ARGS</td><td>The parameters passed in a printf style. </td></tr>
   </table>
   </dd>
 </dl>
@@ -234,6 +292,34 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ad84ccf2de33eeaaa8aac298d27534c16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad84ccf2de33eeaaa8aac298d27534c16">&#9670;&nbsp;</a></span>plog_internal_get_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const gchar* plog_internal_get_time </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function is not meant to be called outside plog macros. </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">void</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the current time in a "mmm dd hh:mm:ss yyyy" format. </dd></dl>
 
 </div>
 </div>

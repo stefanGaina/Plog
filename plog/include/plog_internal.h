@@ -35,6 +35,21 @@
 
 #include <glib.h>
 
+/** ***************************************************************************************************
+ * @brief This macro is not meant to be invoked outside plog macros.
+ * @param severity_bit: The message will not be logged if the severity bit is not set in severity
+ * level mask.
+ * @param time: Time string retrieved from plog_internal_get_time().
+ * @param severity_tag: The tag that will be attached between time and the actual message (indicating
+ * the severity of the message).
+ * @param function_name: String that contains the name of the caller function.
+ * @param format: String that contains the text to be written.
+ * @param VA_ARGS: The parameters passed in a printf style (optional).
+ * @return void
+ *****************************************************************************************************/
+#define plog_internal(severity_bit, severity_tag, function_name, format, ...)                                                                                      \
+	plog_internal_function(severity_bit, format, plog_internal_get_time(), severity_tag, function_name, ##__VA_ARGS__)
+
 /******************************************************************************************************
  * FUNCTION PROTOTYPES
  *****************************************************************************************************/
@@ -47,14 +62,11 @@ extern "C" {
  * @brief This function is not meant to be called outside plog macros.
  * @param severity_bit: The message will not be logged if the severity bit is not set in severity
  * level mask.
- * @param severity_tag: The tag that will be attached between time and the actual message (indicating
- * the severity of the message).
- * @param function_name: String that contains the name of the caller function.
  * @param format: String that contains the text to be written.
- * @param VA_ARGS: The parameters passed in a printf style (optional).
+ * @param VA_ARGS: The parameters passed in a printf style.
  * @return void
  *****************************************************************************************************/
-extern void plog_internal(guint8 severity_bit, const gchar* severity_tag, const gchar* function_name, const gchar* format, ...);
+extern void plog_internal_function(guint8 severity_bit, const gchar* format, ...);
 
 /** ***************************************************************************************************
  * @brief Performs sanity check and prints an error message if the condition did not pass.
@@ -67,6 +79,13 @@ extern void plog_internal(guint8 severity_bit, const gchar* severity_tag, const 
  * @return void
  *****************************************************************************************************/
 extern void plog_internal_assert(gboolean condition, const gchar* message, const gchar* file_name, const gchar* function_name, gint32 line);
+
+/** ***************************************************************************************************
+ * @brief This function is not meant to be called outside plog macros.
+ * @param void
+ * @return A string representing the current time in a "mmm dd hh:mm:ss yyyy" format.
+ *****************************************************************************************************/
+extern const gchar* plog_internal_get_time(void);
 
 #ifdef __cplusplus
 }
