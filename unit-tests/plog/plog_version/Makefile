@@ -7,17 +7,17 @@
 #######################################################################################################
 
 CXXFLAGS += `pkg-config --cflags glib-2.0`
-CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
-LDFLAGS  += `pkg-config --libs glib-2.0`
+CFLAGS	 += `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
+LDFLAGS	 += `pkg-config --libs glib-2.0`
 
-INCLUDES = -I../../../vendor/gtest/include \
-		   -I../../../vendor/gmock/include \
-		   -I../../mocks                   \
-		   -I../../../plog/include
+INCLUDES := -I../../../vendor/gtest/include \
+			-I../../../vendor/gmock/include \
+			-I../../mocks					\
+			-I../../../plog/include
 
-TEST_FILE_NAME   := plog_version_test
+TEST_FILE_NAME	 := plog_version_test
 TESTED_FILE_NAME := plog_version
-EXECUTABLE       := plog_version_ut
+EXECUTABLE		 := plog_version_ut
 
 all: | create_dir $(EXECUTABLE)
 

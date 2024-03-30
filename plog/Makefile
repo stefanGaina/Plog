@@ -5,16 +5,25 @@
 # Description: This Makefile is used to generate the Plog library.
 #######################################################################################################
 
-CFLAGS  = `pkg-config --cflags glib-2.0` -Wextra -Wall -Werror -fanalyzer -fPIC -O2
-LDFLAGS = `pkg-config --libs glib-2.0`
+CFLAGS	:= `pkg-config --cflags glib-2.0` -Wextra -Wall -Werror -Wno-error=format-truncation -fanalyzer -fPIC
+LDFLAGS := `pkg-config --libs glib-2.0`
 
-INCLUDES = -Iinclude
+INCLUDES := -Iinclude
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 LIBRARY := libplog.so
 
-all: | create_dirs $(LIBRARY)
+### DEVELOPMENT ###
+all: CFLAGS += -O1 -g
+all: build
+
+### PRODUCTION ###
+release: CFLAGS += -O2 -DNDEBUG
+release: build
+
+### BUILD ###
+build: | create_dirs $(LIBRARY)
 
 ### CREATE DIRECTORIES ###
 create_dirs:

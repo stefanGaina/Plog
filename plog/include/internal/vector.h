@@ -44,8 +44,7 @@
 typedef struct s_Vector_t
 {
 	gchar dummy[16]; /**< The size of the vector is 16 bytes. */
-}
-Vector_t;
+} Vector_t;
 
 /******************************************************************************************************
  * FUNCTION PROTOTYPES

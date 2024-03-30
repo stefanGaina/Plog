@@ -45,8 +45,7 @@
 typedef struct s_Queue_t
 {
 	gchar dummy[40]; /**< The size of the queue is 40 bytes. */
-}
-Queue_t;
+} Queue_t;
 
 /******************************************************************************************************
  * FUNCTION PROTOTYPES

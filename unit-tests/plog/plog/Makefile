@@ -7,17 +7,17 @@
 #######################################################################################################
 
 CXXFLAGS += `pkg-config --cflags glib-2.0`
-CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage -O2
-LDFLAGS  += `pkg-config --libs glib-2.0`
+CFLAGS	 += `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage -O1
+LDFLAGS	 += `pkg-config --libs glib-2.0`
 
-INCLUDES = -I../../../vendor/gtest/include \
-		   -I../../../vendor/gmock/include \
-		   -I../../mocks                   \
-		   -I../../../plog/include
+INCLUDES := -I../../../vendor/gtest/include \
+			-I../../../vendor/gmock/include \
+			-I../../mocks					\
+			-I../../../plog/include
 
-TEST_FILE_NAME   := plog_test
+TEST_FILE_NAME	 := plog_test
 TESTED_FILE_NAME := plog
-EXECUTABLE       := plog_ut
+EXECUTABLE		 := plog_ut
 
 READ_ONLY_FILENAME = read_only.txt
 

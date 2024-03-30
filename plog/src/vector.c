@@ -28,6 +28,8 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
+#include <assert.h>
+
 #include "internal/vector.h"
 
 /******************************************************************************************************
@@ -40,7 +42,7 @@
 typedef struct s_PrivateVector_t
 {
 	gchar** buffer; /**< Dynamic array of strings. */
-	gsize	size;	/**< The size of the array.    */
+	gsize	size;	/**< The size of the array.	   */
 } PrivateVector_t;
 
 /******************************************************************************************************
@@ -51,6 +53,8 @@ void vector_init(Vector_t* const public_vector)
 {
 	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
 
+	assert(NULL != vector);
+
 	vector->buffer = NULL;
 	vector->size   = 0UL;
 }
@@ -60,13 +64,15 @@ void vector_clean(Vector_t* const public_vector)
 	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
 	gsize				   index  = 0UL;
 
+	assert(NULL != vector);
+
 	for (; index < vector->size; ++index)
 	{
-		g_free(vector->buffer[index]);
+		g_free((gpointer)vector->buffer[index]);
 		vector->buffer[index] = NULL;
 	}
 
-	g_free(vector->buffer);
+	g_free((gpointer)vector->buffer);
 	vector->buffer = NULL;
 }
 
@@ -77,6 +83,8 @@ gboolean vector_push(Vector_t* const public_vector, const gchar* const buffer)
 	gchar*				   buffer_copy		= NULL;
 	gchar**				   buffer_auxiliary = NULL;
 
+	assert(NULL != vector);
+
 	buffer_copy = (gchar*)g_try_malloc(buffer_size);
 	if (NULL == buffer_copy)
 	{
@@ -86,7 +94,7 @@ gboolean vector_push(Vector_t* const public_vector, const gchar* const buffer)
 	buffer_auxiliary = (gchar**)g_try_realloc(vector->buffer, (vector->size + 1UL) * sizeof(gchar*));
 	if (NULL == buffer_auxiliary)
 	{
-		g_free(buffer_copy);
+		g_free((gpointer)buffer_copy);
 		return FALSE;
 	}
 
@@ -102,8 +110,10 @@ void vector_pop(Vector_t* const public_vector, gchar* const buffer, const gsize 
 	PrivateVector_t* const vector = (PrivateVector_t*)public_vector;
 	gsize				   index  = 0UL;
 
+	assert(NULL != vector);
+
 	(void)g_strlcpy(buffer, vector->buffer[0], buffer_size);
-	g_free(vector->buffer[0]);
+	g_free((gpointer)vector->buffer[0]);
 
 	for (; index < vector->size - 1UL; ++index)
 	{
@@ -116,5 +126,7 @@ void vector_pop(Vector_t* const public_vector, gchar* const buffer, const gsize 
 gboolean vector_is_empty(const Vector_t* const public_vector)
 {
 	const PrivateVector_t* const vector = (const PrivateVector_t*)public_vector;
+
+	assert(NULL != vector);
 	return 0UL == vector->size;
 }

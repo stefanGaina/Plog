@@ -48,12 +48,12 @@
 /** ***************************************************************************************************
  * @brief The compiled minor version.
  *****************************************************************************************************/
-#define PLOG_VERSION_MINOR (guint8)0U
+#define PLOG_VERSION_MINOR (guint8)1U
 
 /** ***************************************************************************************************
  * @brief The compiled patch version.
  *****************************************************************************************************/
-#define PLOG_VERSION_PATCH (guint8)2U
+#define PLOG_VERSION_PATCH (guint8)0U
 
 /******************************************************************************************************
  * TYPE DEFINITIONS
@@ -64,9 +64,9 @@
  *****************************************************************************************************/
 typedef struct s_plog_Version_t
 {
-	guint8 major; /**< Increments with massive changes, additions, and enhancement.        */
+	guint8 major; /**< Increments with massive changes, additions, and enhancement.		   */
 	guint8 minor; /**< Increments with backwards-compatible changes to the major revision. */
-	guint8 patch; /**< Increments with fixes to the minor revision.                        */
+	guint8 patch; /**< Increments with fixes to the minor revision.						   */
 } plog_Version_t;
 
 /******************************************************************************************************

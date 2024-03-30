@@ -19,37 +19,26 @@
 #define PLOG_MOCK_HPP_
 
 /******************************************************************************************************
+ * MACROS
+ *****************************************************************************************************/
+
+#define PLOG_STRIP_FATAL
+#define PLOG_STRIP_ERROR
+#define PLOG_STRIP_WARN
+#define PLOG_STRIP_INFO
+#define PLOG_STRIP_DEBUG
+#define PLOG_STRIP_TRACE
+#define PLOG_STRIP_VERBOSE
+#define PLOG_STRIP_ASSERT
+#define PLOG_STRIP_EXPECT
+
+/******************************************************************************************************
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <gmock/gmock.h>
 
 #include "plog.h"
-
-/******************************************************************************************************
- * MACROS
- *****************************************************************************************************/
-
-#undef plog_fatal
-#define plog_fatal(format, ...)
-
-#undef plog_error
-#define plog_error(format, ...)
-
-#undef plog_warn
-#define plog_warn(format, ...)
-
-#undef plog_info
-#define plog_info(format, ...)
-
-#undef plog_debug
-#define plog_debug(format, ...)
-
-#undef plog_trace
-#define plog_trace(format, ...)
-
-#undef plog_verbose
-#define plog_verbose(format, ...)
 
 /******************************************************************************************************
  * TYPE DEFINITIONS
@@ -220,7 +209,7 @@ void plog_internal_function(guint8 severity_bit, const gchar* format, ...)
 {
 }
 
-const gchar* plog_internal_get_time(void)
+const gchar* plog_internal_get_time_string(void)
 {
 	return "DUMMY_TIME";
 }

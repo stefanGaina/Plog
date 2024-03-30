@@ -39,7 +39,7 @@
  * @brief This macro is not meant to be invoked outside plog macros.
  * @param severity_bit: The message will not be logged if the severity bit is not set in severity
  * level mask.
- * @param time: Time string retrieved from plog_internal_get_time().
+ * @param time: Time string retrieved from plog_internal_get_time_string().
  * @param severity_tag: The tag that will be attached between time and the actual message (indicating
  * the severity of the message).
  * @param function_name: String that contains the name of the caller function.
@@ -48,7 +48,7 @@
  * @return void
  *****************************************************************************************************/
 #define plog_internal(severity_bit, severity_tag, function_name, format, ...)                                                                                      \
-	plog_internal_function(severity_bit, format, plog_internal_get_time(), severity_tag, function_name, ##__VA_ARGS__)
+	plog_internal_function(severity_bit, "[%s] [%s] [%s] " format, plog_internal_get_time_string(), severity_tag, function_name, ##__VA_ARGS__)
 
 /******************************************************************************************************
  * FUNCTION PROTOTYPES
@@ -69,23 +69,35 @@ extern "C" {
 extern void plog_internal_function(guint8 severity_bit, const gchar* format, ...);
 
 /** ***************************************************************************************************
- * @brief Performs sanity check and prints an error message if the condition did not pass.
+ * @brief Performs sanity check and prints a fatal error message if the condition did not pass.
  * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
  * program will be aborted.
- * @param message: The message that will be printed if the condition did not pass.
+ * @param condition_string: The condition in string format.
+ * @param message: The message that will be printed if the condition did not pass (can be NULL).
  * @param file_name: String that contains the name of the caller file.
  * @param function_name: String that contains the name of the caller function.
  * @param line: The code line where this function is called.
  * @return void
  *****************************************************************************************************/
-extern void plog_internal_assert(gboolean condition, const gchar* message, const gchar* file_name, const gchar* function_name, gint32 line);
+extern void
+plog_internal_assert(gboolean condition, const gchar* condition_string, const gchar* message, const gchar* file_name, const gchar* function_name, gint32 line);
+
+/** ***************************************************************************************************
+ * @brief Performs check and prints a warning message if the condition did not pass.
+ * @param condition: The condition that needs to be true for the expectation to pass.
+ * @param condition_string: The condition in string format.
+ * @param message: The message that will be printed if the condition did not pass (can be NULL).
+ * @param function_name: String that contains the name of the caller function.
+ * @return void
+ *****************************************************************************************************/
+extern void plog_internal_expect(gboolean condition, const gchar* condition_string, const gchar* message, const gchar* function_name);
 
 /** ***************************************************************************************************
  * @brief This function is not meant to be called outside plog macros.
  * @param void
- * @return A string representing the current time in a "mmm dd hh:mm:ss yyyy" format.
+ * @return A string where the current time is stored in a "DD-MM-YYYY HH-MM-SS.mmm" format.
  *****************************************************************************************************/
-extern const gchar* plog_internal_get_time(void);
+extern const gchar* plog_internal_get_time_string(void);
 
 #ifdef __cplusplus
 }

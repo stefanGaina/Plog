@@ -28,6 +28,7 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
+#include <assert.h>
 #include <stdio.h>
 #include <errno.h>
 #include <glib/gprintf.h>
@@ -174,7 +175,7 @@ gboolean configuration_read(void)
 			auxiliary = g_ascii_strtoull(buffer + LOG_LEVEL_STRING_SIZE, NULL, 0U);
 			if (0 != errno)
 			{
-				plog_error(LOG_PREFIX "Invalid severity level! (text: %s)", buffer + LOG_LEVEL_STRING_SIZE);
+				plog_error(LOG_PREFIX "Invalid severity level! (text: %s) (error message: %s)", buffer + LOG_LEVEL_STRING_SIZE, strerror(errno));
 				continue;
 			}
 
@@ -189,7 +190,7 @@ gboolean configuration_read(void)
 			auxiliary = g_ascii_strtoull(buffer + LOG_FILE_SIZE_STRING_SIZE, NULL, 0U);
 			if (0 != errno)
 			{
-				plog_error(LOG_PREFIX "Invalid log file size! (text: %s)", buffer + LOG_FILE_SIZE_STRING_SIZE);
+				plog_error(LOG_PREFIX "Invalid log file size! (text: %s) (error message: %s)", buffer + LOG_FILE_SIZE_STRING_SIZE, strerror(errno));
 				continue;
 			}
 
@@ -204,7 +205,7 @@ gboolean configuration_read(void)
 			auxiliary = g_ascii_strtoull(buffer + LOG_FILE_COUNT_STRING_SIZE, NULL, 0U);
 			if (0 != errno)
 			{
-				plog_error(LOG_PREFIX "Invalid log file count! (text: %s)", buffer + LOG_FILE_COUNT_STRING_SIZE);
+				plog_error(LOG_PREFIX "Invalid log file count! (text: %s) (error message: %s)", buffer + LOG_FILE_COUNT_STRING_SIZE, strerror(errno));
 				continue;
 			}
 
@@ -219,7 +220,7 @@ gboolean configuration_read(void)
 			auxiliary = g_ascii_strtoull(buffer + TERMINAL_MODE_STRING_SIZE, NULL, 0U);
 			if (0 != errno)
 			{
-				plog_error(LOG_PREFIX "Invalid terminal mode! (text: %s)", buffer + TERMINAL_MODE_STRING_SIZE);
+				plog_error(LOG_PREFIX "Invalid terminal mode! (text: %s) (error message: %s)", buffer + TERMINAL_MODE_STRING_SIZE, strerror(errno));
 				continue;
 			}
 
@@ -234,13 +235,13 @@ gboolean configuration_read(void)
 			auxiliary = g_ascii_strtoull(buffer + BUFFER_MODE_STRING_SIZE, NULL, 0U);
 			if (0 != errno)
 			{
-				plog_error(LOG_PREFIX "Invalid buffer size! (text: %s)", buffer + BUFFER_MODE_STRING_SIZE);
+				plog_error(LOG_PREFIX "Invalid buffer mode! (text: %s) (error message: %s)", buffer + BUFFER_MODE_STRING_SIZE, strerror(errno));
 				continue;
 			}
 
 			if (FALSE == plog_set_buffer_mode(((gboolean)auxiliary)))
 			{
-				plog_error(LOG_PREFIX "Failed to set buffer size! (value: %s)", TRUE == (gboolean)auxiliary ? "TRUE" : "FALSE");
+				plog_error(LOG_PREFIX "Failed to set buffer mode! (value: %s)", TRUE == (gboolean)auxiliary ? "TRUE" : "FALSE");
 				continue;
 			}
 
@@ -358,6 +359,8 @@ RESET_CONFIGURATION:
 
 static void close_configuration_file(FILE* const file)
 {
+	assert(NULL != file);
+
 	if (0 != fclose(file))
 	{
 		plog_warn(LOG_PREFIX "Failed to close \"" PLOG_CONFIGURATION_FILE_NAME "\"! (error message: %s)", strerror(errno));
@@ -369,6 +372,8 @@ static gsize integer_to_string(gchar* const buffer, guint64 integer)
 	gsize offset = 0UL;
 	gsize index	 = 0UL;
 	gchar digit	 = '\0';
+
+	assert(NULL != buffer);
 
 	do
 	{

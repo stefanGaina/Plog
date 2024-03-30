@@ -28,6 +28,8 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
+#include <assert.h>
+
 #include "internal/queue.h"
 
 /******************************************************************************************************
@@ -40,8 +42,8 @@ typedef struct s_Node_t Node_t;
  *****************************************************************************************************/
 struct s_Node_t
 {
-	gchar*	buffer;		  /**< Stored log buffer.                       */
-	guint8	severity_bit; /**< Stored severity bit.                     */
+	gchar*	buffer;		  /**< Stored log buffer.						*/
+	guint8	severity_bit; /**< Stored severity bit.						*/
 	Node_t* next;		  /**< Reference to the next node in the queue. */
 };
 
@@ -50,9 +52,9 @@ struct s_Node_t
  *****************************************************************************************************/
 typedef struct s_PrivateQueue_t
 {
-	Node_t* head;	   /**< The oldest node.                            */
-	Node_t* tail;	   /**< The latest node.                            */
-	GMutex	lock;	   /**< Lock for thread-safe access.                */
+	Node_t* head;	   /**< The oldest node.							*/
+	Node_t* tail;	   /**< The latest node.							*/
+	GMutex	lock;	   /**< Lock for thread-safe access.				*/
 	GCond	condition; /**< Condition signaled when queue is not empty. */
 } PrivateQueue_t;
 
@@ -63,6 +65,8 @@ typedef struct s_PrivateQueue_t
 void queue_init(Queue_t* const public_queue)
 {
 	PrivateQueue_t* const queue = (PrivateQueue_t*)public_queue;
+
+	assert(NULL != queue);
 
 	g_mutex_init(&queue->lock);
 	g_cond_init(&queue->condition);
@@ -76,6 +80,8 @@ void queue_deinit(Queue_t* const public_queue)
 	PrivateQueue_t* const queue = (PrivateQueue_t*)public_queue;
 	Node_t*				  node	= NULL;
 
+	assert(NULL != queue);
+
 	g_mutex_lock(&queue->lock);
 
 	while (NULL != queue->head)
@@ -83,7 +89,7 @@ void queue_deinit(Queue_t* const public_queue)
 		node		= queue->head;
 		queue->head = queue->head->next;
 
-		g_free(node);
+		g_free((gpointer)node);
 		node = NULL;
 	}
 	queue->tail = NULL;
@@ -99,6 +105,8 @@ gboolean queue_push(Queue_t* const public_queue, gchar* const buffer, const guin
 {
 	PrivateQueue_t* const queue = (PrivateQueue_t*)public_queue;
 	Node_t*				  node	= NULL;
+
+	assert(NULL != queue);
 
 	g_mutex_lock(&queue->lock);
 
@@ -135,6 +143,8 @@ gboolean queue_pop(Queue_t* const public_queue, gchar** const buffer, guint8* co
 	PrivateQueue_t* const queue = (PrivateQueue_t*)public_queue;
 	Node_t*				  node	= NULL;
 
+	assert(NULL != queue);
+
 	g_mutex_lock(&queue->lock);
 
 	if (NULL == queue->tail)
@@ -163,7 +173,7 @@ gboolean queue_pop(Queue_t* const public_queue, gchar** const buffer, guint8* co
 	*buffer		  = node->buffer;
 	*severity_bit = node->severity_bit;
 
-	g_free(node);
+	g_free((gpointer)node);
 	node = NULL;
 
 	g_mutex_unlock(&queue->lock);
@@ -175,6 +185,8 @@ gboolean queue_is_empty(Queue_t* const public_queue)
 	PrivateQueue_t* const queue	 = (PrivateQueue_t*)public_queue;
 	gboolean			  result = FALSE;
 
+	assert(NULL != queue);
+
 	g_mutex_lock(&queue->lock);
 	result = NULL == queue->tail;
 	g_mutex_unlock(&queue->lock);
@@ -185,6 +197,8 @@ gboolean queue_is_empty(Queue_t* const public_queue)
 void queue_interrupt_wait(Queue_t* const public_queue)
 {
 	PrivateQueue_t* const queue = (PrivateQueue_t*)public_queue;
+
+	assert(NULL != queue);
 
 	g_mutex_lock(&queue->lock);
 	g_cond_signal(&queue->condition);

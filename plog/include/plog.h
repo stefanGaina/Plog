@@ -46,44 +46,49 @@
 #ifdef PLOG_STRIP_ALL
 
 /** ***************************************************************************************************
- * @brief Strips plog_fatal calls from compilation.
+ * @brief Strips plog_fatal() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_FATAL
 
 /** ***************************************************************************************************
- * @brief Strips plog_error calls from compilation.
+ * @brief Strips plog_error() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_ERROR
 
 /** ***************************************************************************************************
- * @brief Strips plog_warn calls from compilation.
+ * @brief Strips plog_warn() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_WARN
 
 /** ***************************************************************************************************
- * @brief Strips plog_info calls from compilation.
+ * @brief Strips plog_info() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_INFO
 
 /** ***************************************************************************************************
- * @brief Strips plog_debug calls from compilation.
+ * @brief Strips plog_debug() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_DEBUG
 
 /** ***************************************************************************************************
- * @brief Strips plog_trace calls from compilation.
+ * @brief Strips plog_trace() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_TRACE
 
 /** ***************************************************************************************************
- * @brief Strips plog_verbose calls from compilation.
+ * @brief Strips plog_verbose() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_VERBOSE
 
 /** ***************************************************************************************************
- * @brief Strips plog_assert calls from compilation.
+ * @brief Strips plog_assert() and plog_assert_m() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_ASSERT
+
+/** ***************************************************************************************************
+ * @brief Strips plog_expect() and plog_expect_m() calls from compilation.
+ *****************************************************************************************************/
+#define PLOG_STRIP_EXPECT
 
 #endif /*< PLOG_STRIP_ALL */
 
@@ -244,13 +249,24 @@
 #ifndef PLOG_STRIP_ASSERT
 
 /** ***************************************************************************************************
- * @brief Performs sanity check and prints an error message with the file, function, code line and
+ * @brief Performs sanity check and prints a fatal error message with the file, function, code line and
  * the condition that did not pass.
  * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
  * program will be aborted.
  * @return void
  *****************************************************************************************************/
-#define plog_assert(condition) plog_internal_assert(condition, #condition, __FILE__, __FUNCTION__, __LINE__)
+#define plog_assert(condition) plog_internal_assert(condition, #condition, NULL, __FILE__, __FUNCTION__, __LINE__)
+
+/** ***************************************************************************************************
+ * @brief Performs sanity check and prints a fatal error message with the file, function, code line and
+ * the condition that did not pass.
+ * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
+ * program will be aborted.
+ * @param message: Additional message that will be attached (can be NULL but in this situation consider
+ * using plog_assert()).
+ * @return void
+ *****************************************************************************************************/
+#define plog_assert_m(condition, message) plog_internal_assert(condition, #condition, message, __FILE__, __FUNCTION__, __LINE__)
 
 #else
 
@@ -261,7 +277,52 @@
  *****************************************************************************************************/
 #define plog_assert(condition)
 
-#endif /*< PLOG_STRIP_VERBOSE */
+/** ***************************************************************************************************
+ * @brief Asserts are stripped from compilation.
+ * @param condition: Does not matter.
+ * @param message: Does not matter.
+ * @return void
+ *****************************************************************************************************/
+#define plog_assert_m(condition, message)
+
+#endif /*< PLOG_STRIP_ASSERT */
+
+#ifndef PLOG_STRIP_EXPECT
+
+/** ***************************************************************************************************
+ * @brief Performs check and prints a warning message with the the condition that did not pass.
+ * @param condition: The condition that needs to be true for the expectation to pass.
+ * @return void
+ *****************************************************************************************************/
+#define plog_expect(condition) plog_internal_expect(condition, #condition, NULL, __FUNCTION__)
+
+/** ***************************************************************************************************
+ * @brief Performs check and prints a warning message with the the condition that did not pass.
+ * @param condition: The condition that needs to be true for the expectation to pass.
+ * @param message: Additional message that will be attached (can be NULL but in this situation consider
+ * using plog_expect()).
+ * @return void
+ *****************************************************************************************************/
+#define plog_expect_m(condition, message) plog_internal_expect(condition, #condition, message, __FUNCTION__)
+
+#else
+
+/** ***************************************************************************************************
+ * @brief Expectations are stripped from compilation.
+ * @param condition: Does not matter.
+ * @return void
+ *****************************************************************************************************/
+#define plog_expect(condition)
+
+/** ***************************************************************************************************
+ * @brief Expectations are stripped from compilation.
+ * @param condition: Does not matter.
+ * @param message: Does not matter.
+ * @return void
+ *****************************************************************************************************/
+#define plog_expect_m(condition, message)
+
+#endif /*< PLOG_STRIP_EXPECT */
 
 /******************************************************************************************************
  * TYPE DEFINITIONS
@@ -276,8 +337,8 @@ typedef enum e_plog_SeverityLevel_t
 {
 	E_PLOG_SEVERITY_LEVEL_FATAL	  = (1 << 0), /**< If bit is set fatal logs are enabled.   */
 	E_PLOG_SEVERITY_LEVEL_ERROR	  = (1 << 1), /**< If bit is set error logs are enabled.   */
-	E_PLOG_SEVERITY_LEVEL_WARN	  = (1 << 2), /**< If bit is set warn logs are enabled.    */
-	E_PLOG_SEVERITY_LEVEL_INFO	  = (1 << 3), /**< If bit is set info logs are enabled.    */
+	E_PLOG_SEVERITY_LEVEL_WARN	  = (1 << 2), /**< If bit is set warn logs are enabled.	   */
+	E_PLOG_SEVERITY_LEVEL_INFO	  = (1 << 3), /**< If bit is set info logs are enabled.	   */
 	E_PLOG_SEVERITY_LEVEL_DEBUG	  = (1 << 4), /**< If bit is set debug logs are enabled.   */
 	E_PLOG_SEVERITY_LEVEL_TRACE	  = (1 << 5), /**< If bit is set trace logs are enabled.   */
 	E_PLOG_SEVERITY_LEVEL_VERBOSE = (1 << 6)  /**< If bit is set verbose logs are enabled. */
