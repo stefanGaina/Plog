@@ -117,70 +117,69 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structs__Vector__t.html">   44</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structs__Vector__t.html">s_Vector_t</a></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
 <div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structs__Vector__t.html#a87cd41ded43516506af7feb445b39a55">   46</a></span>&#160;    gchar <a class="code" href="structs__Vector__t.html#a87cd41ded43516506af7feb445b39a55">dummy</a>[16]; <span class="comment">/**&lt; The size of the vector is 16 bytes. */</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="vector_8h.html#a9478797dcb2ac2b5294413d9e0053e53">   48</a></span>&#160;<a class="code" href="vector_8h.html#a9478797dcb2ac2b5294413d9e0053e53">Vector_t</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> * FUNCTION PROTOTYPES</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> * @brief Initializes the vector. Do not call any other function before this.</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> * @return void</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="vector_8h.html#ad18c16ca4900beeb678f9b5fac4355ef">vector_init</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> * @brief Cleans the stored strings and buffer. It is safe to call other functions after this.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> * @return void</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="vector_8h.html#a68760dc1fe35067fda65ce9bd7ed461d">vector_clean</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * @brief Pushes a string (makes a copy) into the vector.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> * @param buffer: The string that will be copied.</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> * @return TRUE - the string has been successfully pushed.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> * @return FALSE - an error has occurred.</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">extern</span> gboolean <a class="code" href="vector_8h.html#a7bf45d251588dae3cf7372c6101c7f2d">vector_push</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector, <span class="keyword">const</span> gchar* buffer);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> * @brief Pops a string from the vector (removes it). It is not safe to call if the vector is empty.</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> * @param[out] buffer: The buffer where the stored string will be copied.</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * @param buffer_size: The size of the buffer (to avoid buffer overflow).</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> * @return void</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="vector_8h.html#ab45a7b6064c319e504b1c2464452415e">vector_pop</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector, gchar* buffer, gsize buffer_size);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> * @brief Queries if the vector currently stores any string.</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> * @return TRUE - the vector does not store any string.</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> * @return FALSE - otherwise.</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">extern</span> gboolean <a class="code" href="vector_8h.html#a28c3aeeca1b0a79606d04acbc1125bb9">vector_is_empty</a>(<span class="keyword">const</span> <a class="code" href="structs__Vector__t.html">Vector_t</a>* vector);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; VECTOR_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="vector_8h.html#a9478797dcb2ac2b5294413d9e0053e53">   47</a></span>&#160;} <a class="code" href="vector_8h.html#a9478797dcb2ac2b5294413d9e0053e53">Vector_t</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> * FUNCTION PROTOTYPES</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> * @brief Initializes the vector. Do not call any other function before this.</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="vector_8h.html#ad18c16ca4900beeb678f9b5fac4355ef">vector_init</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> * @brief Cleans the stored strings and buffer. It is safe to call other functions after this.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="vector_8h.html#a68760dc1fe35067fda65ce9bd7ed461d">vector_clean</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> * @brief Pushes a string (makes a copy) into the vector.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> * @param buffer: The string that will be copied.</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> * @return TRUE - the string has been successfully pushed.</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> * @return FALSE - an error has occurred.</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">extern</span> gboolean <a class="code" href="vector_8h.html#a7bf45d251588dae3cf7372c6101c7f2d">vector_push</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector, <span class="keyword">const</span> gchar* buffer);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> * @brief Pops a string from the vector (removes it). It is not safe to call if the vector is empty.</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> * @param[out] buffer: The buffer where the stored string will be copied.</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> * @param buffer_size: The size of the buffer (to avoid buffer overflow).</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="vector_8h.html#ab45a7b6064c319e504b1c2464452415e">vector_pop</a>(<a class="code" href="structs__Vector__t.html">Vector_t</a>* vector, gchar* buffer, gsize buffer_size);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> * @brief Queries if the vector currently stores any string.</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> * @param vector: Vector object.</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> * @return TRUE - the vector does not store any string.</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> * @return FALSE - otherwise.</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">extern</span> gboolean <a class="code" href="vector_8h.html#a28c3aeeca1b0a79606d04acbc1125bb9">vector_is_empty</a>(<span class="keyword">const</span> <a class="code" href="structs__Vector__t.html">Vector_t</a>* vector);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; VECTOR_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="astructs__Vector__t_html"><div class="ttname"><a href="structs__Vector__t.html">s_Vector_t</a></div><div class="ttdoc">Opaque data structure for storying copies of strings.</div><div class="ttdef"><b>Definition:</b> vector.h:45</div></div>
 <div class="ttc" id="astructs__Vector__t_html_a87cd41ded43516506af7feb445b39a55"><div class="ttname"><a href="structs__Vector__t.html#a87cd41ded43516506af7feb445b39a55">s_Vector_t::dummy</a></div><div class="ttdeci">gchar dummy[16]</div><div class="ttdef"><b>Definition:</b> vector.h:46</div></div>
-<div class="ttc" id="avector_8h_html_a28c3aeeca1b0a79606d04acbc1125bb9"><div class="ttname"><a href="vector_8h.html#a28c3aeeca1b0a79606d04acbc1125bb9">vector_is_empty</a></div><div class="ttdeci">gboolean vector_is_empty(const Vector_t *vector)</div><div class="ttdoc">Queries if the vector currently stores any string.</div><div class="ttdef"><b>Definition:</b> vector.c:116</div></div>
-<div class="ttc" id="avector_8h_html_a68760dc1fe35067fda65ce9bd7ed461d"><div class="ttname"><a href="vector_8h.html#a68760dc1fe35067fda65ce9bd7ed461d">vector_clean</a></div><div class="ttdeci">void vector_clean(Vector_t *vector)</div><div class="ttdoc">Cleans the stored strings and buffer. It is safe to call other functions after this.</div><div class="ttdef"><b>Definition:</b> vector.c:58</div></div>
-<div class="ttc" id="avector_8h_html_a7bf45d251588dae3cf7372c6101c7f2d"><div class="ttname"><a href="vector_8h.html#a7bf45d251588dae3cf7372c6101c7f2d">vector_push</a></div><div class="ttdeci">gboolean vector_push(Vector_t *vector, const gchar *buffer)</div><div class="ttdoc">Pushes a string (makes a copy) into the vector.</div><div class="ttdef"><b>Definition:</b> vector.c:73</div></div>
+<div class="ttc" id="avector_8h_html_a28c3aeeca1b0a79606d04acbc1125bb9"><div class="ttname"><a href="vector_8h.html#a28c3aeeca1b0a79606d04acbc1125bb9">vector_is_empty</a></div><div class="ttdeci">gboolean vector_is_empty(const Vector_t *vector)</div><div class="ttdoc">Queries if the vector currently stores any string.</div><div class="ttdef"><b>Definition:</b> vector.c:126</div></div>
+<div class="ttc" id="avector_8h_html_a68760dc1fe35067fda65ce9bd7ed461d"><div class="ttname"><a href="vector_8h.html#a68760dc1fe35067fda65ce9bd7ed461d">vector_clean</a></div><div class="ttdeci">void vector_clean(Vector_t *vector)</div><div class="ttdoc">Cleans the stored strings and buffer. It is safe to call other functions after this.</div><div class="ttdef"><b>Definition:</b> vector.c:62</div></div>
+<div class="ttc" id="avector_8h_html_a7bf45d251588dae3cf7372c6101c7f2d"><div class="ttname"><a href="vector_8h.html#a7bf45d251588dae3cf7372c6101c7f2d">vector_push</a></div><div class="ttdeci">gboolean vector_push(Vector_t *vector, const gchar *buffer)</div><div class="ttdoc">Pushes a string (makes a copy) into the vector.</div><div class="ttdef"><b>Definition:</b> vector.c:79</div></div>
 <div class="ttc" id="avector_8h_html_a9478797dcb2ac2b5294413d9e0053e53"><div class="ttname"><a href="vector_8h.html#a9478797dcb2ac2b5294413d9e0053e53">Vector_t</a></div><div class="ttdeci">struct s_Vector_t Vector_t</div><div class="ttdoc">Opaque data structure for storying copies of strings.</div></div>
-<div class="ttc" id="avector_8h_html_ab45a7b6064c319e504b1c2464452415e"><div class="ttname"><a href="vector_8h.html#ab45a7b6064c319e504b1c2464452415e">vector_pop</a></div><div class="ttdeci">void vector_pop(Vector_t *vector, gchar *buffer, gsize buffer_size)</div><div class="ttdoc">Pops a string from the vector (removes it). It is not safe to call if the vector is empty.</div><div class="ttdef"><b>Definition:</b> vector.c:100</div></div>
-<div class="ttc" id="avector_8h_html_ad18c16ca4900beeb678f9b5fac4355ef"><div class="ttname"><a href="vector_8h.html#ad18c16ca4900beeb678f9b5fac4355ef">vector_init</a></div><div class="ttdeci">void vector_init(Vector_t *vector)</div><div class="ttdoc">Initializes the vector. Do not call any other function before this.</div><div class="ttdef"><b>Definition:</b> vector.c:50</div></div>
+<div class="ttc" id="avector_8h_html_ab45a7b6064c319e504b1c2464452415e"><div class="ttname"><a href="vector_8h.html#ab45a7b6064c319e504b1c2464452415e">vector_pop</a></div><div class="ttdeci">void vector_pop(Vector_t *vector, gchar *buffer, gsize buffer_size)</div><div class="ttdoc">Pops a string from the vector (removes it). It is not safe to call if the vector is empty.</div><div class="ttdef"><b>Definition:</b> vector.c:108</div></div>
+<div class="ttc" id="avector_8h_html_ad18c16ca4900beeb678f9b5fac4355ef"><div class="ttname"><a href="vector_8h.html#ad18c16ca4900beeb678f9b5fac4355ef">vector_init</a></div><div class="ttdeci">void vector_init(Vector_t *vector)</div><div class="ttdoc">Initializes the vector. Do not call any other function before this.</div><div class="ttdef"><b>Definition:</b> vector.c:52</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 		<script src="custom.js"></script>

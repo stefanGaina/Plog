@@ -100,6 +100,10 @@ int main(int argc, char* argv[])
 	plog_info("Logs/functions after initialization will have an effect!");
 
 	plog_assert(1 == 1);
+	plog_assert_m(1 == 1, "message");
+
+	plog_expect(1 == 1);
+	plog_expect_m(1 == 1, "message");
 
 	severity_level = plog_get_severity_level();
 	plog_set_severity_level(E_PLOG_SEVERITY_LEVEL_FATAL | E_PLOG_SEVERITY_LEVEL_ERROR);

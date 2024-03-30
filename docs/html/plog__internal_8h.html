@@ -103,7 +103,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a48e2ddf754119952f73a27596e2a2bae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">plog_internal</a>(severity_bit,  severity_tag,  function_name,  format, ...)&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, format, <a class="el" href="plog_8c.html#ad84ccf2de33eeaaa8aac298d27534c16">plog_internal_get_time</a>(), severity_tag, function_name, ##__VA_ARGS__)</td></tr>
+<tr class="memitem:a48e2ddf754119952f73a27596e2a2bae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">plog_internal</a>(severity_bit,  severity_tag,  function_name,  format, ...)&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, &quot;[%s] [%s] [%s] &quot; format, <a class="el" href="plog_8c.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a>(), severity_tag, function_name, ##__VA_ARGS__)</td></tr>
 <tr class="memdesc:a48e2ddf754119952f73a27596e2a2bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">This macro is not meant to be invoked outside plog macros.  <a href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">More...</a><br /></td></tr>
 <tr class="separator:a48e2ddf754119952f73a27596e2a2bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -112,12 +112,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">plog_internal_function</a> (guint8 severity_bit, const gchar *format,...)</td></tr>
 <tr class="memdesc:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">More...</a><br /></td></tr>
 <tr class="separator:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac70be287c9914dc80c00336604ce529d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ac70be287c9914dc80c00336604ce529d">plog_internal_assert</a> (gboolean condition, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</td></tr>
-<tr class="memdesc:ac70be287c9914dc80c00336604ce529d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints an error message if the condition did not pass.  <a href="plog__internal_8h.html#ac70be287c9914dc80c00336604ce529d">More...</a><br /></td></tr>
-<tr class="separator:ac70be287c9914dc80c00336604ce529d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad84ccf2de33eeaaa8aac298d27534c16"><td class="memItemLeft" align="right" valign="top">const gchar *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ad84ccf2de33eeaaa8aac298d27534c16">plog_internal_get_time</a> (void)</td></tr>
-<tr class="memdesc:ad84ccf2de33eeaaa8aac298d27534c16"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#ad84ccf2de33eeaaa8aac298d27534c16">More...</a><br /></td></tr>
-<tr class="separator:ad84ccf2de33eeaaa8aac298d27534c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17ad16b1d5cca6a8fed4d8dcba9a8e07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a17ad16b1d5cca6a8fed4d8dcba9a8e07">plog_internal_assert</a> (gboolean condition, const gchar *condition_string, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</td></tr>
+<tr class="memdesc:a17ad16b1d5cca6a8fed4d8dcba9a8e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints a fatal error message if the condition did not pass.  <a href="plog__internal_8h.html#a17ad16b1d5cca6a8fed4d8dcba9a8e07">More...</a><br /></td></tr>
+<tr class="separator:a17ad16b1d5cca6a8fed4d8dcba9a8e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1469f97f6aebca064092cefed9357a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ab1469f97f6aebca064092cefed9357a9">plog_internal_expect</a> (gboolean condition, const gchar *condition_string, const gchar *message, const gchar *function_name)</td></tr>
+<tr class="memdesc:ab1469f97f6aebca064092cefed9357a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs check and prints a warning message if the condition did not pass.  <a href="plog__internal_8h.html#ab1469f97f6aebca064092cefed9357a9">More...</a><br /></td></tr>
+<tr class="separator:ab1469f97f6aebca064092cefed9357a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="memItemLeft" align="right" valign="top">const gchar *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a> (void)</td></tr>
+<tr class="memdesc:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">More...</a><br /></td></tr>
+<tr class="separator:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file defines macros and interfaces of Plog that are meant to be internal. </p>
@@ -166,7 +169,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, format, <a class="el" href="plog_8c.html#ad84ccf2de33eeaaa8aac298d27534c16">plog_internal_get_time</a>(), severity_tag, function_name, ##__VA_ARGS__)</td>
+          <td></td><td>&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, &quot;[%s] [%s] [%s] &quot; format, <a class="el" href="plog_8c.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a>(), severity_tag, function_name, ##__VA_ARGS__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -176,7 +179,7 @@ Functions</h2></td></tr>
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">severity_bit</td><td>The message will not be logged if the severity bit is not set in severity level mask. </td></tr>
-    <tr><td class="paramname">time</td><td>Time string retrieved from <a class="el" href="plog__internal_8h.html#ad84ccf2de33eeaaa8aac298d27534c16" title="This function is not meant to be called outside plog macros.">plog_internal_get_time()</a>. </td></tr>
+    <tr><td class="paramname">time</td><td>Time string retrieved from <a class="el" href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052" title="This function is not meant to be called outside plog macros.">plog_internal_get_time_string()</a>. </td></tr>
     <tr><td class="paramname">severity_tag</td><td>The tag that will be attached between time and the actual message (indicating the severity of the message). </td></tr>
     <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
     <tr><td class="paramname">format</td><td>String that contains the text to be written. </td></tr>
@@ -235,8 +238,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac70be287c9914dc80c00336604ce529d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac70be287c9914dc80c00336604ce529d">&#9670;&nbsp;</a></span>plog_internal_assert()</h2>
+<a id="a17ad16b1d5cca6a8fed4d8dcba9a8e07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17ad16b1d5cca6a8fed4d8dcba9a8e07">&#9670;&nbsp;</a></span>plog_internal_assert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -246,6 +249,12 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">gboolean&#160;</td>
           <td class="paramname"><em>condition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>condition_string</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -279,12 +288,13 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Performs sanity check and prints an error message if the condition did not pass. </p>
+<p>Performs sanity check and prints a fatal error message if the condition did not pass. </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">condition</td><td>The condition that needs to be true for the assertion to pass. Otherwise the program will be aborted. </td></tr>
-    <tr><td class="paramname">message</td><td>The message that will be printed if the condition did not pass. </td></tr>
+    <tr><td class="paramname">condition_string</td><td>The condition in string format. </td></tr>
+    <tr><td class="paramname">message</td><td>The message that will be printed if the condition did not pass (can be NULL). </td></tr>
     <tr><td class="paramname">file_name</td><td>String that contains the name of the caller file. </td></tr>
     <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
     <tr><td class="paramname">line</td><td>The code line where this function is called. </td></tr>
@@ -295,14 +305,67 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad84ccf2de33eeaaa8aac298d27534c16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad84ccf2de33eeaaa8aac298d27534c16">&#9670;&nbsp;</a></span>plog_internal_get_time()</h2>
+<a id="ab1469f97f6aebca064092cefed9357a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1469f97f6aebca064092cefed9357a9">&#9670;&nbsp;</a></span>plog_internal_expect()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const gchar* plog_internal_get_time </td>
+          <td class="memname">void plog_internal_expect </td>
+          <td>(</td>
+          <td class="paramtype">gboolean&#160;</td>
+          <td class="paramname"><em>condition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>condition_string</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>message</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gchar *&#160;</td>
+          <td class="paramname"><em>function_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Performs check and prints a warning message if the condition did not pass. </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>The condition that needs to be true for the expectation to pass. </td></tr>
+    <tr><td class="paramname">condition_string</td><td>The condition in string format. </td></tr>
+    <tr><td class="paramname">message</td><td>The message that will be printed if the condition did not pass (can be NULL). </td></tr>
+    <tr><td class="paramname">function_name</td><td>String that contains the name of the caller function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ab5c3fd23280066b2fa79ac1bb60eb052"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5c3fd23280066b2fa79ac1bb60eb052">&#9670;&nbsp;</a></span>plog_internal_get_time_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const gchar* plog_internal_get_time_string </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -319,7 +382,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A string representing the current time in a "mmm dd hh:mm:ss yyyy" format. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A string where the current time is stored in a "DD-MM-YYYY HH-MM-SS.mmm" format. </dd></dl>
 
 </div>
 </div>

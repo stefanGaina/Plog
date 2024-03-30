@@ -6,14 +6,14 @@
 # example of how the functions might get called.
 #######################################################################################################
 
-CFLAGS = `pkg-config --cflags glib-2.0` -Wno-format
+CFLAGS	:= `pkg-config --cflags glib-2.0` -Wno-format
 # CFLAGS += -DPLOG_STRIP_ALL
-LDFLAGS = -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../plog/$(LIB) -L../plog/$(LIB) -lplog
+LDFLAGS := -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../plog/$(LIB) -L../plog/$(LIB) -lplog
 
-INCLUDES = -I../plog/include
+INCLUDES := -I../plog/include
 
-SOURCES    := $(wildcard $(SRC)/*.c)
-OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
+SOURCES	   := $(wildcard $(SRC)/*.c)
+OBJECTS	   := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 EXECUTABLE := plog-example
 
 all: | create_dirs $(EXECUTABLE)

@@ -1,7 +1,15 @@
 var searchData=
 [
-  ['buffer_1',['buffer',['../structs__Node__t.html#a5d1177afb9516641ad3138206050c6aa',1,'s_Node_t::buffer()'],['../structs__PrivateVector__t.html#a74ab1706434fd5751ce8f145d141716a',1,'s_PrivateVector_t::buffer()']]],
-  ['buffer_5fmode_5fstring_2',['BUFFER_MODE_STRING',['../configuration_8c.html#a81de36e750626828bc486b97cd6b9e03',1,'configuration.c']]],
-  ['buffer_5fmode_5fstring_5fsize_3',['BUFFER_MODE_STRING_SIZE',['../configuration_8c.html#acd11a0ff8fcbc2fef445c12c34ca17b2',1,'configuration.c']]],
-  ['bug_20list_4',['Bug List',['../bug.html',1,'']]]
+  ['check_5ffile_5fsize_4',['check_file_size',['../plog_8c.html#abff1a03262f8b6a5d4b305d903365321',1,'plog.c']]],
+  ['close_5fconfiguration_5ffile_5',['close_configuration_file',['../configuration_8c.html#a12b9c1fadda686c4549b6e3cacef789e',1,'configuration.c']]],
+  ['common_2eh_6',['common.h',['../common_8h.html',1,'']]],
+  ['condition_7',['condition',['../structs__PrivateQueue__t.html#aae77aa180e5ba71c8da309325d70b3b5',1,'s_PrivateQueue_t']]],
+  ['configuration_2ec_8',['configuration.c',['../configuration_8c.html',1,'']]],
+  ['configuration_2eh_9',['configuration.h',['../configuration_8h.html',1,'']]],
+  ['configuration_5fread_10',['configuration_read',['../configuration_8h.html#a9ee8d25cf3c337ff98ce8874908d562b',1,'configuration_read(void):&#160;configuration.c'],['../configuration_8c.html#a9ee8d25cf3c337ff98ce8874908d562b',1,'configuration_read(void):&#160;configuration.c']]],
+  ['configuration_5fwrite_11',['configuration_write',['../configuration_8h.html#aed499d46403f078d58185c03f3b376cf',1,'configuration_write(void):&#160;configuration.c'],['../configuration_8c.html#aed499d46403f078d58185c03f3b376cf',1,'configuration_write(void):&#160;configuration.c']]],
+  ['contributing_12',['CONTRIBUTING',['../md_CONTRIBUTING.html',1,'']]],
+  ['contributing_2emd_13',['CONTRIBUTING.md',['../CONTRIBUTING_8md.html',1,'']]],
+  ['current_5ffile_5fcount_14',['current_file_count',['../plog_8c.html#a286cb6f696564eb9e5dad545926873d2',1,'plog.c']]],
+  ['current_5ffile_5fsize_15',['current_file_size',['../plog_8c.html#a61fcfafe84b3f3ec8dea0ed07104b282',1,'plog.c']]]
 ];
