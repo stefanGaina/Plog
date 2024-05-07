@@ -122,66 +122,90 @@ $(function() {
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">   50</a></span>&#160;<span class="preprocessor">#define plog_internal(severity_bit, severity_tag, function_name, format, ...)                                                                                      \</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">    plog_internal_function(severity_bit, &quot;[%s] [%s] [%s] &quot;</span> format, plog_internal_get_time_string(), severity_tag, function_name, ##__VA_ARGS__)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> * FUNCTION PROTOTYPES</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> * @brief This function is not meant to be called outside plog macros.</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> * @param severity_bit: The message will not be logged if the severity bit is not set in severity</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> * level mask.</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> * @param format: String that contains the text to be written.</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> * @param VA_ARGS: The parameters passed in a printf style.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> * @return void</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">plog_internal_function</a>(guint8 severity_bit, <span class="keyword">const</span> gchar* format, ...);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> * @brief Performs sanity check and prints a fatal error message if the condition did not pass.</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> * program will be aborted.</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> * @param condition_string: The condition in string format.</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> * @param message: The message that will be printed if the condition did not pass (can be NULL).</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> * @param file_name: String that contains the name of the caller file.</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> * @param function_name: String that contains the name of the caller function.</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> * @param line: The code line where this function is called.</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> * @return void</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<a class="code" href="plog__internal_8h.html#a17ad16b1d5cca6a8fed4d8dcba9a8e07">plog_internal_assert</a>(gboolean condition, <span class="keyword">const</span> gchar* condition_string, <span class="keyword">const</span> gchar* message, <span class="keyword">const</span> gchar* file_name, <span class="keyword">const</span> gchar* function_name, gint32 line);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> * @brief Performs check and prints a warning message if the condition did not pass.</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> * @param condition: The condition that needs to be true for the expectation to pass.</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> * @param condition_string: The condition in string format.</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> * @param message: The message that will be printed if the condition did not pass (can be NULL).</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> * @param function_name: String that contains the name of the caller function.</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> * @return void</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="plog__internal_8h.html#ab1469f97f6aebca064092cefed9357a9">plog_internal_expect</a>(gboolean condition, <span class="keyword">const</span> gchar* condition_string, <span class="keyword">const</span> gchar* message, <span class="keyword">const</span> gchar* function_name);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> * @brief This function is not meant to be called outside plog macros.</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> * @param void</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> * @return A string where the current time is stored in a &quot;DD-MM-YYYY HH-MM-SS.mmm&quot; format.</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> gchar* <a class="code" href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; PLOG_STRIP_ALL */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; PLOG_INTERNAL_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> * @brief This macro is not meant to be invoked outside plog macros.</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> * program will be aborted.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> * @param condition_string: The condition in string format.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> * @param message: The message that will be printed if the condition did not pass (can be NULL).</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="plog__internal_8h.html#a2bfbd82338cee792704d30ff11a227be">   61</a></span>&#160;<span class="preprocessor">#define plog_internal_assert(condition, condition_string, message)                                                                                                 \</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">    plog_internal_assert_function(condition, condition_string, message, __FILE__, __FUNCTION__, __LINE__)</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> * @brief This macro is not meant to be invoked outside plog macros.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> * @param condition: The condition that needs to be true for the expectation to pass.</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> * @param message: The message that will be printed if the condition did not pass (can be NULL).</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="plog__internal_8h.html#ac813ae68a6f720e9e81fb42262b541aa">   70</a></span>&#160;<span class="preprocessor">#define plog_internal_expect(condition, message) plog_internal_expect_function(condition, #condition, message, __FUNCTION__)</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * FUNCTION PROTOTYPES</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> * @brief This function is not meant to be called outside plog macros.</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> * @param severity_bit: The message will not be logged if the severity bit is not set in severity</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> * level mask.</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> * @param format: String that contains the text to be written.</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * @param VA_ARGS: The parameters passed in a printf style.</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">plog_internal_function</a>(guint8 severity_bit, <span class="keyword">const</span> gchar* format, ...);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> * @brief Performs sanity check and prints a fatal error message if the condition did not pass.</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> * program will be aborted.</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> * @param condition_string: The condition in string format.</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> * @param message: The message that will be printed if the condition did not pass (can be NULL).</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> * @param file_name: String that contains the name of the caller file.</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> * @param function_name: String that contains the name of the caller function.</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> * @param line: The code line where this function is called.</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="plog__internal_8h.html#a17edbccad050b7ccb52d9277ac956a99">plog_internal_assert_function</a>(</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    gboolean     condition,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">const</span> gchar* condition_string,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">const</span> gchar* message,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> gchar* file_name,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">const</span> gchar* function_name,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    gint32       line);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> * @brief Performs check and prints a warning message if the condition did not pass.</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> * @param condition: The condition that needs to be true for the expectation to pass.</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> * @param condition_string: The condition in string format.</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment"> * @param message: The message that will be printed if the condition did not pass (can be NULL).</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment"> * @param function_name: String that contains the name of the caller function.</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment"> * @return void</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="plog__internal_8h.html#a789a4700fa9fa72c2faaccb138fabd46">plog_internal_expect_function</a>(gboolean condition, <span class="keyword">const</span> gchar* condition_string, <span class="keyword">const</span> gchar* message, <span class="keyword">const</span> gchar* function_name);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">/** ***************************************************************************************************</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment"> * @brief This function is not meant to be called outside plog macros.</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment"> * @param void</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment"> * @return A string where the current time is stored in a &quot;DD-MM-YYYY HH-MM-SS.mmm&quot; format.</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> gchar* <a class="code" href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; PLOG_STRIP_ALL */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; PLOG_INTERNAL_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aplog__internal_8h_html_a0fb71f5f9dceb4c1637775afb053b8e3"><div class="ttname"><a href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">plog_internal_function</a></div><div class="ttdeci">void plog_internal_function(guint8 severity_bit, const gchar *format,...)</div><div class="ttdoc">This function is not meant to be called outside plog macros.</div><div class="ttdef"><b>Definition:</b> plog.c:326</div></div>
-<div class="ttc" id="aplog__internal_8h_html_a17ad16b1d5cca6a8fed4d8dcba9a8e07"><div class="ttname"><a href="plog__internal_8h.html#a17ad16b1d5cca6a8fed4d8dcba9a8e07">plog_internal_assert</a></div><div class="ttdeci">void plog_internal_assert(gboolean condition, const gchar *condition_string, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</div><div class="ttdoc">Performs sanity check and prints a fatal error message if the condition did not pass.</div><div class="ttdef"><b>Definition:</b> plog.c:385</div></div>
-<div class="ttc" id="aplog__internal_8h_html_ab1469f97f6aebca064092cefed9357a9"><div class="ttname"><a href="plog__internal_8h.html#ab1469f97f6aebca064092cefed9357a9">plog_internal_expect</a></div><div class="ttdeci">void plog_internal_expect(gboolean condition, const gchar *condition_string, const gchar *message, const gchar *function_name)</div><div class="ttdoc">Performs check and prints a warning message if the condition did not pass.</div><div class="ttdef"><b>Definition:</b> plog.c:406</div></div>
+<div class="ttc" id="aplog__internal_8h_html_a17edbccad050b7ccb52d9277ac956a99"><div class="ttname"><a href="plog__internal_8h.html#a17edbccad050b7ccb52d9277ac956a99">plog_internal_assert_function</a></div><div class="ttdeci">void plog_internal_assert_function(gboolean condition, const gchar *condition_string, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</div><div class="ttdoc">Performs sanity check and prints a fatal error message if the condition did not pass.</div><div class="ttdef"><b>Definition:</b> plog.c:385</div></div>
+<div class="ttc" id="aplog__internal_8h_html_a789a4700fa9fa72c2faaccb138fabd46"><div class="ttname"><a href="plog__internal_8h.html#a789a4700fa9fa72c2faaccb138fabd46">plog_internal_expect_function</a></div><div class="ttdeci">void plog_internal_expect_function(gboolean condition, const gchar *condition_string, const gchar *message, const gchar *function_name)</div><div class="ttdoc">Performs check and prints a warning message if the condition did not pass.</div><div class="ttdef"><b>Definition:</b> plog.c:406</div></div>
 <div class="ttc" id="aplog__internal_8h_html_ab5c3fd23280066b2fa79ac1bb60eb052"><div class="ttname"><a href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a></div><div class="ttdeci">const gchar * plog_internal_get_time_string(void)</div><div class="ttdoc">This function is not meant to be called outside plog macros.</div><div class="ttdef"><b>Definition:</b> plog.c:417</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

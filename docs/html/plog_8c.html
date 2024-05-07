@@ -77,10 +77,10 @@ $(function() {
 
 <p>This file implements the interface defined in <a class="el" href="plog_8h.html" title="This file defines the type definitions and public interface of Plog.">plog.h</a>.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;assert.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;stdarg.h&gt;</code><br />
 <code>#include &lt;stdatomic.h&gt;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
 <code>#include &lt;inttypes.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
@@ -95,21 +95,21 @@ Include dependency graph for plog.c:</div>
 <div class="center"><img src="plog_8c__incl.png" border="0" usemap="#aplog_2src_2plog_8c" alt=""/></div>
 <map name="aplog_2src_2plog_8c" id="aplog_2src_2plog_8c">
 <area shape="rect" title="This file implements the interface defined in plog.h." alt="" coords="555,5,671,32"/>
-<area shape="rect" title=" " alt="" coords="5,80,80,107"/>
-<area shape="rect" title=" " alt="" coords="105,80,175,107"/>
-<area shape="rect" title=" " alt="" coords="200,80,275,107"/>
-<area shape="rect" title=" " alt="" coords="299,80,397,107"/>
-<area shape="rect" title=" " alt="" coords="422,80,509,107"/>
-<area shape="rect" title=" " alt="" coords="533,80,603,107"/>
-<area shape="rect" title=" " alt="" coords="628,80,692,107"/>
-<area shape="rect" title=" " alt="" coords="716,80,820,107"/>
-<area shape="rect" href="plog_8h.html" title="This file defines the type definitions and public interface of Plog." alt="" coords="845,80,907,107"/>
-<area shape="rect" href="configuration_8h.html" title="This file defines function prototypes for reading and writing of plog.conf file. This is used interna..." alt="" coords="909,155,1083,181"/>
-<area shape="rect" href="queue_8h.html" title="This file defines queue data structure that is used internally by Plog and not meant to be public API..." alt="" coords="1107,155,1235,181"/>
-<area shape="rect" href="common_8h.html" title="This file defines a common macro that is used internally by Plog and not meant to be public API." alt="" coords="1034,80,1179,107"/>
-<area shape="rect" href="plog__version_8h.html" title="This file defines the type definitions and function prototype of getting the version of Plog." alt="" coords="625,155,743,181"/>
-<area shape="rect" href="plog__internal_8h.html" title="This file defines macros and interfaces of Plog that are meant to be internal." alt="" coords="766,155,885,181"/>
-<area shape="rect" title=" " alt="" coords="881,229,940,256"/>
+<area shape="rect" title=" " alt="" coords="5,80,76,107"/>
+<area shape="rect" title=" " alt="" coords="101,80,175,107"/>
+<area shape="rect" title=" " alt="" coords="199,80,298,107"/>
+<area shape="rect" title=" " alt="" coords="322,80,397,107"/>
+<area shape="rect" title=" " alt="" coords="421,80,508,107"/>
+<area shape="rect" title=" " alt="" coords="532,80,603,107"/>
+<area shape="rect" title=" " alt="" coords="627,80,691,107"/>
+<area shape="rect" title=" " alt="" coords="715,80,819,107"/>
+<area shape="rect" href="plog_8h.html" title="This file defines the type definitions and public interface of Plog." alt="" coords="844,80,907,107"/>
+<area shape="rect" href="configuration_8h.html" title="This file defines function prototypes for reading and writing of plog.conf file. This is used interna..." alt="" coords="909,155,1082,181"/>
+<area shape="rect" href="queue_8h.html" title="This file defines queue data structure that is used internally by Plog and not meant to be public API..." alt="" coords="1106,155,1234,181"/>
+<area shape="rect" href="common_8h.html" title="This file defines a common macro that is used internally by Plog and not meant to be public API." alt="" coords="1033,80,1179,107"/>
+<area shape="rect" href="plog__version_8h.html" title="This file defines the type definitions and function prototype of getting the version of Plog." alt="" coords="625,155,742,181"/>
+<area shape="rect" href="plog__internal_8h.html" title="This file defines macros and interfaces of Plog that are meant to be internal." alt="" coords="765,155,884,181"/>
+<area shape="rect" title=" " alt="" coords="881,229,939,256"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -172,12 +172,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a9f394b0230ce93a66b7412237ac33cd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a> (const guint8 severity_bit, const gchar *format,...)</td></tr>
 <tr class="memdesc:a9f394b0230ce93a66b7412237ac33cd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">More...</a><br /></td></tr>
 <tr class="separator:a9f394b0230ce93a66b7412237ac33cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a618ae7d67fdcec41a18621f752e7a98a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8c.html#a618ae7d67fdcec41a18621f752e7a98a">plog_internal_assert</a> (const gboolean condition, const gchar *const condition_string, const gchar *const message, const gchar *const file_name, const gchar *const function_name, const gint32 line)</td></tr>
-<tr class="memdesc:a618ae7d67fdcec41a18621f752e7a98a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints a fatal error message if the condition did not pass.  <a href="plog_8c.html#a618ae7d67fdcec41a18621f752e7a98a">More...</a><br /></td></tr>
-<tr class="separator:a618ae7d67fdcec41a18621f752e7a98a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64d420ccdc1a39360bdccad467c1a275"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8c.html#a64d420ccdc1a39360bdccad467c1a275">plog_internal_expect</a> (const gboolean condition, const gchar *const condition_string, const gchar *const message, const gchar *const function_name)</td></tr>
-<tr class="memdesc:a64d420ccdc1a39360bdccad467c1a275"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs check and prints a warning message if the condition did not pass.  <a href="plog_8c.html#a64d420ccdc1a39360bdccad467c1a275">More...</a><br /></td></tr>
-<tr class="separator:a64d420ccdc1a39360bdccad467c1a275"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a415b68cb0887c90d729f1217c4914e97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8c.html#a415b68cb0887c90d729f1217c4914e97">plog_internal_assert_function</a> (const gboolean condition, const gchar *const condition_string, const gchar *const message, const gchar *const file_name, const gchar *const function_name, const gint32 line)</td></tr>
+<tr class="memdesc:a415b68cb0887c90d729f1217c4914e97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints a fatal error message if the condition did not pass.  <a href="plog_8c.html#a415b68cb0887c90d729f1217c4914e97">More...</a><br /></td></tr>
+<tr class="separator:a415b68cb0887c90d729f1217c4914e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe0979bca90d1ac773e82ee5a323968e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8c.html#afe0979bca90d1ac773e82ee5a323968e">plog_internal_expect_function</a> (const gboolean condition, const gchar *const condition_string, const gchar *const message, const gchar *const function_name)</td></tr>
+<tr class="memdesc:afe0979bca90d1ac773e82ee5a323968e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs check and prints a warning message if the condition did not pass.  <a href="plog_8c.html#afe0979bca90d1ac773e82ee5a323968e">More...</a><br /></td></tr>
+<tr class="separator:afe0979bca90d1ac773e82ee5a323968e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="memItemLeft" align="right" valign="top">const gchar *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog_8c.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a> (void)</td></tr>
 <tr class="memdesc:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog_8c.html#ab5c3fd23280066b2fa79ac1bb60eb052">More...</a><br /></td></tr>
 <tr class="separator:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -838,14 +838,14 @@ FALSE - an error occured. </dd></dl>
 
 </div>
 </div>
-<a id="a618ae7d67fdcec41a18621f752e7a98a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a618ae7d67fdcec41a18621f752e7a98a">&#9670;&nbsp;</a></span>plog_internal_assert()</h2>
+<a id="a415b68cb0887c90d729f1217c4914e97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a415b68cb0887c90d729f1217c4914e97">&#9670;&nbsp;</a></span>plog_internal_assert_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plog_internal_assert </td>
+          <td class="memname">void plog_internal_assert_function </td>
           <td>(</td>
           <td class="paramtype">gboolean&#160;</td>
           <td class="paramname"><em>condition</em>, </td>
@@ -905,14 +905,14 @@ FALSE - an error occured. </dd></dl>
 
 </div>
 </div>
-<a id="a64d420ccdc1a39360bdccad467c1a275"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64d420ccdc1a39360bdccad467c1a275">&#9670;&nbsp;</a></span>plog_internal_expect()</h2>
+<a id="afe0979bca90d1ac773e82ee5a323968e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe0979bca90d1ac773e82ee5a323968e">&#9670;&nbsp;</a></span>plog_internal_expect_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plog_internal_expect </td>
+          <td class="memname">void plog_internal_expect_function </td>
           <td>(</td>
           <td class="paramtype">gboolean&#160;</td>
           <td class="paramname"><em>condition</em>, </td>

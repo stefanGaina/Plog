@@ -28,8 +28,8 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
-#include <assert.h>
 #include <stdio.h>
+#include <assert.h>
 #include <errno.h>
 #include <glib/gprintf.h>
 

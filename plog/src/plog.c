@@ -28,10 +28,10 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
-#include <assert.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdatomic.h>
+#include <assert.h>
 #include <inttypes.h>
 #include <string.h>
 #include <time.h>
@@ -382,12 +382,12 @@ void plog_internal_function(const guint8 severity_bit, const gchar* format, ...)
 	buffer = NULL;
 }
 
-void plog_internal_assert(const gboolean	 condition,
-						  const gchar* const condition_string,
-						  const gchar* const message,
-						  const gchar* const file_name,
-						  const gchar* const function_name,
-						  const gint32		 line)
+void plog_internal_assert_function(const gboolean	  condition,
+								   const gchar* const condition_string,
+								   const gchar* const message,
+								   const gchar* const file_name,
+								   const gchar* const function_name,
+								   const gint32		  line)
 {
 	assert(NULL != condition_string);
 	assert(NULL != file_name);
@@ -403,7 +403,7 @@ void plog_internal_assert(const gboolean	 condition,
 	}
 }
 
-void plog_internal_expect(const gboolean condition, const gchar* const condition_string, const gchar* const message, const gchar* const function_name)
+void plog_internal_expect_function(const gboolean condition, const gchar* const condition_string, const gchar* const message, const gchar* const function_name)
 {
 	assert(NULL != condition_string);
 	assert(NULL != function_name);

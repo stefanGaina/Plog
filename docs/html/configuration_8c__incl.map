@@ -1,7 +1,7 @@
 <map id="plog/src/configuration.c" name="plog/src/configuration.c">
 <area shape="rect" id="node1" title="This file implements the interface defined in configuration.h." alt="" coords="307,5,480,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,80,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="104,80,171,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,72,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,80,171,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="195,80,263,107"/>
 <area shape="rect" id="node5" title=" " alt="" coords="288,80,392,107"/>
 <area shape="rect" id="node6" href="$plog_8h.html" title="This file defines the type definitions and public interface of Plog." alt="" coords="417,80,479,107"/>

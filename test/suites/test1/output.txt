@@ -1,0 +1,9 @@
+Running in file mode!
+
+plog_apitest> plog_init NULL
+Plog has been initialized successfully!
+
+plog_apitest> plog_deinit
+Plog has been deinitialized successfully!
+
+plog_apitest> q

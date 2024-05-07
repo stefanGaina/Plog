@@ -106,18 +106,24 @@ Macros</h2></td></tr>
 <tr class="memitem:a48e2ddf754119952f73a27596e2a2bae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">plog_internal</a>(severity_bit,  severity_tag,  function_name,  format, ...)&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a9f394b0230ce93a66b7412237ac33cd2">plog_internal_function</a>(severity_bit, &quot;[%s] [%s] [%s] &quot; format, <a class="el" href="plog_8c.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a>(), severity_tag, function_name, ##__VA_ARGS__)</td></tr>
 <tr class="memdesc:a48e2ddf754119952f73a27596e2a2bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">This macro is not meant to be invoked outside plog macros.  <a href="plog__internal_8h.html#a48e2ddf754119952f73a27596e2a2bae">More...</a><br /></td></tr>
 <tr class="separator:a48e2ddf754119952f73a27596e2a2bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bfbd82338cee792704d30ff11a227be"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a2bfbd82338cee792704d30ff11a227be">plog_internal_assert</a>(condition,  condition_string,  message)&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a415b68cb0887c90d729f1217c4914e97">plog_internal_assert_function</a>(condition, condition_string, message, __FILE__, __FUNCTION__, __LINE__)</td></tr>
+<tr class="memdesc:a2bfbd82338cee792704d30ff11a227be"><td class="mdescLeft">&#160;</td><td class="mdescRight">This macro is not meant to be invoked outside plog macros.  <a href="plog__internal_8h.html#a2bfbd82338cee792704d30ff11a227be">More...</a><br /></td></tr>
+<tr class="separator:a2bfbd82338cee792704d30ff11a227be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac813ae68a6f720e9e81fb42262b541aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ac813ae68a6f720e9e81fb42262b541aa">plog_internal_expect</a>(condition,  message)&#160;&#160;&#160;<a class="el" href="plog_8c.html#afe0979bca90d1ac773e82ee5a323968e">plog_internal_expect_function</a>(condition, #condition, message, __FUNCTION__)</td></tr>
+<tr class="memdesc:ac813ae68a6f720e9e81fb42262b541aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This macro is not meant to be invoked outside plog macros.  <a href="plog__internal_8h.html#ac813ae68a6f720e9e81fb42262b541aa">More...</a><br /></td></tr>
+<tr class="separator:ac813ae68a6f720e9e81fb42262b541aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">plog_internal_function</a> (guint8 severity_bit, const gchar *format,...)</td></tr>
 <tr class="memdesc:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#a0fb71f5f9dceb4c1637775afb053b8e3">More...</a><br /></td></tr>
 <tr class="separator:a0fb71f5f9dceb4c1637775afb053b8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17ad16b1d5cca6a8fed4d8dcba9a8e07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a17ad16b1d5cca6a8fed4d8dcba9a8e07">plog_internal_assert</a> (gboolean condition, const gchar *condition_string, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</td></tr>
-<tr class="memdesc:a17ad16b1d5cca6a8fed4d8dcba9a8e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints a fatal error message if the condition did not pass.  <a href="plog__internal_8h.html#a17ad16b1d5cca6a8fed4d8dcba9a8e07">More...</a><br /></td></tr>
-<tr class="separator:a17ad16b1d5cca6a8fed4d8dcba9a8e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1469f97f6aebca064092cefed9357a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ab1469f97f6aebca064092cefed9357a9">plog_internal_expect</a> (gboolean condition, const gchar *condition_string, const gchar *message, const gchar *function_name)</td></tr>
-<tr class="memdesc:ab1469f97f6aebca064092cefed9357a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs check and prints a warning message if the condition did not pass.  <a href="plog__internal_8h.html#ab1469f97f6aebca064092cefed9357a9">More...</a><br /></td></tr>
-<tr class="separator:ab1469f97f6aebca064092cefed9357a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17edbccad050b7ccb52d9277ac956a99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a17edbccad050b7ccb52d9277ac956a99">plog_internal_assert_function</a> (gboolean condition, const gchar *condition_string, const gchar *message, const gchar *file_name, const gchar *function_name, gint32 line)</td></tr>
+<tr class="memdesc:a17edbccad050b7ccb52d9277ac956a99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs sanity check and prints a fatal error message if the condition did not pass.  <a href="plog__internal_8h.html#a17edbccad050b7ccb52d9277ac956a99">More...</a><br /></td></tr>
+<tr class="separator:a17edbccad050b7ccb52d9277ac956a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a789a4700fa9fa72c2faaccb138fabd46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#a789a4700fa9fa72c2faaccb138fabd46">plog_internal_expect_function</a> (gboolean condition, const gchar *condition_string, const gchar *message, const gchar *function_name)</td></tr>
+<tr class="memdesc:a789a4700fa9fa72c2faaccb138fabd46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs check and prints a warning message if the condition did not pass.  <a href="plog__internal_8h.html#a789a4700fa9fa72c2faaccb138fabd46">More...</a><br /></td></tr>
+<tr class="separator:a789a4700fa9fa72c2faaccb138fabd46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="memItemLeft" align="right" valign="top">const gchar *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">plog_internal_get_time_string</a> (void)</td></tr>
 <tr class="memdesc:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is not meant to be called outside plog macros.  <a href="plog__internal_8h.html#ab5c3fd23280066b2fa79ac1bb60eb052">More...</a><br /></td></tr>
 <tr class="separator:ab5c3fd23280066b2fa79ac1bb60eb052"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,6 +197,91 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a2bfbd82338cee792704d30ff11a227be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bfbd82338cee792704d30ff11a227be">&#9670;&nbsp;</a></span>plog_internal_assert</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define plog_internal_assert</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">condition, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">condition_string, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">message&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;	<a class="el" href="plog_8c.html#a415b68cb0887c90d729f1217c4914e97">plog_internal_assert_function</a>(condition, condition_string, message, __FILE__, __FUNCTION__, __LINE__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This macro is not meant to be invoked outside plog macros. </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>The condition that needs to be true for the assertion to pass. Otherwise the program will be aborted. </td></tr>
+    <tr><td class="paramname">condition_string</td><td>The condition in string format. </td></tr>
+    <tr><td class="paramname">message</td><td>The message that will be printed if the condition did not pass (can be NULL). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ac813ae68a6f720e9e81fb42262b541aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac813ae68a6f720e9e81fb42262b541aa">&#9670;&nbsp;</a></span>plog_internal_expect</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define plog_internal_expect</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">condition, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">message&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="plog_8c.html#afe0979bca90d1ac773e82ee5a323968e">plog_internal_expect_function</a>(condition, #condition, message, __FUNCTION__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This macro is not meant to be invoked outside plog macros. </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>The condition that needs to be true for the expectation to pass. </td></tr>
+    <tr><td class="paramname">message</td><td>The message that will be printed if the condition did not pass (can be NULL). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a0fb71f5f9dceb4c1637775afb053b8e3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0fb71f5f9dceb4c1637775afb053b8e3">&#9670;&nbsp;</a></span>plog_internal_function()</h2>
@@ -238,14 +329,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a17ad16b1d5cca6a8fed4d8dcba9a8e07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17ad16b1d5cca6a8fed4d8dcba9a8e07">&#9670;&nbsp;</a></span>plog_internal_assert()</h2>
+<a id="a17edbccad050b7ccb52d9277ac956a99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17edbccad050b7ccb52d9277ac956a99">&#9670;&nbsp;</a></span>plog_internal_assert_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plog_internal_assert </td>
+          <td class="memname">void plog_internal_assert_function </td>
           <td>(</td>
           <td class="paramtype">gboolean&#160;</td>
           <td class="paramname"><em>condition</em>, </td>
@@ -305,14 +396,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab1469f97f6aebca064092cefed9357a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1469f97f6aebca064092cefed9357a9">&#9670;&nbsp;</a></span>plog_internal_expect()</h2>
+<a id="a789a4700fa9fa72c2faaccb138fabd46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a789a4700fa9fa72c2faaccb138fabd46">&#9670;&nbsp;</a></span>plog_internal_expect_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plog_internal_expect </td>
+          <td class="memname">void plog_internal_expect_function </td>
           <td>(</td>
           <td class="paramtype">gboolean&#160;</td>
           <td class="paramname"><em>condition</em>, </td>

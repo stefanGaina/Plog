@@ -44,6 +44,13 @@
  *****************************************************************************************************/
 #define IS_BIT_ENABLED_STRING(bit, bit_mask) bit == (bit & bit_mask) ? "enabled" : "disabled"
 
+/** ***************************************************************************************************
+ * @brief Checks if a condition is enabled.
+ * @param condition: The condition to be checked.
+ * @return "enabled" or "disabled" string depending of the values of the condition.
+ *****************************************************************************************************/
+#define IS_ENABLED_STRING(condition) TRUE == condition ? "enabled" : "disabled"
+
 /******************************************************************************************************
  * LOCAL FUNCTIONS
  *****************************************************************************************************/
@@ -133,18 +140,18 @@ static void plog_set_terminal_mode_test(void);
 static void plog_get_terminal_mode_test(void);
 
 /** ***************************************************************************************************
- * @brief Function that will be called when plog_set_buffer_size() is requested by the user.
+ * @brief Function that will be called when plog_set_buffer_mode() is requested by the user.
  * @param void
  * @return void
  *****************************************************************************************************/
-static void plog_set_buffer_size_test(void);
+static void plog_set_buffer_mode_test(void);
 
 /** ***************************************************************************************************
- * @brief Function that will be called when plog_get_buffer_size() is requested by the user.
+ * @brief Function that will be called when plog_get_buffer_mode() is requested by the user.
  * @param void
  * @return void
  *****************************************************************************************************/
-static void plog_get_buffer_size_test(void);
+static void plog_get_buffer_mode_test(void);
 
 /** ***************************************************************************************************
  * @brief Function that will be called when plog_fatal() is requested by the user.
@@ -202,6 +209,44 @@ static void plog_verbose_test(void);
  *****************************************************************************************************/
 static void plog_assert_test(void);
 
+/** ***************************************************************************************************
+ * @brief Function that will be called when plog_assert() with message parameter is requested by the
+ * user.
+ * @param void
+ * @return void
+ *****************************************************************************************************/
+static void plog_assert_m_test(void);
+
+/** ***************************************************************************************************
+ * @brief Function that will be called when plog_abort() is requested by the user.
+ * @param void
+ * @return void
+ *****************************************************************************************************/
+static void plog_abort_test(void);
+
+/** ***************************************************************************************************
+ * @brief Function that will be called when plog_abort() with message parameter is requested by the
+ * user.
+ * @param void
+ * @return void
+ *****************************************************************************************************/
+static void plog_abort_m_test(void);
+
+/** ***************************************************************************************************
+ * @brief Function that will be called when plog_expect() is requested by the user.
+ * @param void
+ * @return void
+ *****************************************************************************************************/
+static void plog_expect_test(void);
+
+/** ***************************************************************************************************
+ * @brief Function that will be called when plog_expect_m() with message parameter is requested by the
+ * user.
+ * @param void
+ * @return void
+ *****************************************************************************************************/
+static void plog_expect_m_test(void);
+
 /******************************************************************************************************
  * FUNCTION DEFINITIONS
  *****************************************************************************************************/
@@ -220,8 +265,8 @@ static void test_main(void)
 	APITEST_HANDLE_COMMAND(plog_get_file_count, 0U);
 	APITEST_HANDLE_COMMAND(plog_set_terminal_mode, 1U);
 	APITEST_HANDLE_COMMAND(plog_get_terminal_mode, 0U);
-	APITEST_HANDLE_COMMAND(plog_set_buffer_size, 1U);
-	APITEST_HANDLE_COMMAND(plog_get_buffer_size, 0U);
+	APITEST_HANDLE_COMMAND(plog_set_buffer_mode, 1U);
+	APITEST_HANDLE_COMMAND(plog_get_buffer_mode, 0U);
 	APITEST_HANDLE_COMMAND(plog_fatal, 1U);
 	APITEST_HANDLE_COMMAND(plog_error, 1U);
 	APITEST_HANDLE_COMMAND(plog_warn, 1U);
@@ -230,6 +275,11 @@ static void test_main(void)
 	APITEST_HANDLE_COMMAND(plog_trace, 1U);
 	APITEST_HANDLE_COMMAND(plog_verbose, 1U);
 	APITEST_HANDLE_COMMAND(plog_assert, 1U);
+	APITEST_HANDLE_COMMAND(plog_assert_m, 2U);
+	APITEST_HANDLE_COMMAND(plog_abort, 0U);
+	APITEST_HANDLE_COMMAND(plog_abort_m, 1U);
+	APITEST_HANDLE_COMMAND(plog_expect, 1U);
+	APITEST_HANDLE_COMMAND(plog_expect_m, 2U);
 	(void)g_fprintf(stdout, "Invalid function name! Type \"h\" or \"help\" for a list of supported commands!\n");
 }
 
@@ -245,8 +295,8 @@ static void print_help(void)
 	(void)g_fprintf(stdout, "plog_get_file_count\n");
 	(void)g_fprintf(stdout, "plog_set_terminal_mode  <mode>\n");
 	(void)g_fprintf(stdout, "plog_get_terminal_mode\n");
-	(void)g_fprintf(stdout, "plog_set_buffer_size    <size>\n");
-	(void)g_fprintf(stdout, "plog_get_buffer_size\n");
+	(void)g_fprintf(stdout, "plog_set_buffer_mode    <size>\n");
+	(void)g_fprintf(stdout, "plog_get_buffer_mode\n");
 	(void)g_fprintf(stdout, "plog_fatal              <text>\n");
 	(void)g_fprintf(stdout, "plog_error              <text>\n");
 	(void)g_fprintf(stdout, "plog_warn               <text>\n");
@@ -255,11 +305,14 @@ static void print_help(void)
 	(void)g_fprintf(stdout, "plog_trace              <text>\n");
 	(void)g_fprintf(stdout, "plog_verbose            <text>\n");
 	(void)g_fprintf(stdout, "plog_assert             <condition>\n");
+	(void)g_fprintf(stdout, "plog_assert_m           <condition> <message>\n");
+	(void)g_fprintf(stdout, "plog_expect             <condition>\n");
+	(void)g_fprintf(stdout, "plog_expect_m           <condition> <message>\n");
 }
 
 static void plog_init_test(void)
 {
-	const gchar* const input = 0 == strcmp("NULL", command.argv[1]) ? NULL : command.argv[1];
+	const gchar* const input = 0 == g_strcmp0("NULL", command.argv[1]) ? NULL : command.argv[1];
 
 	if (TRUE == plog_init(input))
 	{
@@ -362,31 +415,31 @@ static void plog_get_terminal_mode_test(void)
 	(void)g_fprintf(stdout,
 					"Terminal mode has been got successfully!\n"
 					"Terminal mode is %s\n",
-					FALSE == terminal_mode ? "disabled" : "enabled");
+					IS_ENABLED_STRING(terminal_mode));
 }
 
-static void plog_set_buffer_size_test(void)
+static void plog_set_buffer_mode_test(void)
 {
-	gsize buffer_size = 0UL;
+	gboolean buffer_mode = FALSE;
 
-	APITEST_STRING_TO_UINT64(1, buffer_size);
+	APITEST_STRING_TO_UINT64(1, buffer_mode);
 
-	if (TRUE == plog_set_buffer_size(buffer_size))
+	if (TRUE == plog_set_buffer_mode(buffer_mode))
 	{
-		(void)g_fprintf(stdout, "Buffer size has been set successfully!\n");
+		(void)g_fprintf(stdout, "Buffer mode has been set successfully!\n");
 		return;
 	}
-	(void)g_fprintf(stdout, "Failed to set buffer size!\n");
+	(void)g_fprintf(stdout, "Failed to set buffer mode!\n");
 }
 
-static void plog_get_buffer_size_test(void)
+static void plog_get_buffer_mode_test(void)
 {
-	const gsize buffer_size = plog_get_buffer_size();
+	const gboolean buffer_mode = plog_get_buffer_mode();
 
 	(void)g_fprintf(stdout,
-					"Buffer size has been got successfully!\n"
-					"Buffer size: %" G_GSIZE_FORMAT "\n",
-					buffer_size);
+					"Buffer mode has been got successfully!\n"
+					"Buffer mode: %s\n",
+					IS_ENABLED_STRING(buffer_mode));
 }
 
 static void plog_fatal_test(void)
@@ -439,4 +492,44 @@ static void plog_assert_test(void)
 
 	plog_assert(TRUE == condition);
 	(void)g_fprintf(stdout, "Assertion has passed successfully!\n");
+}
+
+static void plog_assert_m_test(void)
+{
+	gboolean condition = FALSE;
+
+	APITEST_STRING_TO_INT32(1, condition);
+
+	plog_assert(TRUE == condition, command.argv[2]);
+	(void)g_fprintf(stdout, "Assertion has passed successfully!\n");
+}
+
+static void plog_abort_test(void)
+{
+	plog_abort();
+	(void)g_fprintf(stdout, "Abortion has failed!\n");
+}
+
+static void plog_abort_m_test(void)
+{
+	plog_abort(command.argv[1]);
+	(void)g_fprintf(stdout, "Abortion has failed!\n");
+}
+
+static void plog_expect_test(void)
+{
+	gboolean condition = FALSE;
+
+	APITEST_STRING_TO_INT32(1, condition);
+
+	plog_expect(TRUE == condition);
+}
+
+static void plog_expect_m_test(void)
+{
+	gboolean condition = FALSE;
+
+	APITEST_STRING_TO_INT32(1, condition);
+
+	plog_expect(TRUE == condition, command.argv[2]);
 }

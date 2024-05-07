@@ -1,0 +1,3 @@
+plog_init NULL
+plog_deinit
+q

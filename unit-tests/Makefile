@@ -18,11 +18,11 @@ export COVERAGE_REPORT	:= ../coverage_report
 GENHTML		  := ../vendor/lcov/$(BIN)/genhtml.perl
 GENHTML_FLAGS := --branch-coverage --num-spaces=4 --output-directory $(COVERAGE_REPORT) --dark-mode
 
-INFO_FILES = $(COVERAGE_REPORT)/configuration.info \
-			 $(COVERAGE_REPORT)/plog_version.info  \
-			 $(COVERAGE_REPORT)/plog.info		   \
-			 $(COVERAGE_REPORT)/queue.info		   \
-			 $(COVERAGE_REPORT)/vector.info
+INFO_FILES := $(COVERAGE_REPORT)/configuration.info \
+			  $(COVERAGE_REPORT)/plog_version.info	\
+			  $(COVERAGE_REPORT)/plog.info			\
+			  $(COVERAGE_REPORT)/queue.info			\
+			  $(COVERAGE_REPORT)/vector.info
 
 ### MAKE SUBDIRECTORIES ###
 all:

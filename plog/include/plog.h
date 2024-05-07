@@ -81,12 +81,12 @@
 #define PLOG_STRIP_VERBOSE
 
 /** ***************************************************************************************************
- * @brief Strips plog_assert() and plog_assert_m() calls from compilation.
+ * @brief Strips plog_assert() and plog_abort() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_ASSERT
 
 /** ***************************************************************************************************
- * @brief Strips plog_expect() and plog_expect_m() calls from compilation.
+ * @brief Strips plog_expect() calls from compilation.
  *****************************************************************************************************/
 #define PLOG_STRIP_EXPECT
 
@@ -110,7 +110,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_fatal(format, ...)
+#define plog_fatal(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_FATAL */
 
@@ -132,7 +132,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_error(format, ...)
+#define plog_error(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_ERROR */
 
@@ -154,7 +154,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_warn(format, ...)
+#define plog_warn(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_WARN */
 
@@ -176,7 +176,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_info(format, ...)
+#define plog_info(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_INFO */
 
@@ -198,7 +198,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_debug(format, ...)
+#define plog_debug(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_DEBUG */
 
@@ -220,7 +220,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_trace(format, ...)
+#define plog_trace(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_TRACE */
 
@@ -242,7 +242,7 @@
  * @param VA_ARGS: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_verbose(format, ...)
+#define plog_verbose(format, ...) (void)0
 
 #endif /*< PLOG_STRIP_VERBOSE */
 
@@ -253,20 +253,17 @@
  * the condition that did not pass.
  * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
  * program will be aborted.
+ * @param message: Optional message that will be printed if the condition did not pass (can be NULL).
  * @return void
  *****************************************************************************************************/
-#define plog_assert(condition) plog_internal_assert(condition, #condition, NULL, __FILE__, __FUNCTION__, __LINE__)
+#define plog_assert(condition, ...) plog_internal_assert(condition, #condition, #__VA_ARGS__ ? __VA_ARGS__ : NULL)
 
 /** ***************************************************************************************************
- * @brief Performs sanity check and prints a fatal error message with the file, function, code line and
- * the condition that did not pass.
- * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
- * program will be aborted.
- * @param message: Additional message that will be attached (can be NULL but in this situation consider
- * using plog_assert()).
+ * @brief Aborts the prgoram as if an assertion failed.
+ * @param message: Optional additional message that will be attached (can be NULL).
  * @return void
  *****************************************************************************************************/
-#define plog_assert_m(condition, message) plog_internal_assert(condition, #condition, message, __FILE__, __FUNCTION__, __LINE__)
+#define plog_abort(...) plog_internal_assert(FALSE, "Abort", #__VA_ARGS__ ? __VA_ARGS__ : NULL)
 
 #else
 
@@ -275,15 +272,14 @@
  * @param condition: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_assert(condition)
+#define plog_assert(condition, ...) (void)0
 
 /** ***************************************************************************************************
  * @brief Asserts are stripped from compilation.
- * @param condition: Does not matter.
- * @param message: Does not matter.
+ * @param void
  * @return void
  *****************************************************************************************************/
-#define plog_assert_m(condition, message)
+#define plog_abort(...)				(void)0
 
 #endif /*< PLOG_STRIP_ASSERT */
 
@@ -292,27 +288,12 @@
 /** ***************************************************************************************************
  * @brief Performs check and prints a warning message with the the condition that did not pass.
  * @param condition: The condition that needs to be true for the expectation to pass.
+ * @param message: Optional message that will be printed if the condition did not pass (can be NULL).
  * @return void
  *****************************************************************************************************/
-#define plog_expect(condition) plog_internal_expect(condition, #condition, NULL, __FUNCTION__)
-
-/** ***************************************************************************************************
- * @brief Performs check and prints a warning message with the the condition that did not pass.
- * @param condition: The condition that needs to be true for the expectation to pass.
- * @param message: Additional message that will be attached (can be NULL but in this situation consider
- * using plog_expect()).
- * @return void
- *****************************************************************************************************/
-#define plog_expect_m(condition, message) plog_internal_expect(condition, #condition, message, __FUNCTION__)
+#define plog_expect(condition, ...) plog_internal_expect(condition, #__VA_ARGS__ ? __VA_ARGS__ : NULL)
 
 #else
-
-/** ***************************************************************************************************
- * @brief Expectations are stripped from compilation.
- * @param condition: Does not matter.
- * @return void
- *****************************************************************************************************/
-#define plog_expect(condition)
 
 /** ***************************************************************************************************
  * @brief Expectations are stripped from compilation.
@@ -320,7 +301,7 @@
  * @param message: Does not matter.
  * @return void
  *****************************************************************************************************/
-#define plog_expect_m(condition, message)
+#define plog_expect(condition, ...) (void)0
 
 #endif /*< PLOG_STRIP_EXPECT */
 

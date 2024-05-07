@@ -50,6 +50,25 @@
 #define plog_internal(severity_bit, severity_tag, function_name, format, ...)                                                                                      \
 	plog_internal_function(severity_bit, "[%s] [%s] [%s] " format, plog_internal_get_time_string(), severity_tag, function_name, ##__VA_ARGS__)
 
+/** ***************************************************************************************************
+ * @brief This macro is not meant to be invoked outside plog macros.
+ * @param condition: The condition that needs to be true for the assertion to pass. Otherwise the
+ * program will be aborted.
+ * @param condition_string: The condition in string format.
+ * @param message: The message that will be printed if the condition did not pass (can be NULL).
+ * @return void
+ *****************************************************************************************************/
+#define plog_internal_assert(condition, condition_string, message)                                                                                                 \
+	plog_internal_assert_function(condition, condition_string, message, __FILE__, __FUNCTION__, __LINE__)
+
+/** ***************************************************************************************************
+ * @brief This macro is not meant to be invoked outside plog macros.
+ * @param condition: The condition that needs to be true for the expectation to pass.
+ * @param message: The message that will be printed if the condition did not pass (can be NULL).
+ * @return void
+ *****************************************************************************************************/
+#define plog_internal_expect(condition, message) plog_internal_expect_function(condition, #condition, message, __FUNCTION__)
+
 /******************************************************************************************************
  * FUNCTION PROTOTYPES
  *****************************************************************************************************/
@@ -79,8 +98,13 @@ extern void plog_internal_function(guint8 severity_bit, const gchar* format, ...
  * @param line: The code line where this function is called.
  * @return void
  *****************************************************************************************************/
-extern void
-plog_internal_assert(gboolean condition, const gchar* condition_string, const gchar* message, const gchar* file_name, const gchar* function_name, gint32 line);
+extern void plog_internal_assert_function(
+	gboolean	 condition,
+	const gchar* condition_string,
+	const gchar* message,
+	const gchar* file_name,
+	const gchar* function_name,
+	gint32		 line);
 
 /** ***************************************************************************************************
  * @brief Performs check and prints a warning message if the condition did not pass.
@@ -90,7 +114,7 @@ plog_internal_assert(gboolean condition, const gchar* condition_string, const gc
  * @param function_name: String that contains the name of the caller function.
  * @return void
  *****************************************************************************************************/
-extern void plog_internal_expect(gboolean condition, const gchar* condition_string, const gchar* message, const gchar* function_name);
+extern void plog_internal_expect_function(gboolean condition, const gchar* condition_string, const gchar* message, const gchar* function_name);
 
 /** ***************************************************************************************************
  * @brief This function is not meant to be called outside plog macros.
